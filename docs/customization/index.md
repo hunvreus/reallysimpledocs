@@ -29,7 +29,7 @@ The docs layout is composed from a few templates.
 
 ## Styles
 
-Styles are compiled from `src/styles.css` into `assets/styles.css`.
+Styles are compiled from `src/css/styles.css` into `assets/styles.css`.
 
 Basecoat provides component primitives. Tailwind styles the site and content.
 

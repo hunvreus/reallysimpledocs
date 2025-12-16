@@ -10,13 +10,13 @@ icon: boxes
 |------|---------------|-------------|
 | **Eleventy (11ty)** | Builds pages from Markdown + templates | `.eleventy.js`, `docs/` |
 | **Nunjucks** | Layouts, partials, and macros | `_includes/` |
-| **Tailwind CSS** | Site styling | `src/styles.css` → `assets/styles.css` |
+| **Tailwind CSS** | Site styling | `src/css/styles.css` → `assets/styles.css` |
 | **Basecoat** | UI components + JS init system | `assets/basecoat.min.js` |
 | **highlight.js** | Syntax highlighting | `_includes/layouts/base.njk` |
 
 ## Build pipeline
 
-1. Tailwind compiles `src/styles.css` to `assets/styles.css`.
+1. Tailwind compiles `src/css/styles.css` to `assets/styles.css`.
 2. Basecoat is copied into `assets/`.
 3. Eleventy renders `docs/**/*.md` with layouts from `_includes/layouts/`.
 
