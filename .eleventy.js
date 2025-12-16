@@ -4,6 +4,7 @@ import markdownIt from "markdown-it";
 import markdownItAnchor from "markdown-it-anchor";
 import pluginTOC from "eleventy-plugin-toc";
 import fs from "node:fs";
+import path from "node:path";
 
 export default async function(eleventyConfig) {
   // Config
@@ -23,9 +24,11 @@ export default async function(eleventyConfig) {
 
   // Global data
   let configuredSiteUrl = null;
+  let configuredSite = null;
   try {
     const raw = fs.readFileSync(new URL("./_data/site.json", import.meta.url), "utf8");
-    configuredSiteUrl = JSON.parse(raw)?.url || null;
+    configuredSite = JSON.parse(raw) || null;
+    configuredSiteUrl = configuredSite?.url || null;
   } catch (_) {}
 
   const isServe = process.argv.includes("--serve");
@@ -35,7 +38,186 @@ export default async function(eleventyConfig) {
     process.env.SITE_URL ||
       (isServe ? "http://localhost:8080" : configuredSiteUrl || ""),
   );
-  
+
+  const stripFrontMatter = (source) => {
+    if (!source.startsWith("---")) return { frontmatter: {}, content: source };
+    const match = source.match(/^---\s*\n[\s\S]*?\n---\s*\n?/);
+    if (!match) return { frontmatter: {}, content: source };
+
+    const rawFrontmatter = match[0]
+      .replace(/^---\s*\n/, "")
+      .replace(/\n---\s*\n?$/, "");
+
+    const frontmatter = {};
+    rawFrontmatter.split("\n").forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) return;
+      const idx = trimmed.indexOf(":");
+      if (idx === -1) return;
+      const key = trimmed.slice(0, idx).trim();
+      let value = trimmed.slice(idx + 1).trim();
+      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      frontmatter[key] = value;
+    });
+
+    return { frontmatter, content: source.slice(match[0].length) };
+  };
+
+  const slugFromDocPath = (absolutePath, docsRoot) => {
+    const relative = path.relative(docsRoot, absolutePath).replaceAll(path.sep, "/");
+    const withoutExt = relative.replace(/\.md$/, "");
+    return withoutExt === "index" ? "index" : withoutExt;
+  };
+
+  const docUrlFromSlug = (slug) => {
+    if (slug === "index") return "/";
+    if (slug.endsWith("/index")) return "/" + slug.replace(/\/index$/, "/");
+    return "/" + slug + "/";
+  };
+
+  const markdownExportPathFromSlug = (slug) => {
+    if (slug === "index") return "index.md";
+    if (slug.endsWith("/index")) return `${slug.slice(0, -"/index".length)}.md`;
+    return `${slug}.md`;
+  };
+
+  const writeTextFile = async (outputDir, relativePath, content) => {
+    const outPath = path.join(outputDir, relativePath);
+    await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
+    await fs.promises.writeFile(outPath, content, "utf8");
+  };
+
+  const collectSlugsFromMenu = (menu) => {
+    const slugs = [];
+    (menu || []).forEach((group) => {
+      if (group?.type !== "group") return;
+      (group.items || []).forEach((item) => {
+        if (typeof item === "string") {
+          slugs.push(item);
+          return;
+        }
+        if (item?.type === "submenu" && Array.isArray(item.items)) {
+          item.items.forEach((subitem) => slugs.push(subitem));
+        }
+      });
+    });
+    return [...new Set(slugs)];
+  };
+
+  eleventyConfig.on("eleventy.after", async (eventsArg) => {
+    const outputDir = eventsArg?.directories?.output || eventsArg?.dir?.output;
+    const inputDir = eventsArg?.directories?.input || eventsArg?.dir?.input;
+    if (!outputDir || !inputDir) return;
+
+    const docsRoot = path.resolve(inputDir);
+    const siteUrl = process.env.SITE_URL || (isServe ? "http://localhost:8080" : configuredSiteUrl || "");
+    const siteTitle = configuredSite?.title || "Docs";
+
+    const docsJsonPath = path.join(docsRoot, "docs.json");
+    let docsConfig = null;
+    try {
+      docsConfig = JSON.parse(await fs.promises.readFile(docsJsonPath, "utf8"));
+    } catch (_) {}
+
+    const menu = docsConfig?.menu || [];
+    const menuSlugs = collectSlugsFromMenu(menu);
+
+    const collectMarkdownFiles = async (dir) => {
+      const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+      const files = [];
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          files.push(...(await collectMarkdownFiles(fullPath)));
+        } else if (entry.isFile() && entry.name.endsWith(".md")) {
+          files.push(fullPath);
+        }
+      }
+      return files;
+    };
+
+    const mdFiles = await collectMarkdownFiles(docsRoot);
+
+    const docs = mdFiles
+      .map((filePath) => {
+        const slug = slugFromDocPath(filePath, docsRoot);
+        const url = docUrlFromSlug(slug);
+        const raw = fs.readFileSync(filePath, "utf8");
+        const { frontmatter, content } = stripFrontMatter(raw);
+        const title = (frontmatter.title || "").trim() || (slug === "index" ? "Introduction" : slug.split("/").pop());
+        const description = (frontmatter.description || "").trim();
+        return {
+          slug,
+          url,
+          inputPath: filePath,
+          title,
+          description,
+          content: content.trim(),
+        };
+      })
+      .sort((a, b) => a.url.localeCompare(b.url));
+
+    const docsBySlug = new Map(docs.map((d) => [d.slug, d]));
+    const docsInMenu = menuSlugs.map((slug) => docsBySlug.get(slug)).filter(Boolean);
+    const docsNotInMenu = docs.filter((doc) => !docsInMenu.includes(doc));
+    const orderedDocs = [...docsInMenu, ...docsNotInMenu];
+
+    // Per-page Markdown exports (used by "Copy page")
+    await Promise.all(
+      docs.map(async (doc) => {
+        const parts = [`# ${doc.title}`];
+        if (doc.description) parts.push(doc.description);
+        if (doc.content) parts.push(doc.content);
+        const out = parts.join("\n\n") + "\n";
+        await writeTextFile(outputDir, markdownExportPathFromSlug(doc.slug), out);
+      }),
+    );
+
+    // llms.txt (menu-only, short)
+    const llmsLines = [`# ${siteTitle}`, "", "## Docs", ""];
+    menu.forEach((group) => {
+      if (group?.type !== "group") return;
+      const groupLabel = group.label || "Docs";
+      llmsLines.push(`### ${groupLabel}`, "");
+
+      (group.items || []).forEach((item) => {
+        const handleSlug = (slug) => {
+          const doc = docsBySlug.get(slug);
+          if (!doc) return;
+          const fullUrl = `${siteUrl}${doc.url}`;
+          if (doc.description) {
+            llmsLines.push(`- [${doc.title}](${fullUrl}): ${doc.description}`);
+          } else {
+            llmsLines.push(`- [${doc.title}](${fullUrl})`);
+          }
+        };
+
+        if (typeof item === "string") {
+          handleSlug(item);
+        } else if (item?.type === "submenu" && Array.isArray(item.items)) {
+          item.items.forEach(handleSlug);
+        }
+      });
+
+      llmsLines.push("");
+    });
+
+    await writeTextFile(outputDir, "llms.txt", llmsLines.join("\n"));
+
+    // llms-full.txt (menu first, then everything else)
+    const fullLines = [];
+    orderedDocs.forEach((doc) => {
+      const url = `${siteUrl}${doc.url}`;
+      fullLines.push(`# ${doc.title}`, `Source: ${url}`, "");
+      if (doc.description) fullLines.push(doc.description, "");
+      fullLines.push(doc.content, "", "---", "");
+    });
+
+    await writeTextFile(outputDir, "llms-full.txt", fullLines.join("\n"));
+  });
+
   let markdownLib = markdownIt(options).use(
     markdownItAnchor,
     { permalink: markdownItAnchor.permalink.headerLink() }
