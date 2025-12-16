@@ -1,0 +1,9 @@
+{
+  "name": "create-reallysimpledocs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "create-reallysimpledocs": "bin/create-reallysimpledocs.js"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "layout": "layouts/doc.njk",
+  "tags": "docs",
+  "menu": [
+    {
+      "type": "group",
+      "items": [
+        "index",
+        "getting-started"
+      ]
+    },
+    {
+      "type": "group",
+      "label": "Customization",
+      "items": [
+        "customization/index",
+        "customization/navigation",
+        "customization/search",
+        "customization/layout",
+        "customization/theme"
+      ]
+    },
+    {
+      "type": "group",
+      "label": "Content",
+      "items": [
+        "content/index",
+        "content/markdown",
+        "content/code",
+        "content/icons",
+        "content/media",
+        "content/html",
+        "content/llms"
+      ]
+    }
+  ]
+}

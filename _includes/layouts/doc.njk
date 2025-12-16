@@ -1,0 +1,180 @@
+---
+layout: layouts/base.njk
+---
+{% from "macros/dropdown-menu.njk" import dropdown_menu %}
+
+{% include "partials/docs/sidebar.njk" %}
+{% set navigation = menu | getNavigation(collections) %}
+
+<main id="content">
+  <header class="bg-background sticky inset-x-0 top-0 isolate flex shrink-0 items-center gap-2 border-b z-10">
+    {% include "partials/docs/header.njk" %}
+  </header>
+
+  <div class="p-4 md:p-6 xl:p-12 flex gap-10">
+    <article class="flex-1 min-w-0 wrap-break-word">
+      <div class="mx-auto w-full max-w-2xl flex-1 space-y-10">
+        <header class="space-y-2">
+          <div class="flex items-start gap-x-2">
+            <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl mr-auto">{{ title }}</h1>
+            <div class="flex items-center gap-x-2 mt-1.5">
+              <div role="group" class="button-group">
+                <button
+                  type="button"
+                  class="btn-sm-secondary h-7 px-2.5 text-[13px]"
+                  data-md-url="{{ page.url | markdownUrl }}"
+                  onclick="copyPageMarkdown(this)"
+                >
+                  {% lucide "copy" %}
+                  <span>Copy page</span>
+                </button>
+                <hr role="separator">
+                {% set trigger %}
+                  {% lucide "chevron-down" %}
+                {% endset %}
+                {% set markdown_icon %}{% include "logos/markdown.svg" %}{% endset %}
+                {% set chatgpt_icon %}{% include "logos/openai.svg" %}{% endset %}
+                {% set claude_icon %}{% include "logos/claude.svg" %}{% endset %}
+                {% set cursor_icon %}{% include "logos/cursor.svg" %}{% endset %}
+                {% set absolute_url = siteUrl ~ page.url %}
+                {% set llm_prompt = "Read from " ~ absolute_url ~ " so I can ask questions about it." %}
+                {{ dropdown_menu(
+                  trigger=trigger,
+                  items=[
+                    {
+                      "icon": markdown_icon,
+                      "label": "View as Markdown",
+                      "url": page.url | markdownUrl,
+                      "attrs": { "target": "_blank", "rel": "noopener" }
+                    },
+                    {
+                      "icon": chatgpt_icon,
+                      "label": "Open in ChatGPT",
+                      "url": "https://chatgpt.com/?q=" ~ (llm_prompt | urlencode),
+                      "attrs": { "target": "_blank", "rel": "noopener" }
+                    },
+                    {
+                      "icon": claude_icon,
+                      "label": "Open in Claude",
+                      "url": "https://claude.ai/new?q=" ~ (llm_prompt | urlencode),
+                      "attrs": { "target": "_blank", "rel": "noopener" }
+                    },
+                    {
+                      "icon": cursor_icon,
+                      "label": "Open in Cursor",
+                      "url": "cursor://anysphere.cursor-deeplink/prompt?text=" ~ (llm_prompt | urlencode),
+                      "attrs": { "target": "_blank", "rel": "noopener" }
+                    }
+                  ],
+                  trigger_attrs={"class": "btn-sm-icon-secondary size-7"},
+                  popover_attrs={"data-align": "end"}
+                ) }}
+              </div>
+
+              <div role="group" class="button-group">
+                {% if navigation.prev %}
+                  <a href="{{ navigation.prev.url }}" class="btn-sm-icon-secondary hidden sm:flex size-7">
+                    <span class="sr-only">{{ navigation.prev.label }}</span>
+                    {% lucide "arrow-left" %}
+                  </a>
+                {% endif %}
+                {% if navigation.prev and navigation.next %}
+                  <hr role="separator">
+                {% endif %}
+                {% if navigation.next %}
+                  <a
+                    href="{{ navigation.next.url }}" class="btn-sm-icon-secondary hidden sm:flex size-7"
+                  >
+                    <span class="sr-only">{{ navigation.next.label }}</span>
+                    {% lucide "arrow-right" %}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% if description %}
+            <p class="text-muted-foreground sm:text-base">{{ description }}</p>
+          {% endif %}
+        </header>
+        <div class="prose">
+          {{ content | safe }}
+        </div>
+        <footer class="flex items-center mt-12">
+          {% if navigation.prev %}
+            <a href="{{ navigation.prev.url }}" class="btn-sm-secondary mr-auto">
+              {% lucide "arrow-left" %}
+              {{ navigation.prev.label }}
+            </a>
+          {% endif %}
+          {% if navigation.next %}
+            <a
+              href="{{ navigation.next.url }}" class="btn-sm-secondary ml-auto"
+            >
+              {{ navigation.next.label }}
+              {% lucide "arrow-right" %}
+            </a>
+          {% endif %}
+        </footer>
+      </div>
+    </article>
+    <aside class="hidden xl:block w-56">
+      <div class="sticky top-20 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-primary space-y-2 [&_ol]:space-y-2 [&_ol_ol]:pl-3 [&_ol_ol]:mt-2">
+        <h2 class="font-medium flex items-center gap-1">
+          {% lucide "table-of-contents", { class: "size-4" } %}
+          On this page
+        </h2> 
+        {{ content | toc | safe }}
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script>
+  async function copyPageMarkdown(button) {
+    const markdownUrl = button?.dataset?.mdUrl;
+    if (!markdownUrl) return;
+
+    const label = button.querySelector("span");
+    const originalLabel = label?.textContent;
+
+    try {
+      const absoluteMarkdownUrl = new URL(markdownUrl, window.location.href).toString();
+      const response =
+        (await fetch(markdownUrl, { credentials: "same-origin", cache: "no-store" }).catch(() => null)) ||
+        (await fetch(absoluteMarkdownUrl, { credentials: "same-origin", cache: "no-store" }));
+      if (!response.ok) throw new Error("Failed to fetch markdown");
+      const markdown = await response.text();
+      await writeToClipboard(markdown);
+
+      if (label) {
+        label.textContent = "Copied";
+        window.setTimeout(() => {
+          label.textContent = originalLabel || "Copy page";
+        }, 1200);
+      }
+    } catch (error) {
+      const absoluteMarkdownUrl = new URL(markdownUrl, window.location.href).toString();
+      window.open(absoluteMarkdownUrl, "_blank", "noopener");
+    }
+  }
+
+  async function writeToClipboard(text) {
+    if (navigator.clipboard?.writeText && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.top = "-9999px";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    const ok = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    if (!ok) throw new Error("Copy failed");
+  }
+</script>

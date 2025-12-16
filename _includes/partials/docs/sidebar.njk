@@ -1,0 +1,22 @@
+{% from "macros/sidebar.njk" import sidebar %}
+
+{% set header %}
+<a href="/" class="btn-ghost p-2 h-12 w-full justify-start">
+  <div class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+    {% include "assets/logo.svg" %}
+  </div>
+  <div class="grid flex-1 text-left text-sm leading-tight">
+    <span class="truncate font-semibold">{{ site.title }}</span>
+    <span class="truncate text-xs text-muted-foreground">Documentation</span>
+  </div>
+</a>
+{% endset %}
+
+{{ sidebar(
+  id="sidebar",
+  label="Sidebar navigation",
+  header=header,
+  footer=footer,
+  content_attrs={ "class": "scrollbar" },
+  menu=menu | sidebarMenu(collections)
+) }}

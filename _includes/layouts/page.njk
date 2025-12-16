@@ -1,0 +1,14 @@
+---
+layout: layouts/base.njk
+---
+
+<header
+  class="sticky top-0 bg-background z-50 transition-color duration-300 border-b border-background"
+  x-data="{ scrolled: false }"
+  @scroll.window="scrolled = window.scrollY > 0"
+  :class="{ 'border-border': scrolled }"
+>
+  {% include "partials/header.njk" %}
+</header>
+{{ content | safe }}
+{% include "partials/footer.njk" %}

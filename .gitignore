@@ -1,0 +1,7 @@
+.*
+!.gitignore
+!.eleventy.js
+!.eleventyignore
+
+_site/
+node_modules/

@@ -1,0 +1,87 @@
+{% from "macros/command.njk" import command_dialog %}
+
+{% set commandMenu = menu | commandMenu(collections) %}
+{{ command_dialog(id="command-search", items=commandMenu, placeholder="Search the docs...") }}
+<script>
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      const dialog = document.getElementById('command-search');
+      if (dialog.open) {
+        dialog.close();
+      } else {
+        dialog.showModal();
+        dialog.querySelector('header input')?.focus();
+      }
+    }
+  });
+</script>
+
+<div class="flex h-14 w-full items-center justify-between gap-2 px-4">
+  <button
+    type="button"
+    onclick="document.dispatchEvent(new CustomEvent('basecoat:sidebar'))"
+    aria-label="Toggle sidebar"
+    data-tooltip="Toggle sidebar"
+    data-side="bottom"
+    data-align="start"
+    class="btn-sm-icon-ghost"
+  >
+    {% lucide "panel-left" %}
+  </button>
+
+  <button
+    type="button"
+    class="relative text-muted-foreground bg-background dark:bg-input/30 border-input flex items-center h-8 w-full min-w-0 rounded-md border px-3 py-1 gap-x-2 text-base md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none cursor-text max-w-72 sm:ml-auto"
+    onclick="document.getElementById('command-search').showModal()"
+  >
+    {% lucide "search", { "class": "size-4" } %}
+    Search the docs...
+    <kbd class="kbd ml-auto -mr-1.5">⌘K</kbd>
+  </button>
+
+  <nav class="items-center gap-2 hidden sm:flex">
+    {% for link in site.links %}
+      <a
+        class="{% if link.icon and not link.label %}btn-sm-icon-ghost{% else %}btn-sm-ghost{% endif %} {{ link.class }}"
+        href="{{ link.url }}"
+        {% for key, value in link.attrs %}
+          {% if key != "class" %}{{ key }}="{{ value }}"{% endif %}
+        {% endfor %}
+      >
+        {% if link.icon %}{{ link.icon | safe }}{% endif %}
+        {% if link.label %}{{ link.label }}{% endif %}
+      </a>
+    {% endfor %}
+    <button
+      type="button"
+      aria-label="Toggle dark mode"
+      data-tooltip="Toggle dark mode"
+      data-side="bottom"
+      data-align="end"
+      onclick="document.dispatchEvent(new CustomEvent('basecoat:theme'))"
+      class="btn-sm-icon-ghost size-7"
+    >
+      <span class="hidden dark:block">{% lucide "sun" %}</span>
+      <span class="block dark:hidden">{% lucide "moon" %}</span>
+    </button>
+  </nav>
+
+  <div class="sm:hidden" x-data="{ isOpen: false }">
+    <button type="button" class="btn-sm-icon-ghost" @click="isOpen = !isOpen">
+      <span x-show="!isOpen" x-cloak>{% lucide "menu" %}</span>
+      <span x-show="isOpen" x-cloak>{% lucide "x" %}</span>
+    </button>
+    <nav class="fixed inset-0 top-16 bg-background z-50 flex flex-col gap-2 p-4 transition-all opacity-0 scale-95 -translate-y-16 invisible" :class="{ 'opacity-100 scale-100 translate-y-0 visible': isOpen }" x-cloak>
+      <a class="btn-lg-ghost justify-between px-4" href="/">
+        Home
+      </a>
+      {% if site.links and site.links.github %}
+        <a class="btn-lg-ghost justify-between" href="{{ site.links.github }}" rel="noopener" target="_blank">
+          GitHub
+          {% include "logos/github.svg" %}
+        </a>
+      {% endif %}
+    </nav>
+  </div>
+</div>
