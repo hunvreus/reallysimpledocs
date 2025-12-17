@@ -48,6 +48,7 @@
         href="{{ link.url }}"
         aria-label="{{ link.label }}"
         data-tooltip="{{ link.label }}"
+        data-side="bottom"
         {% if link.attrs %}
           {% for key, value in link.attrs %}
             {% if key != "class" %}{{ key }}="{{ value }}"{% endif %}
