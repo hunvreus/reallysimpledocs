@@ -30,7 +30,7 @@ The site metadata, including the header links, live in `_data/site.json`:
 | `links[]` | `array` | Header links. |
 | `links[].label` | `string` | Link label (used for tooltips and mobile; shown on desktop when `iconOnly` is `false`). |
 | `links[].iconOnly` | `boolean` | Desktop-only: render as icon button. |
-| `links[].icon` | `string` | Inline SVG markup for the icon. |
+| `links[].icon` | `string` | Lucide icon name or inline SVG markup. |
 | `links[].url` | `string` | Link destination. |
 | `links[].attrs` | `object` | Extra attributes (`target`, `rel`, …). |
 

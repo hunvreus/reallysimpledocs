@@ -12,6 +12,15 @@ export const registerNavigationFilters = (eleventyConfig, lucideIcons) => {
     return iconComponent.replace('class="lucide', `class="lucide lucide-${iconName}`);
   };
 
+  const resolveIcon = (icon) => {
+    if (!icon) return null;
+    if (typeof icon !== "string") return icon;
+    const trimmed = icon.trim();
+    if (!trimmed) return null;
+    if (trimmed.startsWith("<svg")) return trimmed;
+    return lucideSvg(trimmed) || null;
+  };
+
   const buildMenus = (menu, collections) => {
     const docs = collections?.docs || [];
     const docsByUrl = new Map(docs.map((doc) => [doc.url, doc]));
@@ -21,8 +30,7 @@ export const registerNavigationFilters = (eleventyConfig, lucideIcons) => {
       const doc = docsByUrl.get(url);
       const title = doc?.data?.title ? String(doc.data.title) : fallbackLabelFromSlug(slug);
       const description = doc?.data?.description ? String(doc.data.description) : "";
-      const iconName = doc?.data?.icon ? String(doc.data.icon) : null;
-      const iconSvg = lucideSvg(iconName) || null;
+      const iconSvg = resolveIcon(doc?.data?.icon) || null;
 
       const sidebarItem = {
         icon: iconSvg,
@@ -50,10 +58,7 @@ export const registerNavigationFilters = (eleventyConfig, lucideIcons) => {
       if (typeof item === "string") return processSlug(item);
 
       if (item?.type === "submenu") {
-        const submenuIcon =
-          typeof item.icon === "string"
-            ? lucideSvg(item.icon) || null
-            : item.icon || null;
+        const submenuIcon = resolveIcon(item.icon) || null;
         const sidebarItems = (item.items || []).map((sub) => processItem(sub).sidebar);
         const commandItems = (item.items || []).map((sub) => processItem(sub).command);
         return {

@@ -42,6 +42,7 @@
 
   <nav class="items-center gap-2 hidden sm:flex">
     {% for link in site.links %}
+      {% set icon = (link.icon or "") | trim %}
       <a
         class="{% if link.iconOnly %}btn-sm-icon-ghost{% else %}btn-sm-ghost{% endif %} {{ link.class }}"
         href="{{ link.url }}"
@@ -53,7 +54,13 @@
           {% endfor %}
         {% endif %}
       >
-        {% if link.icon %}{{ link.icon | safe }}{% endif %}
+        {% if icon %}
+          {% if icon.slice(0, 4) == "<svg" %}
+            {{ icon | safe }}
+          {% else %}
+            {% lucide icon %}
+          {% endif %}
+        {% endif %}
         {% if not link.iconOnly %}{{ link.label }}{% endif %}
       </a>
     {% endfor %}
@@ -71,16 +78,26 @@
     </button>
   </nav>
 
-  <div class="sm:hidden" x-data="{ isOpen: false }">
-    <button type="button" class="btn-sm-icon-ghost" @click="isOpen = !isOpen">
-      <span x-show="!isOpen" x-cloak>{% lucide "menu" %}</span>
-      <span x-show="isOpen" x-cloak>{% lucide "x" %}</span>
+  <div class="sm:hidden">
+    <button
+      type="button"
+      class="btn-sm-icon-ghost peer group"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"
+    >
+      <span class="group-aria-expanded:hidden">{% lucide "menu" %}</span>
+      <span class="hidden group-aria-expanded:block">{% lucide "x" %}</span>
     </button>
-    <nav class="fixed inset-0 top-16 bg-background z-50 flex flex-col gap-2 p-4 transition-all opacity-0 scale-95 -translate-y-16 invisible" :class="{ 'opacity-100 scale-100 translate-y-0 visible': isOpen }" x-cloak>
-      <a class="btn-lg-ghost justify-between px-4" href="/">
-        Home
-      </a>
+
+    <nav
+      id="mobile-menu"
+      class="fixed inset-0 top-14 bg-background z-50 flex flex-col gap-2 p-4 transition-all opacity-0 scale-95 -translate-y-16 invisible pointer-events-none peer-aria-expanded:opacity-100 peer-aria-expanded:scale-100 peer-aria-expanded:translate-y-0 peer-aria-expanded:visible peer-aria-expanded:pointer-events-auto"
+      data-mobile-menu
+    >
       {% for link in site.links %}
+        {% set icon = (link.icon or "") | trim %}
         <a
           class="btn-lg-ghost justify-between {{ link.class }}"
           href="{{ link.url }}"
@@ -91,10 +108,15 @@
           {% endif %}
         >
           <span>{{ link.label }}</span>
-          {% if link.icon %}{{ link.icon | safe }}{% endif %}
+          {% if icon %}
+            {% if icon.slice(0, 4) == "<svg" %}
+              {{ icon | safe }}
+            {% else %}
+              {% lucide icon %}
+            {% endif %}
+          {% endif %}
         </a>
       {% endfor %}
     </nav>
   </div>
 </div>
-
