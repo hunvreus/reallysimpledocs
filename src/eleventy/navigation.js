@@ -1,6 +1,5 @@
 import { docUrl, fallbackLabelFromSlug, flattenMenuSlugs } from "./menu.js";
 
-// Filters: prev/next, sidebar menu, and command palette menu.
 export const registerNavigationFilters = (eleventyConfig, lucideIcons) => {
   const lucideSvg = (iconName) => {
     if (!iconName) return null;
@@ -51,10 +50,14 @@ export const registerNavigationFilters = (eleventyConfig, lucideIcons) => {
       if (typeof item === "string") return processSlug(item);
 
       if (item?.type === "submenu") {
+        const submenuIcon =
+          typeof item.icon === "string"
+            ? lucideSvg(item.icon) || null
+            : item.icon || null;
         const sidebarItems = (item.items || []).map((sub) => processItem(sub).sidebar);
         const commandItems = (item.items || []).map((sub) => processItem(sub).command);
         return {
-          sidebar: { ...item, items: sidebarItems },
+          sidebar: { ...item, icon: submenuIcon, items: sidebarItems },
           command: { type: "group", label: item.label, items: commandItems },
         };
       }
@@ -65,8 +68,12 @@ export const registerNavigationFilters = (eleventyConfig, lucideIcons) => {
     const processedGroups = (menu || []).map((group) => {
       if (group?.type !== "group") return { sidebar: group, command: group };
 
-      const sidebarItems = (group.items || []).map((item) => processItem(item).sidebar).filter(Boolean);
-      const commandItems = (group.items || []).map((item) => processItem(item).command).filter(Boolean);
+      const sidebarItems = (group.items || [])
+        .map((item) => processItem(item).sidebar)
+        .filter(Boolean);
+      const commandItems = (group.items || [])
+        .map((item) => processItem(item).command)
+        .filter(Boolean);
 
       return {
         sidebar: { ...group, items: sidebarItems },
@@ -94,10 +101,7 @@ export const registerNavigationFilters = (eleventyConfig, lucideIcons) => {
     };
 
     return {
-      prev:
-        index > 0
-          ? { url: docUrl(flattened[index - 1]), label: labelFor(flattened[index - 1]) }
-          : null,
+      prev: index > 0 ? { url: docUrl(flattened[index - 1]), label: labelFor(flattened[index - 1]) } : null,
       next:
         index < flattened.length - 1
           ? { url: docUrl(flattened[index + 1]), label: labelFor(flattened[index + 1]) }

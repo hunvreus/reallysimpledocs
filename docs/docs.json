@@ -1,36 +1,24 @@
 {
-  "layout": "layouts/doc.njk",
+  "layout": "doc",
   "tags": "docs",
   "menu": [
     {
       "type": "group",
+      "label": "Getting started",
       "items": [
         "index",
-        "getting-started"
-      ]
-    },
-    {
-      "type": "group",
-      "label": "Customization",
-      "items": [
-        "customization/index",
-        "customization/navigation",
-        "customization/search",
-        "customization/layout",
-        "customization/theme"
-      ]
-    },
-    {
-      "type": "group",
-      "label": "Content",
-      "items": [
-        "content/index",
-        "content/markdown",
-        "content/code",
-        "content/icons",
-        "content/media",
-        "content/html",
-        "content/llms"
+        "install",
+        "customize",
+        {
+          "type": "submenu",
+          "label": "Manage content",
+          "icon": "file-text",
+          "open": true,
+          "items": [
+            "content/navigation",
+            "content/pages"
+          ]
+        }
       ]
     }
   ]

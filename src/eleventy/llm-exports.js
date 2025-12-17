@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+
 import { collectMenuSlugs, docUrl, fallbackLabelFromSlug } from "./menu.js";
 
-// Build outputs: llms.txt, llms-full.txt, and per-page markdown exports.
 export const registerLlmExports = (eleventyConfig, options) => {
   const collectFiles = async (dir, predicate) => {
     const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -45,7 +45,10 @@ export const registerLlmExports = (eleventyConfig, options) => {
     if (!line) return null;
 
     let value = line.slice(`${key}:`.length).trim();
-    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
       value = value.slice(1, -1);
     }
     return value || null;
@@ -75,7 +78,8 @@ export const registerLlmExports = (eleventyConfig, options) => {
         mdFiles.map(async (filePath) => {
           const source = await fs.readFile(filePath, "utf8");
           const relative = path.relative(docsRoot, filePath).replaceAll(path.sep, "/");
-          const slug = relative.replace(/\.md$/, "") === "index" ? "index" : relative.replace(/\.md$/, "");
+          const slug =
+            relative.replace(/\.md$/, "") === "index" ? "index" : relative.replace(/\.md$/, "");
           const url = docUrl(slug);
           const title = readFrontMatterField(source, "title") || fallbackLabelFromSlug(slug);
           const description = (readFrontMatterField(source, "description") || "").trim();
@@ -140,3 +144,4 @@ export const registerLlmExports = (eleventyConfig, options) => {
     await writeTextFile(outputDir, "llms-full.txt", fullLines.join("\n"));
   });
 };
+

@@ -1,0 +1,113 @@
+.prose {
+  @apply my-6;
+
+  > h2,
+  > h3,
+  > h4 {
+    @apply sm:text-lg my-6 scroll-m-18 font-semibold tracking-tight;
+
+    a {
+      @apply no-underline;
+    }
+  }
+  > h2 {
+    @apply text-xl sm:text-2xl mt-8 lg:mt-12 first:mt-0;
+  }
+  > h3 {
+    @apply text-lg sm:text-xl lg:mt-8;
+  }
+  p > a,
+  li > a,
+  dt > a,
+  dd > a,
+  td > a,
+  th > a {
+    @apply underline underline-offset-2 decoration-muted-foreground/50 hover:decoration-foreground/50 transition-all;
+  }
+  code:not(pre > code) {
+    @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[13px];
+  }
+  pre > code {
+    @apply bg-muted dark:bg-muted/50 block rounded-lg px-4 py-3 text-[13px];  
+  }
+  pre:has(> code) {
+    @apply relative;
+  }
+  pre:has(> code) > button {
+    @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
+  }
+  blockquote {
+    @apply border-l-4 border-border pl-4;
+  }
+  ol {
+    @apply list-decimal ml-6;
+  }
+  ul {
+    @apply list-disc ml-6;
+  }
+  ol,
+  ul {
+    li {
+      @apply mt-2;
+
+      ol,
+      ul {
+        @apply mt-0 mb-0;
+      }
+    }
+  }
+  dl {
+    @apply border-b pb-3 my-6;
+    dt {
+      @apply border-t pt-3 mt-3 first:mt-0;
+    }
+    dd {
+      @apply mt-2;
+    }
+    dl {
+      @apply mt-4 border-b-0 pb-0 pl-8 my-0;
+    }
+  }
+  b,
+  strong {
+    @apply font-semibold;
+  }
+  > p,
+  blockquote,
+  ul,
+  ol,
+  dl,
+  pre {
+    @apply my-6;
+  }
+  > *:first-child {
+    @apply !mt-0;
+  }
+  > *:last-child {
+    @apply !mb-0;
+  }
+  table {
+    @apply w-full caption-bottom text-sm;
+    thead {
+      @apply [&_tr]:border-b;
+    }
+    tbody {
+      @apply [&_tr:last-child]:border-0;
+    }
+    tfoot {
+      @apply bg-muted/50 border-t font-medium [&>tr]:last:border-b-0;
+    }
+    tr {
+      @apply hover:bg-muted/50 border-b transition-colors;
+    }
+    th {
+      @apply text-foreground h-10 px-2 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px];
+    }
+    td {
+      @apply p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px];
+    }
+    caption {
+      @apply text-muted-foreground mt-4 text-sm;
+    }
+  }
+}

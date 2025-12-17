@@ -6,7 +6,7 @@ icon: info
 
 ## Why ReallySimpleDocs?
 
-There are plenty of existing templates: Mintlify, Fumadocs, Docusaurus, MkDocs... So why create another one?
+There are plenty of existing solutions to create documentation websites: Mintlify, Fumadocs, Docusaurus, MkDocs... So why create another one?
 
 I wanted something that was fast, modern, simple, and good-looking. In particular, I did not want any React.
 

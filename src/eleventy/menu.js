@@ -1,4 +1,3 @@
-// Menu slug helpers (kept framework-agnostic for future packaging).
 export const docUrl = (slug) => {
   if (slug === "index") return "/";
   if (slug.endsWith("/index")) return "/" + slug.replace(/\/index$/, "/");
@@ -40,3 +39,4 @@ export const fallbackLabelFromSlug = (slug) => {
   const base = last === "index" && parts.length > 1 ? parts[parts.length - 2] : last;
   return base.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 };
+

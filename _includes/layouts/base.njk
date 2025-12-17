@@ -32,8 +32,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   {# Title & Description #}
-  {% set meta_title = title ~ ' | ' ~ site.title  if title else site.title %}
-  {% set meta_description = description or site.description %}
+  {% set meta_description = description or site.description or "" %}
+  {% if page.url == "/" %}
+    {% set meta_title = site.title ~ ' | ' ~ meta_description %}
+  {% else %}
+    {% set meta_title = meta_description ~ ' | ' ~ site.title %}
+  {% endif %}
   <title>{{ meta_title }}</title>
   <meta name="description" content="{{ meta_description }}"/>
   <meta name="title" content="{{ meta_title }}">
@@ -56,7 +60,7 @@
   {# X/Twitter #}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="{{ siteUrl }}{{ page.url }}">
-  <meta name="twitter:title" content="{{ title if title else site.title }}">
+  <meta name="twitter:title" content="{{ meta_title }}">
   <meta name="twitter:description" content="{{ meta_description }}">
   <meta name="twitter:image" content="{{ siteUrl }}/assets/social.png">
   <meta name="twitter:creator" content="{{ site.author.x }}">
@@ -67,8 +71,7 @@
   {# JS #}
   <script src="/assets/basecoat.min.js" defer></script>
   <script src="/assets/copy-code.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/django.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
   <script>
     const highlight = () => {
       if (!window.hljs) return;

@@ -43,14 +43,18 @@
   <nav class="items-center gap-2 hidden sm:flex">
     {% for link in site.links %}
       <a
-        class="{% if link.icon and not link.label %}btn-sm-icon-ghost{% else %}btn-sm-ghost{% endif %} {{ link.class }}"
+        class="{% if link.iconOnly %}btn-sm-icon-ghost{% else %}btn-sm-ghost{% endif %} {{ link.class }}"
         href="{{ link.url }}"
-        {% for key, value in link.attrs %}
-          {% if key != "class" %}{{ key }}="{{ value }}"{% endif %}
-        {% endfor %}
+        aria-label="{{ link.label }}"
+        data-tooltip="{{ link.label }}"
+        {% if link.attrs %}
+          {% for key, value in link.attrs %}
+            {% if key != "class" %}{{ key }}="{{ value }}"{% endif %}
+          {% endfor %}
+        {% endif %}
       >
         {% if link.icon %}{{ link.icon | safe }}{% endif %}
-        {% if link.label %}{{ link.label }}{% endif %}
+        {% if not link.iconOnly %}{{ link.label }}{% endif %}
       </a>
     {% endfor %}
     <button
@@ -76,12 +80,21 @@
       <a class="btn-lg-ghost justify-between px-4" href="/">
         Home
       </a>
-      {% if site.links and site.links.github %}
-        <a class="btn-lg-ghost justify-between" href="{{ site.links.github }}" rel="noopener" target="_blank">
-          GitHub
-          {% include "logos/github.svg" %}
+      {% for link in site.links %}
+        <a
+          class="btn-lg-ghost justify-between {{ link.class }}"
+          href="{{ link.url }}"
+          {% if link.attrs %}
+            {% for key, value in link.attrs %}
+              {% if key != "class" %}{{ key }}="{{ value }}"{% endif %}
+            {% endfor %}
+          {% endif %}
+        >
+          <span>{{ link.label }}</span>
+          {% if link.icon %}{{ link.icon | safe }}{% endif %}
         </a>
-      {% endif %}
+      {% endfor %}
     </nav>
   </div>
 </div>
+

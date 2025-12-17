@@ -1,12 +1,12 @@
 {
-  "version": "0.1.0-beta.1",
+  "name": "reallysimpledocs",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "basecoat": "cp node_modules/basecoat-css/dist/js/all.min.js assets/basecoat.min.js",
     "clean": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('_site', { recursive: true, force: true });\"",
     "build": "npm run clean && npm run basecoat && npx tailwindcss -i ./src/css/styles.css -o ./assets/styles.css --minify && npx @11ty/eleventy",
-    "dev": "npm run basecoat &&  concurrently \"npx @11ty/eleventy --serve\" \"npx tailwindcss -i ./src/css/styles.css -o ./assets/styles.css --watch\"",
-    "create": "node packages/create-reallysimpledocs/bin/create-reallysimpledocs.js"
+    "dev": "npm run basecoat &&  concurrently \"npx @11ty/eleventy --serve\" \"npx tailwindcss -i ./src/css/styles.css -o ./assets/styles.css --watch\""
   },
   "dependencies": {
     "@11ty/eleventy": "^3.1.2",
@@ -14,6 +14,8 @@
     "@tailwindcss/cli": "^4.1.11",
     "basecoat-css": "^0.3.7",
     "eleventy-plugin-toc": "^1.1.5",
+    "lucide-static": "^0.552.0",
+    "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.2.0",
     "tailwindcss": "^4.1.11"
   },
