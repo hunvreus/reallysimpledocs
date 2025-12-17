@@ -21,12 +21,12 @@ layout: base
               <div role="group" class="button-group">
                 <button
                   type="button"
-                  class="btn-sm-secondary h-7 px-2.5 text-[13px]"
+                  class="btn-sm-secondary h-7 px-2.5 text-[13px] max-sm:size-7"
                   data-md-url="{{ page.url | markdownUrl }}"
                   onclick="copyPageMarkdown(this)"
                 >
                   {% lucide "copy" %}
-                  <span>Copy page</span>
+                  <span class="hidden sm:block">Copy page</span>
                 </button>
                 <hr role="separator">
                 {% set trigger %}
