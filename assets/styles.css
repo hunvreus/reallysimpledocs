@@ -230,9 +230,6 @@
   .invisible {
     visibility: hidden;
   }
-  .visible {
-    visibility: visible;
-  }
   .sr-only {
     position: absolute;
     width: 1px;
@@ -271,9 +268,6 @@
   .top-14 {
     top: calc(var(--spacing) * 14);
   }
-  .top-16 {
-    top: calc(var(--spacing) * 16);
-  }
   .top-20 {
     top: calc(var(--spacing) * 20);
   }
@@ -310,17 +304,11 @@
   .my-6 {
     margin-block: calc(var(--spacing) * 6);
   }
-  .mt-1 {
-    margin-top: calc(var(--spacing) * 1);
-  }
   .mt-1\.5 {
     margin-top: calc(var(--spacing) * 1.5);
   }
   .mt-12 {
     margin-top: calc(var(--spacing) * 12);
-  }
-  .-mr-1 {
-    margin-right: calc(var(--spacing) * -1);
   }
   .-mr-1\.5 {
     margin-right: calc(var(--spacing) * -1.5);
@@ -401,21 +389,11 @@
   .flex-1 {
     flex: 1;
   }
-  .flex-shrink {
-    flex-shrink: 1;
-  }
   .shrink-0 {
     flex-shrink: 0;
   }
-  .border-collapse {
-    border-collapse: collapse;
-  }
   .-translate-y-16 {
     --tw-translate-y: calc(var(--spacing) * -16);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
-  .translate-y-0 {
-    --tw-translate-y: calc(var(--spacing) * 0);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .scale-95 {
@@ -424,20 +402,8 @@
     --tw-scale-z: 95%;
     scale: var(--tw-scale-x) var(--tw-scale-y);
   }
-  .scale-100 {
-    --tw-scale-x: 100%;
-    --tw-scale-y: 100%;
-    --tw-scale-z: 100%;
-    scale: var(--tw-scale-x) var(--tw-scale-y);
-  }
-  .transform {
-    transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
-  }
   .cursor-text {
     cursor: text;
-  }
-  .resize {
-    resize: both;
   }
   .flex-col {
     flex-direction: column;
@@ -520,17 +486,11 @@
   .bg-sidebar-primary {
     background-color: var(--color-sidebar-primary);
   }
-  .mask-repeat {
-    mask-repeat: repeat;
-  }
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
   .p-4 {
     padding: calc(var(--spacing) * 4);
-  }
-  .px-2 {
-    padding-inline: calc(var(--spacing) * 2);
   }
   .px-2\.5 {
     padding-inline: calc(var(--spacing) * 2.5);
@@ -582,9 +542,6 @@
     --tw-tracking: var(--tracking-tight);
     letter-spacing: var(--tracking-tight);
   }
-  .text-wrap {
-    text-wrap: wrap;
-  }
   .wrap-break-word {
     overflow-wrap: break-word;
   }
@@ -594,18 +551,8 @@
   .text-sidebar-primary-foreground {
     color: var(--color-sidebar-primary-foreground);
   }
-  .underline {
-    text-decoration-line: underline;
-  }
   .opacity-0 {
     opacity: 0%;
-  }
-  .opacity-100 {
-    opacity: 100%;
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
   }
   .transition-all {
     transition-property: all;
@@ -622,16 +569,6 @@
     }
   }
   .group-aria-expanded\:hidden {
-    &:is(:where(.group)[aria-expanded="true"] *) {
-      display: none;
-    }
-  }
-  .group-aria-\[expanded\=true\]\:block {
-    &:is(:where(.group)[aria-expanded="true"] *) {
-      display: block;
-    }
-  }
-  .group-aria-\[expanded\=true\]\:hidden {
     &:is(:where(.group)[aria-expanded="true"] *) {
       display: none;
     }
@@ -665,35 +602,6 @@
       opacity: 100%;
     }
   }
-  .peer-aria-\[expanded\=true\]\:pointer-events-auto {
-    &:is(:where(.peer)[aria-expanded="true"] ~ *) {
-      pointer-events: auto;
-    }
-  }
-  .peer-aria-\[expanded\=true\]\:visible {
-    &:is(:where(.peer)[aria-expanded="true"] ~ *) {
-      visibility: visible;
-    }
-  }
-  .peer-aria-\[expanded\=true\]\:translate-y-0 {
-    &:is(:where(.peer)[aria-expanded="true"] ~ *) {
-      --tw-translate-y: calc(var(--spacing) * 0);
-      translate: var(--tw-translate-x) var(--tw-translate-y);
-    }
-  }
-  .peer-aria-\[expanded\=true\]\:scale-100 {
-    &:is(:where(.peer)[aria-expanded="true"] ~ *) {
-      --tw-scale-x: 100%;
-      --tw-scale-y: 100%;
-      --tw-scale-z: 100%;
-      scale: var(--tw-scale-x) var(--tw-scale-y);
-    }
-  }
-  .peer-aria-\[expanded\=true\]\:opacity-100 {
-    &:is(:where(.peer)[aria-expanded="true"] ~ *) {
-      opacity: 100%;
-    }
-  }
   .focus-visible\:border-ring {
     &:focus-visible {
       border-color: var(--color-ring);
@@ -711,30 +619,6 @@
       @supports (color: color-mix(in lab, red, red)) {
         --tw-ring-color: color-mix(in oklab, var(--color-ring) 50%, transparent);
       }
-    }
-  }
-  .data-\[visible\]\:visible {
-    &[data-visible] {
-      visibility: visible;
-    }
-  }
-  .data-\[visible\]\:translate-y-0 {
-    &[data-visible] {
-      --tw-translate-y: calc(var(--spacing) * 0);
-      translate: var(--tw-translate-x) var(--tw-translate-y);
-    }
-  }
-  .data-\[visible\]\:scale-100 {
-    &[data-visible] {
-      --tw-scale-x: 100%;
-      --tw-scale-y: 100%;
-      --tw-scale-z: 100%;
-      scale: var(--tw-scale-x) var(--tw-scale-y);
-    }
-  }
-  .data-\[visible\]\:opacity-100 {
-    &[data-visible] {
-      opacity: 100%;
     }
   }
   .max-sm\:size-7 {
@@ -4442,26 +4326,6 @@ code.hljs {
   inherits: false;
   initial-value: 1;
 }
-@property --tw-rotate-x {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-rotate-y {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-rotate-z {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-skew-x {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-skew-y {
-  syntax: "*";
-  inherits: false;
-}
 @property --tw-space-y-reverse {
   syntax: "*";
   inherits: false;
@@ -4483,11 +4347,6 @@ code.hljs {
 @property --tw-tracking {
   syntax: "*";
   inherits: false;
-}
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
 }
 @property --tw-shadow {
   syntax: "*";
@@ -4567,6 +4426,11 @@ code.hljs {
   syntax: "*";
   inherits: false;
 }
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -4576,17 +4440,11 @@ code.hljs {
       --tw-scale-x: 1;
       --tw-scale-y: 1;
       --tw-scale-z: 1;
-      --tw-rotate-x: initial;
-      --tw-rotate-y: initial;
-      --tw-rotate-z: initial;
-      --tw-skew-x: initial;
-      --tw-skew-y: initial;
       --tw-space-y-reverse: 0;
       --tw-border-style: solid;
       --tw-leading: initial;
       --tw-font-weight: initial;
       --tw-tracking: initial;
-      --tw-outline-style: solid;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
       --tw-shadow-alpha: 100%;
@@ -4604,6 +4462,7 @@ code.hljs {
       --tw-content: "";
       --tw-duration: initial;
       --tw-ease: initial;
+      --tw-outline-style: solid;
     }
   }
 }

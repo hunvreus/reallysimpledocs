@@ -44,7 +44,11 @@
     {% for link in site.links %}
       {% set icon = (link.icon or "") | trim %}
       <a
-        class="{% if link.iconOnly %}btn-sm-icon-ghost{% else %}btn-sm-ghost{% endif %} {{ link.class }}"
+        {% if link.attrs and link.attrs.class %}
+          class="{{ link.attrs.class }}"
+        {% else %}
+          class="{% if link.iconOnly %}btn-sm-icon-outline{% else %}btn-sm-outline{% endif %}"
+        {% endif %}
         href="{{ link.url }}"
         aria-label="{{ link.label }}"
         data-tooltip="{{ link.label }}"
@@ -72,7 +76,7 @@
       data-side="bottom"
       data-align="end"
       onclick="document.dispatchEvent(new CustomEvent('basecoat:theme'))"
-      class="btn-sm-icon-ghost size-7"
+      class="btn-sm-icon-outline size-7"
     >
       <span class="hidden dark:block">{% lucide "sun" %}</span>
       <span class="block dark:hidden">{% lucide "moon" %}</span>
