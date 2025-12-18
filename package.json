@@ -1,6 +1,6 @@
 {
   "name": "reallysimpledocs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "basecoat": "cp node_modules/basecoat-css/dist/js/all.min.js assets/basecoat.min.js",
