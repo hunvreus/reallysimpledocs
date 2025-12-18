@@ -6,6 +6,7 @@
 
 - [ ] **Full-text search**: integrate Lunr.js for full-text search on docs.
 - [ ] **Additional components**: improve and document all relevant Basecoat components (e.g. accordion, item, card, tabs)
+- [ ] **Add themes**: document shadcn/ui themes and add switcher in demo.
 
 ## Later
 
