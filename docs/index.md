@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: A minimal docs template built with Eleventy, Basecoat, and Tailwind.
+description: A really simple documentation template built with 11ty and Tailwind.
 icon: info
 ---
 
