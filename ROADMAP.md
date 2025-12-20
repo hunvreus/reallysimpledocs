@@ -1,16 +1,15 @@
 ## Now
 
-- [ ] **Pages CMS integration**: add `.pages.yml` for easy editing via https://pagescms.org.
+- [ ] **Full-text search**: integrate Lunr.js for full-text search on docs.
 
 ## Next
 
-- [ ] **Full-text search**: integrate Lunr.js for full-text search on docs.
+- [ ] **API reference**: add support for API reference.
 - [ ] **Additional components**: improve and document all relevant Basecoat components (e.g. accordion, item, card, tabs)
 - [ ] **Add themes**: document shadcn/ui themes and add switcher in demo.
 
 ## Later
 
-- [ ] **API reference**: add support for API reference.
 - [ ] **Changelog**: add support for changelog.
 - [ ] **Versions**: support version switch.
 - [ ] **Code improvements**: implement code groups (w/ tabs) and other improvements (e.g. open in codepen/llm).
