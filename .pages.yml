@@ -28,7 +28,7 @@ content:
       - name: icon
         label: Icon
         type: string
-        description: Kebab case [Lucide icon](https://lucide.dev/) name
+        description: Kebab case Lucide icon (https://lucide.dev/) name
       - name: body
         label: Body
         type: rich-text
