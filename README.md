@@ -20,6 +20,7 @@ npm run dev
 Docs:
 
 - `docs/index.md`
+- Pages CMS: `docs/content/pages-cms.md`
 
 ## Local development (this repo)
 
@@ -27,3 +28,18 @@ Docs:
 npm install
 npm run dev
 ```
+
+## Documentation
+
+Go to [ReallySimpleDocs.com](https://reallysimpledocs.com).
+
+## Support the project 
+
+- [Contribute code](/CONTRIBUTING.md)
+- [Report issues](https://github.com/hunvreus/reallysimpledocs/issues)
+- [Sponsor me](https://github.com/sponsors/hunvreus)
+- [Star the project on GitHub](https://github.com/hunvreus/reallysimpledocs)
+
+## License
+
+[MIT](/LICENSE.md)

@@ -1,0 +1,54 @@
+media: media
+
+content:
+  - name: docs
+    label: Docs
+    type: collection
+    path: docs
+    format: yaml-frontmatter
+    exclude: [docs.json]
+    filename: "{primary}.md"
+    view:
+      fields: [title, description, date]
+      primary: title
+      sort: [date, title]
+      default:
+        search: ""
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: string
+        required: true
+      - name: icon
+        label: Icon
+        type: string
+        description: Kebab case [Lucide icon](https://lucide.dev/) name
+      - name: body
+        label: Body
+        type: rich-text
+
+  - name: navigation
+    label: Navigation
+    type: file
+    path: docs/docs.json
+    format: code
+    options:
+      language: json
+
+  - name: site
+    label: Site configuration
+    type: file
+    path: _data/site.json
+    format: code
+    options:
+      language: json
+
+settings:
+  content:
+    merge: true

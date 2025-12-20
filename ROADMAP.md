@@ -14,3 +14,5 @@
 - [ ] **Changelog**: add support for changelog.
 - [ ] **Versions**: support version switch.
 - [ ] **Code improvements**: implement code groups (w/ tabs) and other improvements (e.g. open in codepen/llm).
+- [ ] **Feedback**: add widgets for sending feedback or voting on docs.
+= [ ] **Redirects**: support permalink aliases and/or redirections.

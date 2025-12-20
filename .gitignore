@@ -3,6 +3,7 @@
 !.gitkeep
 !.eleventy.js
 !.eleventyignore
+!.pages.yml
 
 _site/
 node_modules/

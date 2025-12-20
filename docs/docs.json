@@ -16,7 +16,8 @@
           "open": true,
           "items": [
             "content/navigation",
-            "content/pages"
+            "content/pages",
+            "content/pages-cms"
           ]
         }
       ]
