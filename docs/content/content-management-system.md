@@ -1,5 +1,5 @@
 ---
-title: Content Management System
+title: CMS
 description: Use Pages CMS to edit docs and navigation in user-friendly UI.
 ---
 
