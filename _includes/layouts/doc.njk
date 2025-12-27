@@ -6,8 +6,8 @@ layout: base
 {% include "partials/docs/sidebar.njk" %}
 {% set navigation = menu | getNavigation(collections) %}
 
-<main id="content">
-  <header class="bg-background sticky inset-x-0 top-0 isolate flex shrink-0 items-center gap-2 border-b z-10">
+<main id="content" data-pagefind-body>
+  <header class="bg-background sticky inset-x-0 top-0 isolate flex shrink-0 items-center gap-2 border-b z-10" data-pagefind-ignore>
     {% include "partials/docs/header.njk" %}
   </header>
 
@@ -16,7 +16,7 @@ layout: base
       <div class="mx-auto w-full max-w-2xl flex-1 space-y-10">
         <header class="space-y-2">
           <div class="flex items-start gap-x-2">
-            <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl mr-auto">{{ title }}</h1>
+            <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl mr-auto" data-pagefind-meta="title">{{ title }}</h1>
             <div class="flex items-center gap-x-2 mt-1.5">
               <div role="group" class="button-group">
                 <button
@@ -117,7 +117,7 @@ layout: base
         </footer>
       </div>
     </article>
-    <aside class="hidden xl:block w-56">
+    <aside class="hidden xl:block w-56" data-pagefind-ignore>
       <div class="sticky top-20 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-primary space-y-2 [&_ol]:space-y-2 [&_ol_ol]:pl-3 [&_ol_ol]:mt-2">
         <h2 class="font-medium flex items-center gap-1">
           {% lucide "table-of-contents", { class: "size-4" } %}

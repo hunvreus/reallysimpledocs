@@ -1,7 +1,10 @@
 {% from "macros/command.njk" import command_dialog %}
 
-{% set commandMenu = menu | commandMenu(collections) %}
-{{ command_dialog(id="command-search", items=commandMenu, placeholder="Search the docs...") }}
+{{ command_dialog(
+  id="command-search",
+  placeholder="Search the docs...",
+  dialog_attrs={ "data-pagefind-search": "true" }
+) }}
 <script>
   document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
