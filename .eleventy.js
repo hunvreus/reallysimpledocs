@@ -37,20 +37,18 @@ export default async function eleventyConfigFile(eleventyConfig) {
   const siteUrl = process.env.SITE_URL || (isServe ? "" : site?.url || "");
   eleventyConfig.addGlobalData("siteUrl", siteUrl);
 
-  // Shiki (build-time syntax highlighting)
+  // Syntax highlighting
   const shiki = await Shiki({
     themes: {
       light: "github-light-default",
       dark: "github-dark-default",
     },
-    defaultColor: false, // Use CSS vars only
+    defaultColor: false,
     colorReplacements: {
-      // Override dark theme background to match existing styling
       "github-dark-default": {
         "#24292e": "oklch(0.145 0 0)",
       },
     },
-    // Map unknown languages to similar ones
     langAlias: {
       njk: "html",
     },
@@ -58,7 +56,11 @@ export default async function eleventyConfigFile(eleventyConfig) {
   });
 
   // Markdown
-  const markdown = markdownIt({ html: true, breaks: true, linkify: true })
+  const markdown = markdownIt({
+      html: true,
+      breaks: true,
+      linkify: true,
+    })
     .use(markdownItAnchor, {
       permalink: markdownItAnchor.permalink.headerLink(),
     })

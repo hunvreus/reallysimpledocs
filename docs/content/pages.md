@@ -34,7 +34,7 @@ npm run build
 
 Code blocks get:
 
-- Syntax highlighting (Shiki, build-time)
+- Syntax highlighting (with [Shiki](https://shiki.style/))
 - A **Copy** button
 
 ## Media
