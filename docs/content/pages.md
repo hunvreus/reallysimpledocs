@@ -34,7 +34,7 @@ npm run build
 
 Code blocks get:
 
-- Syntax highlighting (highlight.js)
+- Syntax highlighting (Shiki, build-time)
 - A **Copy** button
 
 ## Media

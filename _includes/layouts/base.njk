@@ -71,20 +71,6 @@
   {# JS #}
   <script src="/assets/basecoat.min.js" defer></script>
   <script src="/assets/copy-code.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-  <script>
-    const highlight = () => {
-      if (!window.hljs) return;
-      document
-        .querySelectorAll('pre code:not([data-highlighted]), code.highlight:not([data-highlighted])')
-        .forEach(el => hljs.highlightElement(el));
-    };
-
-    if (!window._hljsInit) {
-      window._hljsInit = true;
-      document.addEventListener('DOMContentLoaded', highlight);
-    }
-  </script>
 
   {% if head %}{{ head | safe }}{% endif %}
 </head>

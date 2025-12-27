@@ -1,0 +1,22 @@
+/* Shiki syntax highlighting with CSS variables */
+
+/* Base code block styling */
+pre.shiki {
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  background-color: var(--shiki-light-bg);
+}
+
+html.dark pre.shiki {
+  background-color: var(--shiki-dark-bg);
+}
+
+/* Light theme text colors */
+.shiki span {
+  color: var(--shiki-light);
+}
+
+/* Dark theme text colors */
+html.dark .shiki span {
+  color: var(--shiki-dark);
+}
