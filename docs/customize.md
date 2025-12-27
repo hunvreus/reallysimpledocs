@@ -69,7 +69,7 @@ Tailwind compiles `src/css/styles.css` into `assets/styles.css`. If you want to 
 |------|---------|
 | `src/css/styles.css` | Tailwind entry + source scanning + imports. |
 | `src/css/custom.css` | Default content styling (prose, headings, tables). |
-| `src/css/highlight.css` | Syntax highlighting theme. |
+| `src/css/shiki.css` | Syntax highlighting theme (Shiki). |
 | `src/css/overrides.css` | Your overrides (loaded last). |
 
 ## Assets
