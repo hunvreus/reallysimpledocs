@@ -1,12 +1,12 @@
 {
   "name": "reallysimpledocs",
-  "version": "0.1.3",
+  "version": "0.2.0-beta.1",
   "type": "module",
   "scripts": {
     "basecoat": "cp node_modules/basecoat-css/dist/js/all.min.js assets/basecoat.min.js",
     "clean": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('_site', { recursive: true, force: true });\"",
-    "build": "npm run clean && npm run basecoat && npx tailwindcss -i ./src/css/styles.css -o ./assets/styles.css --minify && npx @11ty/eleventy",
-    "dev": "npm run basecoat &&  concurrently \"npx @11ty/eleventy --serve\" \"npx tailwindcss -i ./src/css/styles.css -o ./assets/styles.css --watch\""
+    "build": "npm run clean && npm run basecoat && npx tailwindcss -i ./src/css/styles.css -o ./assets/styles.css --minify && npx @11ty/eleventy && npx pagefind --site _site",
+    "dev": "npm run basecoat && npx @11ty/eleventy && npx pagefind --site _site && concurrently \"npx @11ty/eleventy --serve\" \"npx tailwindcss -i ./src/css/styles.css -o ./assets/styles.css --watch\""
   },
   "dependencies": {
     "@11ty/eleventy": "^3.1.2",
@@ -20,6 +20,7 @@
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
-    "concurrently": "^9.2.0"
+    "concurrently": "^9.2.0",
+    "pagefind": "^1.4.0"
   }
 }
