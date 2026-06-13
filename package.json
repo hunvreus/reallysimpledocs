@@ -20,20 +20,23 @@
     "check": "npm run build && npm pack --dry-run && npm run smoke:consumer"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
     "@tailwindcss/vite": "4.1.17",
-    "astro": "^5.16.4",
+    "astro": "^6.4.6",
     "github-slugger": "^2.0.0",
     "lucide-static": "^0.552.0",
     "lunr": "^2.3.9",
     "marked": "^16.4.1",
     "shiki": "^4.1.0",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "4.1.17"
   },
   "peerDependencies": {
     "basecoat-css": "^1.0.0-beta.1"
   },
   "devDependencies": {
     "basecoat-css": "^1.0.0-beta.1"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1",
+    "picomatch": "^4.0.4"
   }
 }
