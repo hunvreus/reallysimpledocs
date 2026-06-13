@@ -1,12 +1,9 @@
----
-title: Navigation
-description: Configure groups, items, and submenus in `docs/docs.json`.
----
+# Navigation
 
 Navigation is defined in `docs/docs.json` under `menu`. This `menu` powers:
 
 - The sidebar menu,
-- The command menu (⌘K / Ctrl+K),
+- The search index,
 - Previous and next links on each page.
 
 ## Schema
@@ -38,7 +35,7 @@ Rules:
 The UI is derived from that structure:
 
 - Sidebar renders the tree as-is.
-- Command menu + prev/next flatten the tree to page slugs (in order).
+- Search, previous links, and next links flatten the tree to page slugs (in order).
 
 ### Group
 
@@ -53,6 +50,7 @@ The UI is derived from that structure:
 | Shape | Type | Notes |
 |------|------|------|
 | `"content/pages"` | `string` | Slug (path without `.md`). |
+| `{ "slug": "content/pages", "icon": "fileText" }` | `object` | Page slug with a sidebar icon. |
 
 ### Submenu
 
@@ -60,7 +58,7 @@ The UI is derived from that structure:
 |-----|------|----------|------|
 | `type` | `"submenu"` | Yes | Submenu container. |
 | `label` | `string` | Yes | Label shown in the sidebar. |
-| `icon` | `string` | No | Lucide icon name (kebab-case). |
+| `icon` | `string` | No | Lucide icon name (`fileText` or `file-text`). |
 | `open` | `boolean` | No | Default open state. |
 | `items` | `array` | Yes | Page slugs or nested submenus. |
 
@@ -74,25 +72,12 @@ The UI is derived from that structure:
 
 ## Icons
 
-Icons are always [**Lucide names**](https://lucide.dev/). They get converted to SVG at build time.
-
-### Page icon
-
-```yaml
----
-title: Install
-icon: package
----
-```
-
-### Submenu icon
+Icons are [Lucide names](https://lucide.dev/). Use camelCase or kebab-case. They get converted to SVG at build time.
 
 ```json
 {
-  "type": "submenu",
-  "label": "Manage content",
-  "icon": "file-text",
-  "items": ["content/index", "content/navigation", "content/pages"]
+  "slug": "content/pages",
+  "icon": "fileText"
 }
 ```
 
@@ -105,7 +90,11 @@ icon: package
     {
       "type": "group",
       "label": "Getting started",
-      "items": ["install", "customize", "content/index"]
+      "items": [
+        { "slug": "install", "icon": "package" },
+        { "slug": "customize", "icon": "slidersVertical" },
+        "content/index"
+      ]
     },
     {
       "type": "submenu",

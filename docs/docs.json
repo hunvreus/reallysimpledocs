@@ -6,9 +6,9 @@
       "type": "group",
       "label": "Getting started",
       "items": [
-        "index",
-        "install",
-        "customize",
+        { "slug": "index", "icon": "info" },
+        { "slug": "install", "icon": "package" },
+        { "slug": "customize", "icon": "slidersVertical" },
         {
           "type": "submenu",
           "label": "Manage content",

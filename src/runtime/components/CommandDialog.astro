@@ -1,0 +1,269 @@
+---
+import { renderCommandDialog } from "../lib/macros.js";
+
+const { indexUrl } = Astro.props;
+---
+
+<div data-rsd-command-search data-index-url={indexUrl}>
+  <Fragment
+    set:html={renderCommandDialog({
+      id: "command-search",
+      items: [],
+      emptyText: "Type to search docs.",
+      commandAttrs: { "data-filter": "manual" },
+    })}
+  />
+</div>
+
+<script>
+  import lunr from "lunr";
+
+  const root = document.querySelector("[data-rsd-command-search]");
+  const indexUrl = root?.getAttribute("data-index-url");
+  const dialog = document.getElementById("command-search");
+  const command = dialog?.querySelector(".command");
+  const input = dialog?.querySelector("header input");
+  const menu = dialog?.querySelector('[role="menu"]');
+  const state = {
+    loadPromise: null,
+    index: null,
+    documents: [],
+    bySlug: new Map(),
+  };
+  const MAX_RESULTS = 20;
+  const SNIPPET_RADIUS = 80;
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function refreshCommand() {
+    if (!command) return;
+    if (typeof command.refresh !== "function") window.basecoat?.initAll?.();
+    if (typeof command.refresh === "function") {
+      command.refresh();
+    } else {
+      window.basecoat?.refresh?.(command);
+    }
+  }
+
+  function mergeSpans(spans) {
+    const sorted = spans
+      .filter(([start, end]) => end > start)
+      .sort((a, b) => a[0] - b[0]);
+    const merged = [];
+    sorted.forEach(([start, end]) => {
+      const last = merged.at(-1);
+      if (last && start <= last[1]) {
+        last[1] = Math.max(last[1], end);
+      } else {
+        merged.push([start, end]);
+      }
+    });
+    return merged;
+  }
+
+  function rangesFromMatch(match, field) {
+    if (!match?.matchData?.metadata) return [];
+    return mergeSpans(
+      Object.values(match.matchData.metadata)
+        .flatMap((metadata) => metadata?.[field]?.position || [])
+        .map(([start, length]) => [start, start + length]),
+    );
+  }
+
+  function queryTerms(query) {
+    return query
+      .toLowerCase()
+      .match(/[\p{L}\p{N}_]+/gu)
+      ?.filter(Boolean) || [];
+  }
+
+  function refineRanges(text, ranges, query) {
+    const terms = queryTerms(query);
+    if (!terms.length) return ranges;
+
+    const refined = ranges.flatMap(([start, end]) => {
+      const value = text.slice(start, end);
+      const lower = value.toLowerCase();
+      const termRanges = terms.flatMap((term) => {
+        const matches = [];
+        let index = lower.indexOf(term);
+        while (index > -1) {
+          matches.push([start + index, start + index + term.length]);
+          index = lower.indexOf(term, index + term.length);
+        }
+        return matches;
+      });
+      return termRanges.length ? termRanges : [[start, end]];
+    });
+
+    return mergeSpans(refined);
+  }
+
+  function highlightRanges(text, ranges) {
+    if (!ranges.length) return escapeHtml(text);
+    let cursor = 0;
+    let html = "";
+    ranges.forEach(([start, end]) => {
+      if (start > cursor) html += escapeHtml(text.slice(cursor, start));
+      html += `<mark>${escapeHtml(text.slice(start, end))}</mark>`;
+      cursor = end;
+    });
+    if (cursor < text.length) html += escapeHtml(text.slice(cursor));
+    return html;
+  }
+
+  function clampSnippetStart(text, start) {
+    if (start <= 0) return 0;
+    const space = text.lastIndexOf(" ", start);
+    return space > 0 ? space + 1 : start;
+  }
+
+  function clampSnippetEnd(text, end) {
+    if (end >= text.length) return text.length;
+    const space = text.indexOf(" ", end);
+    return space > -1 ? space : end;
+  }
+
+  function snippetFromBody(body, ranges) {
+    const text = String(body || "");
+    if (!text || !ranges.length) return "";
+
+    const first = ranges[0];
+    const start = clampSnippetStart(text, Math.max(0, first[0] - SNIPPET_RADIUS));
+    const end = clampSnippetEnd(text, Math.min(text.length, first[1] + SNIPPET_RADIUS));
+    const snippet = text.slice(start, end);
+    const offsetRanges = ranges
+      .map(([rangeStart, rangeEnd]) => [rangeStart - start, rangeEnd - start])
+      .filter(([rangeStart, rangeEnd]) => rangeEnd > 0 && rangeStart < snippet.length)
+      .map(([rangeStart, rangeEnd]) => [Math.max(0, rangeStart), Math.min(snippet.length, rangeEnd)]);
+
+    return `${start > 0 ? "..." : ""}${highlightRanges(snippet, mergeSpans(offsetRanges))}${end < text.length ? "..." : ""}`;
+  }
+
+  function resultView(result, query) {
+    const doc = result.doc || result;
+    if (!query.trim()) {
+      return {
+        path: doc.path,
+        title: escapeHtml(doc.title),
+        snippet: "",
+      };
+    }
+
+    const titleRanges = refineRanges(doc.title, rangesFromMatch(result.match, "title"), query);
+    const bodyRanges = refineRanges(doc.body, rangesFromMatch(result.match, "body"), query);
+    return {
+      path: doc.path,
+      title: highlightRanges(doc.title, titleRanges),
+      snippet: snippetFromBody(doc.body, bodyRanges),
+    };
+  }
+
+  function renderItems(items, label, query = "") {
+    if (!menu) return;
+    if (!items.length) {
+      menu.innerHTML = "";
+      refreshCommand();
+      return;
+    }
+
+    menu.innerHTML = `<div role="group" aria-labelledby="command-search-results-heading">
+      <span role="heading" id="command-search-results-heading">${escapeHtml(label)}</span>
+      ${items
+        .map((item, index) => {
+          const view = resultView(item, query);
+          return `<a id="command-search-result-${index}" role="menuitem" data-force data-rsd-search-result href="${escapeHtml(view.path)}">
+            <span data-rsd-search-title>${view.title}</span>
+            ${view.snippet ? `<span data-rsd-search-snippet>${view.snippet}</span>` : ""}
+          </a>`;
+        })
+      .join("")}
+    </div>`;
+    refreshCommand();
+  }
+
+  function renderLoading() {
+    if (!menu) return;
+    menu.innerHTML = `<div role="group" aria-labelledby="command-search-loading-heading">
+      <span role="heading" id="command-search-loading-heading">Search</span>
+      <div role="menuitem" aria-disabled="true" data-force><span>Loading...</span></div>
+    </div>`;
+    refreshCommand();
+  }
+
+  async function loadIndex() {
+    if (state.index) return state;
+    if (!indexUrl) throw new Error("Missing RSD search index URL.");
+    if (!state.loadPromise) {
+      renderLoading();
+      state.loadPromise = fetch(indexUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          state.documents = data.documents || [];
+          state.bySlug = new Map(state.documents.map((doc) => [doc.slug, doc]));
+          state.index = lunr.Index.load(data.index);
+          return state;
+        });
+    }
+    return state.loadPromise;
+  }
+
+  function search(query) {
+    const normalized = query.trim();
+    if (!normalized) return state.documents;
+
+    const terms = normalized.match(/[\p{L}\p{N}_]+/gu) || [];
+    if (!terms.length) return [];
+
+    let matches = [];
+    try {
+      matches = state.index.search(terms.join(" "));
+      if (!matches.length) matches = state.index.search(terms.map((term) => `${term}*`).join(" "));
+    } catch {
+      matches = [];
+    }
+
+    return matches
+      .map((match) => {
+        const doc = state.bySlug.get(match.ref);
+        return doc ? { doc, match } : null;
+      })
+      .filter(Boolean);
+  }
+
+  async function refreshResults() {
+    await loadIndex();
+    const query = input?.value || "";
+    const results = search(query).slice(0, MAX_RESULTS);
+    renderItems(results, query.trim() ? "Results" : "Docs", query);
+  }
+
+  window.rsdOpenCommandSearch = async () => {
+    if (!dialog || !input) return;
+    if (!dialog.open) dialog.showModal();
+    input.focus();
+    await refreshResults();
+  };
+
+  input?.addEventListener("input", () => {
+    refreshResults();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      if (!dialog) return;
+      if (dialog.open) {
+        dialog.close();
+      } else {
+        window.rsdOpenCommandSearch?.();
+      }
+    }
+  });
+</script>

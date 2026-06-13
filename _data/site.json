@@ -14,8 +14,13 @@
             "attrs": {
                 "rel": "noopener",
                 "target": "_blank",
-                "class": "btn-sm h-7"
+                "class": "btn-sm"
             }
         }
-    ]
+    ],
+    "assets": {
+        "favicon": "favicon.svg",
+        "appleTouchIcon": "apple-touch-icon.png",
+        "socialImage": "social.png"
+    }
 }

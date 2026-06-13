@@ -1,26 +1,65 @@
 # ReallySimpleDocs
 
-A simple documentation site template built with **Eleventy (11ty)**, **Basecoat**, and **Tailwind CSS**.
+A simple documentation system for Astro, built with **Basecoat** and **Tailwind CSS**.
 
-## Create a new site
+RSD keeps docs portable: content lives in `docs/`, navigation lives in `docs/docs.json`, and the Astro integration owns the docs UI.
 
-```bash
-npm create reallysimpledocs@latest my-docs
-# or: npx create-reallysimpledocs@latest my-docs
-```
-
-Then:
+## Add to an Astro site
 
 ```bash
-cd my-docs
-npm install
-npm run dev
+npm install reallysimpledocs@beta basecoat-css@beta
 ```
 
-Docs:
+Add the integration:
 
-- `docs/index.md`
-- Pages CMS: `docs/content/pages-cms.md`
+```js
+// astro.config.mjs
+import { defineConfig } from "astro/config";
+import reallySimpleDocs from "reallysimpledocs/astro";
+
+export default defineConfig({
+  integrations: [
+    reallySimpleDocs({
+      docsDir: "./docs",
+      routeBase: "/docs",
+      style: "vega",
+      customCss: ["./src/docs.css"],
+      site: {
+        title: "ReallySimpleDocs",
+        description: "A simple documentation system for Astro.",
+      },
+    }),
+  ],
+});
+```
+
+Create docs:
+
+```text
+docs/
+├── docs.json
+└── index.md
+```
+
+```json
+{
+  "menu": [
+    {
+      "type": "group",
+      "label": "Docs",
+      "items": [{ "slug": "index", "icon": "info" }]
+    }
+  ]
+}
+```
+
+```md
+# Introduction
+
+Welcome to the docs.
+```
+
+RSD injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
 
 ## Local development (this repo)
 

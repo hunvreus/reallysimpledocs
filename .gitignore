@@ -1,10 +1,10 @@
 .*
 !.gitignore
 !.gitkeep
-!.eleventy.js
-!.eleventyignore
 !.pages.yml
 
-_site/
+dist/
+.astro/
 node_modules/
 tmp-*/
+.tmp/

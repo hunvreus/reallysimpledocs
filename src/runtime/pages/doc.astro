@@ -1,0 +1,20 @@
+---
+import config from "virtual:reallysimpledocs/config";
+import DocsLayout from "../components/DocsLayout.astro";
+import { getPages, renderDoc } from "../lib/docs.js";
+import { routeSlug } from "../lib/paths.js";
+
+export function getStaticPaths() {
+  return getPages(config).map((page) => ({
+    params: { slug: routeSlug(page.slug) },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const doc = await renderDoc(config, page);
+---
+
+<DocsLayout page={page} headings={doc.headings}>
+  <Fragment set:html={doc.html} />
+</DocsLayout>

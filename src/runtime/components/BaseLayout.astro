@@ -1,0 +1,83 @@
+---
+import "virtual:reallysimpledocs/styles.css";
+import config from "virtual:reallysimpledocs/config";
+import { getSite } from "../lib/site.js";
+
+const { title, description, pagePath = "/" } = Astro.props;
+const site = getSite(config);
+const metaDescription = description || site.description || "";
+const metaTitle = pagePath === "/" ? `${site.title} | ${metaDescription}` : `${title || metaDescription} | ${site.title}`;
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") || site.url || "";
+const absoluteUrl = `${siteUrl}${pagePath}`;
+const assetsBase = config.assetsBase || "/assets";
+const favicon = site.assets?.favicon || site.favicon || "";
+const appleTouchIcon = site.assets?.appleTouchIcon || site.appleTouchIcon || "";
+const socialImage = site.assets?.socialImage || site.socialImage || "";
+const assetPath = (value) => {
+  const path = String(value || "");
+  if (!path || path.startsWith("http") || path.startsWith("/")) return path;
+  return `${assetsBase.replace(/\/$/, "")}/${path}`;
+};
+const absoluteAssetUrl = (value) => {
+  const path = assetPath(value);
+  return path.startsWith("http") ? path : `${siteUrl}${path}`;
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem("themeMode");
+          if (stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (_) {}
+
+        const apply = (dark) => {
+          document.documentElement.classList.toggle("dark", dark);
+          try {
+            localStorage.setItem("themeMode", dark ? "dark" : "light");
+          } catch (_) {}
+        };
+
+        document.addEventListener("basecoat:theme", (event) => {
+          const mode = event.detail?.mode;
+          apply(mode === "dark" ? true : mode === "light" ? false : !document.documentElement.classList.contains("dark"));
+        });
+      })();
+    </script>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <meta name="title" content={metaTitle} />
+    {site.keywords && <meta name="keywords" content={site.keywords.join(",")} />}
+    {favicon && <link rel="icon" type="image/svg+xml" href={assetPath(favicon)} />}
+    {appleTouchIcon && <link rel="apple-touch-icon" sizes="180x180" href={assetPath(appleTouchIcon)} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={absoluteUrl} />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:description" content={metaDescription} />
+    {socialImage && <meta property="og:image" content={absoluteAssetUrl(socialImage)} />}
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:locale" content="en_US" />
+    {site.author?.name && <meta property="og:author" content={site.author.name} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={absoluteUrl} />
+    <meta name="twitter:title" content={metaTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    {socialImage && <meta name="twitter:image" content={absoluteAssetUrl(socialImage)} />}
+    {site.author?.x && <meta name="twitter:creator" content={site.author.x} />}
+    <script>
+      import "basecoat-css/all.min";
+      import "../scripts/copy-code.js";
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

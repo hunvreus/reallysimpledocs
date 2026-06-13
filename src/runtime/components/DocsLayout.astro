@@ -1,0 +1,287 @@
+---
+import config from "virtual:reallysimpledocs/config";
+import ArrowLeft from "lucide-static/icons/arrow-left.svg?raw";
+import ArrowRight from "lucide-static/icons/arrow-right.svg?raw";
+import Check from "lucide-static/icons/check.svg?raw";
+import Copy from "lucide-static/icons/copy.svg?raw";
+import Menu from "lucide-static/icons/menu.svg?raw";
+import Moon from "lucide-static/icons/moon.svg?raw";
+import PanelLeft from "lucide-static/icons/panel-left.svg?raw";
+import Search from "lucide-static/icons/search.svg?raw";
+import Sun from "lucide-static/icons/sun.svg?raw";
+import X from "lucide-static/icons/x.svg?raw";
+import ClaudeLogo from "../../icons/logos/claude.svg?raw";
+import CursorLogo from "../../icons/logos/cursor.svg?raw";
+import MarkdownLogo from "../../icons/logos/markdown.svg?raw";
+import OpenAILogo from "../../icons/logos/openai.svg?raw";
+import BaseLayout from "./BaseLayout.astro";
+import CommandDialog from "./CommandDialog.astro";
+import DropdownMenu from "./DropdownMenu.astro";
+import Sidebar from "./Sidebar.astro";
+import { buildMenus, getNavigation } from "../lib/docs.js";
+import { addSvgClass } from "../lib/html.js";
+import { routeFilePath } from "../lib/paths.js";
+import { getSite } from "../lib/site.js";
+
+const { page, headings } = Astro.props;
+const site = getSite(config);
+const navigation = getNavigation(config, page);
+const { sidebar } = buildMenus(config, page.slug);
+const searchIndexUrl = routeFilePath(config.routeBase, "search-index.json");
+const panelLeftIcon = addSvgClass(PanelLeft, "size-4");
+const searchIcon = addSvgClass(Search, "size-4");
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") || site.url || "";
+const pageUrl = `${siteUrl}${page.path}`;
+const llmPrompt = `Read from ${pageUrl} so I can ask questions about it.`;
+const actionItems = [
+  {
+    icon: MarkdownLogo,
+    label: "View as Markdown",
+    url: page.markdownPath,
+    target: "_blank",
+    rel: "noopener",
+  },
+  {
+    icon: OpenAILogo,
+    label: "Open in ChatGPT",
+    url: `https://chatgpt.com/?q=${encodeURIComponent(llmPrompt)}`,
+    target: "_blank",
+    rel: "noopener",
+  },
+  {
+    icon: ClaudeLogo,
+    label: "Open in Claude",
+    url: `https://claude.ai/new?q=${encodeURIComponent(llmPrompt)}`,
+    target: "_blank",
+    rel: "noopener",
+  },
+  {
+    icon: CursorLogo,
+    label: "Open in Cursor",
+    url: `cursor://anysphere.cursor-deeplink/prompt?text=${encodeURIComponent(llmPrompt)}`,
+    target: "_blank",
+    rel: "noopener",
+  },
+];
+---
+
+<BaseLayout title={page.title} description={site.description} pagePath={page.path}>
+  <CommandDialog indexUrl={searchIndexUrl} />
+  <Sidebar menu={sidebar} />
+
+  <main id="content">
+    <header class="bg-background sticky inset-x-0 top-0 isolate z-10 flex shrink-0 items-center gap-2 border-b">
+      <div class="flex h-14 w-full items-center justify-between gap-2 px-4">
+        <button
+          type="button"
+          onclick="document.getElementById('sidebar')?.toggle()"
+          aria-label="Toggle sidebar"
+          data-tooltip="Toggle sidebar"
+          data-side="bottom"
+          data-align="start"
+          class="btn-sm-icon-ghost"
+        >
+          <Fragment set:html={panelLeftIcon} />
+        </button>
+
+        <button
+          type="button"
+          class="relative flex h-8 w-full min-w-0 max-w-72 cursor-text items-center gap-x-2 rounded-md border border-input bg-background px-3 py-1 text-base text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 sm:ml-auto md:text-sm"
+          onclick="window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal()"
+        >
+          <Fragment set:html={searchIcon} />
+          Search the docs...
+          <kbd class="kbd ml-auto -mr-1.5">⌘K</kbd>
+        </button>
+
+        <nav class="hidden items-center gap-2 sm:flex">
+          {
+            (site.links || []).map((link) => (
+              <a
+                class={link.attrs?.class || "btn-sm-outline"}
+                href={link.url}
+                aria-label={link.label}
+                data-tooltip={link.label}
+                data-side="bottom"
+                target={link.attrs?.target}
+                rel={link.attrs?.rel}
+              >
+                {link.icon && <Fragment set:html={link.icon} />}
+                {!link.iconOnly && link.label}
+              </a>
+            ))
+          }
+          <button
+            type="button"
+            aria-label="Toggle dark mode"
+            data-tooltip="Toggle dark mode"
+            data-side="bottom"
+            data-align="end"
+            onclick="document.dispatchEvent(new CustomEvent('basecoat:theme'))"
+            class="btn-sm-icon-outline"
+          >
+            <span class="hidden dark:block"><Fragment set:html={Sun} /></span>
+            <span class="block dark:hidden"><Fragment set:html={Moon} /></span>
+          </button>
+        </nav>
+
+        <div class="sm:hidden">
+          <button
+            type="button"
+            class="btn-sm-icon-ghost peer group"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"
+          >
+            <span class="group-aria-expanded:hidden"><Fragment set:html={Menu} /></span>
+            <span class="hidden group-aria-expanded:block"><Fragment set:html={X} /></span>
+          </button>
+          <nav
+            id="mobile-menu"
+            class="fixed inset-0 top-14 z-50 flex invisible -translate-y-16 scale-95 flex-col gap-2 bg-background p-4 opacity-0 transition-all pointer-events-none peer-aria-expanded:visible peer-aria-expanded:translate-y-0 peer-aria-expanded:scale-100 peer-aria-expanded:opacity-100 peer-aria-expanded:pointer-events-auto"
+            data-mobile-menu
+          >
+            {
+              (site.links || []).map((link) => (
+                <a class="btn-lg-ghost justify-between" href={link.url} target={link.attrs?.target} rel={link.attrs?.rel}>
+                  <span>{link.label}</span>
+                  {link.icon && <Fragment set:html={link.icon} />}
+                </a>
+              ))
+            }
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex gap-10 p-4 md:p-6 xl:p-12">
+      <article class="min-w-0 flex-1 wrap-break-word">
+        <div class="mx-auto w-full max-w-2xl flex-1 space-y-10">
+          <header class="space-y-2">
+            <div class="flex items-start gap-x-2">
+              <h1 class="mr-auto text-3xl font-semibold tracking-tight sm:text-4xl">{page.title}</h1>
+              <div class="mt-1 flex items-center gap-x-2">
+                <div role="group" class="button-group">
+                  <button
+                    type="button"
+                    class="btn-sm-secondary"
+                    data-md-url={page.markdownPath}
+                    onclick="copyPageMarkdown(this)"
+                  >
+                    <span data-copy-icon><Fragment set:html={Copy} /></span>
+                    <span data-check-icon class="hidden"><Fragment set:html={Check} /></span>
+                    <span>Copy page</span>
+                  </button>
+                  <hr role="separator" />
+                  <DropdownMenu items={actionItems} />
+                </div>
+                <div role="group" class="button-group">
+                  {
+                    navigation.prev && (
+                      <a href={navigation.prev.path} class="btn-sm-icon-secondary">
+                        <span class="sr-only">{navigation.prev.title}</span>
+                        <Fragment set:html={ArrowLeft} />
+                      </a>
+                    )
+                  }
+                  {navigation.prev && navigation.next && <hr role="separator" />}
+                  {
+                    navigation.next && (
+                      <a href={navigation.next.path} class="btn-sm-icon-secondary">
+                        <span class="sr-only">{navigation.next.title}</span>
+                        <Fragment set:html={ArrowRight} />
+                      </a>
+                    )
+                  }
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="prose">
+            <slot />
+          </div>
+          <footer class="mt-12 flex items-center">
+            {
+              navigation.prev && (
+                <a href={navigation.prev.path} class="btn-sm-secondary mr-auto">
+                  <Fragment set:html={ArrowLeft} />
+                  {navigation.prev.title}
+                </a>
+              )
+            }
+            {
+              navigation.next && (
+                <a href={navigation.next.path} class="btn-sm-secondary ml-auto">
+                  {navigation.next.title}
+                  <Fragment set:html={ArrowRight} />
+                </a>
+              )
+            }
+          </footer>
+        </div>
+      </article>
+      <aside class="hidden w-56 xl:block">
+        <div class="docs-toc sticky top-20 space-y-2 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-primary [&_ol]:space-y-2 [&_ol_ol]:mt-2 [&_ol_ol]:pl-3">
+          <h2 class="flex items-center gap-1 font-medium">
+            On this page
+          </h2>
+          <ol>
+            {
+              headings.map((heading) => (
+                <li class={heading.depth === 3 ? "pl-3" : ""}>
+                  <a href={`#${heading.id}`}>{heading.text}</a>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script is:inline>
+    async function copyPageMarkdown(button) {
+      const markdownUrl = button?.dataset?.mdUrl;
+      if (!markdownUrl) return;
+      const copyIcon = button.querySelector("[data-copy-icon]");
+      const checkIcon = button.querySelector("[data-check-icon]");
+
+      try {
+        const response = await fetch(markdownUrl, { credentials: "same-origin", cache: "no-store" });
+        if (!response.ok) throw new Error("Failed to fetch markdown");
+        const markdown = await response.text();
+        await writeToClipboard(markdown);
+        if (copyIcon && checkIcon) {
+          copyIcon.classList.add("hidden");
+          checkIcon.classList.remove("hidden");
+          window.setTimeout(() => {
+            copyIcon.classList.remove("hidden");
+            checkIcon.classList.add("hidden");
+          }, 1200);
+        }
+      } catch (_) {
+        window.open(new URL(markdownUrl, window.location.href).toString(), "_blank", "noopener");
+      }
+    }
+
+    async function writeToClipboard(text) {
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "-9999px";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!ok) throw new Error("Copy failed");
+    }
+  </script>
+</BaseLayout>

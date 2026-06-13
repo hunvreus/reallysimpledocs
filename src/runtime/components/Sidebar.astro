@@ -1,0 +1,20 @@
+---
+import config from "virtual:reallysimpledocs/config";
+import SidebarHeader from "virtual:reallysimpledocs/components/SidebarHeader";
+import { renderSidebarContent } from "../lib/macros.js";
+import { getSite } from "../lib/site.js";
+
+const { menu } = Astro.props;
+const site = getSite(config);
+---
+
+<aside id="sidebar" class="sidebar" data-side="left" aria-hidden="false">
+  <nav aria-label="Sidebar navigation">
+    <header>
+      <SidebarHeader site={site} />
+    </header>
+    <section class="scrollbar">
+      <Fragment set:html={renderSidebarContent(menu, "sidebar-content")} />
+    </section>
+  </nav>
+</aside>

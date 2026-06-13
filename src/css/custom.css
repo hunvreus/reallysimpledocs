@@ -1,3 +1,7 @@
+@theme {
+  --color-search-highlight: oklch(90.5% 0.182 98.111);
+}
+
 .prose {
   @apply my-6;
 
@@ -27,11 +31,14 @@
   code:not(pre > code) {
     @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[13px];
   }
+  pre {
+    @apply rounded-lg;
+  }
   pre > code {
-    @apply bg-muted dark:bg-muted/50 block rounded-lg px-4 py-3 text-[13px];  
+    @apply block min-w-full w-max px-4 py-3 text-[13px];
   }
   pre:has(> code) {
-    @apply relative;
+    @apply relative max-w-full overflow-x-auto;
   }
   pre:has(> code) > button {
     @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
@@ -110,4 +117,41 @@
       @apply text-muted-foreground mt-4 text-sm;
     }
   }
+}
+
+.shiki {
+  @apply bg-muted dark:bg-muted/50;
+  color: var(--shiki-light);
+}
+
+.shiki span {
+  color: var(--shiki-light);
+}
+
+html.dark .shiki {
+  color: var(--shiki-dark);
+}
+
+html.dark .shiki span {
+  color: var(--shiki-dark);
+}
+
+#command-search > .command {
+  @apply sm:max-w-2xl;
+}
+
+.command [data-rsd-search-result] {
+  @apply flex-col items-start gap-1;
+}
+
+.command [data-rsd-search-title] {
+  @apply font-medium;
+}
+
+.command [data-rsd-search-snippet] {
+  @apply text-muted-foreground line-clamp-2 text-xs font-normal leading-snug;
+}
+
+.command mark {
+  @apply bg-search-highlight/50 text-foreground rounded-sm px-0.5 dark:bg-search-highlight/25;
 }

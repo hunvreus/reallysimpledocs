@@ -1,31 +1,58 @@
----
-title: Install
-description: Create a new docs site and deploy it.
-icon: package
----
+# Install
 
-## Create your docs
+## Add RSD to Astro
 
-1. Create a new project using [the GitHub template](https://github.com/hunvreus/reallysimpledocs/generate) or the CLI:
+1. Install the integration and Basecoat:
     ```bash
-    npm create reallysimpledocs@latest my-docs
-    # or: npx create-reallysimpledocs@latest my-docs
+    npm install reallysimpledocs@beta basecoat-css@beta
     ```
-2. Install dependencies:
-    ```bash
-    cd my-docs && npm install
+2. Add RSD to `astro.config.mjs`:
+    ```js
+    import { defineConfig } from "astro/config";
+    import reallySimpleDocs from "reallysimpledocs/astro";
+
+    export default defineConfig({
+      integrations: [
+        reallySimpleDocs({
+          docsDir: "./docs",
+          routeBase: "/docs",
+          site: {
+            title: "My docs",
+            description: "Documentation for my project.",
+          },
+        }),
+      ],
+    });
     ```
-3. Start the dev server:
+3. Create `docs/docs.json`:
+    ```json
+    {
+      "menu": [
+        {
+          "type": "group",
+          "label": "Docs",
+          "items": [{ "slug": "index", "icon": "info" }]
+        }
+      ]
+    }
+    ```
+4. Create `docs/index.md`:
+    ```md
+    # Introduction
+
+    Welcome to the docs.
+    ```
+5. Start the dev server:
     ```bash
     npm run dev
     ```
-4. Open up the site at `http://localhost:8080`
+6. Open the site at the URL printed by Astro.
 
-You can then [customize your site](/customize/) and [write docs](/content/).
+You can then [customize your site](/customize/) and [write docs](/content/pages/).
 
 ## Deploy
 
-Build the site with `npm run build` and upload `_site/` to a static host:
+Build the site with `npm run build` and upload `dist/` to a static host:
 
 - [Cloudflare Pages](https://pages.cloudflare.com)
 - [GitHub Pages](https://docs.github.com/en/pages)
@@ -34,14 +61,18 @@ Build the site with `npm run build` and upload `_site/` to a static host:
 
 ## Upgrade
 
-This template is intentionally simple: the easiest “upgrade” flow is to scaffold a fresh copy and move your content back in.
+RSD is an Astro integration. Upgrade it through your package manager:
 
-1. Scaffold a new copy (next version).
-2. Copy your content and config:
-   - `docs/`
-   - `docs/docs.json`
-   - `_data/site.json`
-   - `media/` (if you use it)
-3. Re-apply any local customizations you made in:
-   - `_includes/`
-   - `src/css/overrides.css`
+```bash
+npm install reallysimpledocs@beta basecoat-css@beta
+```
+
+Keep your project-owned content and config:
+
+| Path | Purpose |
+|------|---------|
+| `docs/` | Markdown content. |
+| `docs/docs.json` | Navigation. |
+| `astro.config.mjs` | Integration config, site metadata, and header links. |
+| `public/media/` | Images and files used by docs content. |
+| `src/docs.css` | Optional custom CSS imported with `customCss`. |

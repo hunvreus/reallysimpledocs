@@ -1,0 +1,22 @@
+---
+import ChevronDown from "lucide-static/icons/chevron-down.svg?raw";
+import { renderDropdownMenu } from "../lib/macros.js";
+
+const { items } = Astro.props;
+---
+
+<Fragment
+  set:html={renderDropdownMenu({
+    id: "page-actions",
+    trigger: ChevronDown,
+    items: items.map((item) => ({
+      ...item,
+      attrs: {
+        target: item.target,
+        rel: item.rel,
+      },
+    })),
+    triggerAttrs: { class: "btn-sm-icon-secondary" },
+    popoverAttrs: { "data-align": "end" },
+  })}
+/>

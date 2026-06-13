@@ -1,23 +1,19 @@
----
-title: Introduction
-description: A really simple documentation template built with 11ty and Tailwind.
-icon: info
----
+# Introduction
 
 ## Why ReallySimpleDocs?
 
 There are plenty of existing solutions to create documentation websites: Mintlify, Fumadocs, Docusaurus, MkDocs... So why create another one?
 
-I wanted something that was fast, modern, simple, and good-looking. In particular, I did not want any React.
+I wanted something fast, modern, simple, and good-looking. I also wanted docs content to stay portable.
 
-So I built ReallySimpleDocs with [11ty](https://11ty.dev) and [Basecoat](https://basecoatui.com) (Tailwind-based). You get vanilla HTML and CSS, with a tiny bit of JS. And it uses the same design system as shadcn/ui.
+So I built ReallySimpleDocs as an [Astro](https://astro.build) integration with [Basecoat](https://basecoatui.com). You keep your content in `docs/`, define navigation in `docs/docs.json`, and let RSD render the docs section.
 
 ## Key features
 
-- **Fast**: 11ty is one of the fastest site generators, usually only second to Hugo.
-- **Standard and Reliable**: It's all vanilla CSS, JS and HTML. No complex frameworks with hydration errors. 
+- **Fast**: Astro builds static docs with minimal client JavaScript.
+- **Standard and Reliable**: It's HTML, CSS, and a small amount of vanilla JavaScript.
 - **Git-based with a user-friendly CMS**: All of your content lives in a GitHub repo. And if you need a user-friendly interface for your teammates to edit the content, just use [Pages CMS](https://pagescms.org).
-- **Markdown + Nunjucks**: Simple Markdown YAML frontmatter, with the convenience of Nunjucks templating if you need more advance features (e.g. loading Lucide icons).
+- **Portable docs**: Keep Markdown pages and navigation in `docs/`, outside Astro's `src/content` conventions.
 - **LLM-friendly**: Auto-generated `llms.txt`, `llms-full.txt`, and per-page `/*.md` exports for LLMs.
 - **100% free and open source**: I have nothing to sell. No hosting plan, no advanced features. You can host it for free on Cloudflare Pages.
 

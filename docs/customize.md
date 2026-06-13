@@ -1,30 +1,70 @@
----
-title: Customize
-description: Configure the site, templates, and styles.
-icon: sliders-vertical
----
+# Customize
 
 ## Files
 
 ```text
-├── _data/      # Data files, including the site config (site.json)
-├── _includes/  # Layouts, macros, partials
-├── assets/     # Public assets: CSS, JS, favicon, etc
 ├── docs/       # Content and navigation (in docs.json)
-├── media/      # Media files: images, attachments, etc
-└── src/        # Build sources (Tailwind + Eleventy helpers)
+├── public/     # Public assets: favicon, social image, media
+└── src/        # Optional custom CSS and component overrides
 ```
 
-## Site config
+## Astro integration
 
-The site metadata, including the header links, live in `_data/site.json`:
+Configure RSD in `astro.config.mjs`:
+
+```js
+import { defineConfig } from "astro/config";
+import reallySimpleDocs from "reallysimpledocs/astro";
+
+export default defineConfig({
+  integrations: [
+    reallySimpleDocs({
+      docsDir: "./docs",
+      routeBase: "/docs",
+      style: "vega",
+      customCss: ["./src/docs.css"],
+      components: {
+        SidebarHeader: "./src/components/SidebarHeader.astro",
+      },
+      site: {
+        title: "ReallySimpleDocs",
+        subtitle: "v0.1.3",
+        description: "A really simple documentation system.",
+        url: "https://example.com",
+        assets: {
+          favicon: "favicon.svg",
+          appleTouchIcon: "apple-touch-icon.png",
+          socialImage: "social.png",
+        },
+        logo: { url: "/favicon.svg" },
+        links: [
+          {
+            label: "GitHub",
+            url: "https://github.com/you/project",
+            attrs: { target: "_blank", rel: "noopener" },
+          },
+        ],
+      },
+    }),
+  ],
+});
+```
 
 | Key | Type | Notes |
 |-----|------|------|
+| `docsDir` | `string` | Folder containing Markdown pages and `docs.json`. |
+| `routeBase` | `string` | URL path where docs are mounted. |
+| `style` | `string` | Basecoat style (`vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, `rhea`). |
+| `customCss` | `string[]` | CSS files imported after RSD and Basecoat styles. |
+| `components.SidebarHeader` | `string` | Astro component path for the sidebar header override. |
+| `site` | `object` | Site metadata and header links. |
 | `title` | `string` | Site title (used in header + `<title>`). |
 | `subtitle` | `string` | Optional short line shown under the title in the sidebar (e.g. version or tagline). |
 | `description` | `string` | Default meta description. |
 | `url` | `string` | Canonical URL (used for LLM exports). |
+| `assets.favicon` | `string` | Optional favicon path or URL. Relative values resolve under `assetsBase` (`/assets` by default). |
+| `assets.appleTouchIcon` | `string` | Optional Apple touch icon path or URL. Relative values resolve under `assetsBase`. |
+| `assets.socialImage` | `string` | Optional social preview image path or URL. Relative values resolve under `assetsBase`. |
 | `logo.svg` | `string` | Inline SVG markup for the sidebar logo. |
 | `logo.url` | `string` | Image URL (alternative to `logo.svg`). |
 | `links[]` | `array` | Header links. |
@@ -34,22 +74,35 @@ The site metadata, including the header links, live in `_data/site.json`:
 | `links[].url` | `string` | Link destination. |
 | `links[].attrs` | `object` | Extra attributes (`target`, `rel`, …). |
 
-## Templates
+## Sidebar header
 
-Templates live in `_includes/`:
+Override the sidebar header with an Astro component:
 
-| File | Purpose |
-|------|---------|
-| `_includes/layouts/base.njk` | Global HTML shell (meta tags, CSS/JS). |
-| `_includes/layouts/doc.njk` | Docs layout (sidebar, header, content, table of contents). |
-| `_includes/partials/docs/header.njk` | Top bar (search trigger, links, theme toggle). |
-| `_includes/partials/docs/sidebar.njk` | Sidebar header wiring. |
+```js
+reallySimpleDocs({
+  components: {
+    SidebarHeader: "./src/components/SidebarHeader.astro",
+  }
+});
+```
+
+The component receives `site` as a prop:
+
+```astro
+---
+const { site } = Astro.props;
+---
+
+<a href="/" class="btn-ghost h-12 w-full justify-start p-2">
+  {site.title}
+</a>
+```
 
 <div class="alert">
   {% lucide "triangle-alert" %}
-  <h3>Avoid touching the macros</h3>
+  <h3>Keep custom pages in Astro</h3>
   <section>
-    <p>The macros in <code>_includes/macros</code> are from <a href="https://basecoatui.com">Basecoat</a>. Avoid modifying them unless you know what you're doing.</p>
+    <p>RSD owns the docs route tree. Add landing pages, pricing pages, blogs, and app pages with normal Astro routes.</p>
   </section>
 </div>
 
@@ -57,34 +110,38 @@ Templates live in `_includes/`:
 
 <div class="alert">
   {% lucide "info" %}
-  <h3>Use any shadcn/ui theme</h3>
+  <h3>Use any Basecoat style</h3>
   <section>
-    <p>ReallySimpleDocs is built with [Basecoat](https://basecoatui.com) which [supports any shadcn/ui theme](https://basecoatui.com/installation/#install-theming).</p>
+    <p>ReallySimpleDocs is built with [Basecoat](https://basecoatui.com). Pick a Basecoat style in the integration config and override CSS variables in custom CSS.</p>
   </section>
 </div>
 
-Tailwind compiles `src/css/styles.css` into `assets/styles.css`. If you want to add custom styles, add them to `src/css/overrides.css`:
+Use `customCss` to import CSS after RSD and Basecoat styles:
 
-| File | Purpose |
-|------|---------|
-| `src/css/styles.css` | Tailwind entry + source scanning + imports. |
-| `src/css/custom.css` | Default content styling (prose, headings, tables). |
-| `src/css/highlight.css` | Syntax highlighting theme. |
-| `src/css/overrides.css` | Your overrides (loaded last). |
+```css
+:root {
+  --primary: oklch(54.6% 0.245 262.881);
+}
+
+.dark {
+  --primary: oklch(70.7% 0.165 254.624);
+}
+```
+
+Astro watches these files and rebuilds them during development.
 
 ## Assets
 
-The `assets/` folder contains public files served at `/assets/*`.
+The `public/assets/` folder contains public files served at `/assets/*`. RSD does not emit favicon or social-image tags unless you configure them under `site.assets`.
 
 | Path | Notes |
 |------|------|
-| `assets/styles.css` | Built output. Don’t edit directly (edit `src/css/*`). |
-| `assets/basecoat.min.js` | Copied from `basecoat-css` during `npm run dev`/`npm run build`. |
-| `assets/copy-code.js` | Copy button behavior for code blocks. |
-| `assets/favicon.svg` | Default favicon. Replace to customize. |
+| `public/assets/favicon.svg` | Favicon when `site.assets.favicon` is `"favicon.svg"`. |
+| `public/assets/apple-touch-icon.png` | Apple touch icon when `site.assets.appleTouchIcon` is `"apple-touch-icon.png"`. |
+| `public/assets/social.png` | Social preview image when `site.assets.socialImage` is `"social.png"`. |
 
-Media files (e.g. images your insert in the content) should go in the `media/` folder.
+Media files you insert in content should go in `public/media/` and be referenced with `/media/...`.
 
 ## Search
 
-The search is currently built from the same `menu` as [navigation](/content/navigation/), relying on the `title` and `description` of each entry for matching the keywords.
+Search uses a generated Lunr index. RSD extracts each page title from the first H1 and indexes the remaining Markdown body.
