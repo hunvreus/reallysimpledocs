@@ -28,7 +28,7 @@ export default defineConfig({
       },
       site: {
         title: "ReallySimpleDocs",
-        subtitle: "v0.1.3",
+        subtitle: "v1.0.0-beta.1",
         description: "A really simple documentation system.",
         url: "https://example.com",
         assets: {
@@ -129,6 +129,40 @@ Use `customCss` to import CSS after RSD and Basecoat styles:
 ```
 
 Astro watches these files and rebuilds them during development.
+
+## Basecoat outside docs
+
+RSD owns the generated docs pages. If your Astro site also has custom pages, such as a landing page at `/`, use Basecoat directly in your own Astro layout.
+
+Create a stylesheet for the rest of the site:
+
+```css
+@import "tailwindcss";
+@import "basecoat-css/base";
+@import "basecoat-css/styles/vega";
+
+@source "../src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}";
+```
+
+Then import it with Basecoat's JavaScript in the layout used by your custom pages:
+
+```astro
+---
+import "../styles/site.css";
+import "basecoat-css/all.min";
+---
+
+<slot />
+```
+
+Use the same Basecoat style name in both places:
+
+```js
+reallySimpleDocs({
+  routeBase: "/docs",
+  style: "vega",
+});
+```
 
 ## Assets
 

@@ -222,7 +222,7 @@ const actionItems = [
         </div>
       </article>
       <aside class="hidden w-56 xl:block">
-        <div class="docs-toc sticky top-20 space-y-2 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-primary [&_ol]:space-y-2 [&_ol_ol]:mt-2 [&_ol_ol]:pl-3">
+        <div class="docs-toc sticky top-20 space-y-2 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-foreground [&_a[data-active='true']]:text-foreground [&_ol]:space-y-2 [&_ol_ol]:mt-2 [&_ol_ol]:pl-3" data-docs-toc>
           <h2 class="flex items-center gap-1 font-medium">
             On this page
           </h2>
@@ -230,7 +230,7 @@ const actionItems = [
             {
               headings.map((heading) => (
                 <li class={heading.depth === 3 ? "pl-3" : ""}>
-                  <a href={`#${heading.id}`}>{heading.text}</a>
+                  <a href={`#${heading.id}`} data-toc-link>{heading.text}</a>
                 </li>
               ))
             }
@@ -283,5 +283,60 @@ const actionItems = [
       document.body.removeChild(textarea);
       if (!ok) throw new Error("Copy failed");
     }
+
+    function initDocsToc() {
+      const toc = document.querySelector("[data-docs-toc]");
+      if (!toc) return;
+
+      const links = Array.from(toc.querySelectorAll("[data-toc-link]"));
+      const linkById = new Map();
+      for (const link of links) {
+        const id = decodeURIComponent(link.hash.slice(1));
+        if (id) linkById.set(id, link);
+      }
+
+      const headings = Array.from(linkById.keys())
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+      if (!headings.length) return;
+
+      const setActive = (id) => {
+        for (const link of links) {
+          const active = decodeURIComponent(link.hash.slice(1)) === id;
+          link.dataset.active = active ? "true" : "false";
+          if (active) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        }
+      };
+
+      const currentHeading = () => {
+        const offset = 160;
+        let current = headings[0];
+        for (const heading of headings) {
+          if (heading.getBoundingClientRect().top <= offset) current = heading;
+          else break;
+        }
+        return current;
+      };
+
+      const updateActive = () => setActive(currentHeading().id);
+      updateActive();
+
+      let queued = false;
+      const queueUpdate = () => {
+        if (queued) return;
+        queued = true;
+        window.requestAnimationFrame(() => {
+          queued = false;
+          updateActive();
+        });
+      };
+
+      window.addEventListener("scroll", queueUpdate, { passive: true });
+      window.addEventListener("resize", queueUpdate);
+      window.addEventListener("hashchange", () => window.setTimeout(updateActive, 0));
+    }
+
+    initDocsToc();
   </script>
 </BaseLayout>

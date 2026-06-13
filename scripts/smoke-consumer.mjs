@@ -62,6 +62,7 @@ writeJson(path.join(appDir, "package.json"), {
   dependencies: {
     "basecoat-css": "^1.0.0-beta.0",
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
+    tailwindcss: "4.1.17",
   },
 });
 

@@ -7,7 +7,7 @@ RSD keeps docs portable: content lives in `docs/`, navigation lives in `docs/doc
 ## Add to an Astro site
 
 ```bash
-npm install reallysimpledocs@beta basecoat-css@beta
+npm install reallysimpledocs@beta basecoat-css@beta tailwindcss
 ```
 
 Add the integration:
@@ -60,6 +60,40 @@ Welcome to the docs.
 ```
 
 RSD injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
+
+## Use Basecoat on the rest of the site
+
+RSD styles and scripts its generated docs pages. For custom Astro pages outside the docs route, use Basecoat directly in your own layout.
+
+Install stays the same:
+
+```bash
+npm install reallysimpledocs@beta basecoat-css@beta tailwindcss
+```
+
+Create a site stylesheet:
+
+```css
+/* src/styles/site.css */
+@import "tailwindcss";
+@import "basecoat-css/base";
+@import "basecoat-css/styles/vega";
+
+@source "../src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}";
+```
+
+Load that stylesheet and Basecoat's JavaScript in your custom layout:
+
+```astro
+---
+import "../styles/site.css";
+import "basecoat-css/all.min";
+---
+
+<slot />
+```
+
+Use the same Basecoat `style` in your RSD config and your site stylesheet if you want the docs and custom pages to match.
 
 ## Local development (this repo)
 

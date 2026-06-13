@@ -1,6 +1,6 @@
 {
   "name": "reallysimpledocs",
-  "version": "0.1.3",
+  "version": "1.0.0-beta.1",
   "type": "module",
   "exports": {
     ".": "./src/index.js",
@@ -26,14 +26,15 @@
     "lucide-static": "^0.552.0",
     "lunr": "^2.3.9",
     "marked": "^16.4.1",
-    "shiki": "^4.1.0",
-    "tailwindcss": "4.1.17"
+    "shiki": "^4.1.0"
   },
   "peerDependencies": {
-    "basecoat-css": "^1.0.0-beta.1"
+    "basecoat-css": "^1.0.0-beta.1",
+    "tailwindcss": ">=4.1.17 <5"
   },
   "devDependencies": {
-    "basecoat-css": "^1.0.0-beta.1"
+    "basecoat-css": "^1.0.0-beta.1",
+    "tailwindcss": "4.1.17"
   },
   "overrides": {
     "esbuild": "^0.28.1",
