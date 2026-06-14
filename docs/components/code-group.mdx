@@ -35,9 +35,17 @@ Use `CodeGroup` for tabbed code examples, usually package-manager commands or pl
 />`}
 />
 
+## Options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `tabs` | `{ label, lang?, code, value? }[]` | `[]` | Tabbed code entries. |
+| `defaultTab` | `string` | First tab | Initial active tab value. |
+| `class` | `string` | `""` | Extra classes applied to the wrapper. |
+
 ## Examples
 
-<Preview code={packageManagerSource} lang="mdx">
+<Preview code={packageManagerSource} lang="mdx" class="block w-full">
   <CodeGroup
     defaultTab="npm"
     tabs={[
@@ -49,7 +57,7 @@ Use `CodeGroup` for tabbed code examples, usually package-manager commands or pl
   />
 </Preview>
 
-<Preview code={languageSource} lang="mdx">
+<Preview code={languageSource} lang="mdx" class="block w-full">
   <CodeGroup
     tabs={[
       { label: "Astro", lang: "js", code: `import { defineConfig } from "astro/config";
@@ -64,11 +72,3 @@ Start writing docs in Markdown.` },
     ]}
   />
 </Preview>
-
-## Options
-
-| Prop | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `tabs` | `{ label, lang?, code, value? }[]` | `[]` | Tabbed code entries. |
-| `defaultTab` | `string` | First tab | Initial active tab value. |
-| `class` | `string` | `""` | Extra classes applied to the wrapper. |

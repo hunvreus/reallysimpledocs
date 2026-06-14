@@ -35,44 +35,44 @@ Use `Callout` for important notes, warnings, and destructive or irreversible act
 </Callout>`}
 />
 
+## Options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `type` | `"note" \| "info" \| "tip" \| "warning" \| "danger"` | `"note"` | Main variant. `note` uses the info color treatment. |
+| `variant` | `"note" \| "info" \| "tip" \| "warning" \| "danger"` | `undefined` | Alias for `type`; wins when both are set. |
+| `title` | `string` | Variant label | Heading displayed in the alert. |
+| `icon` | `false` | `undefined` | Set to `false` to hide the icon. |
+| `class` | `string` | `""` | Extra classes applied to the alert root. |
+
 ## Examples
 
-<Preview code={noteSource} lang="mdx">
+<Preview code={noteSource} lang="mdx" class="block w-full">
   <Callout type="note" title="Note">
-  Use a callout when the surrounding paragraph is not enough.
+    Use a callout when the surrounding paragraph is not enough.
   </Callout>
 </Preview>
 
-<Preview code={tipSource} lang="mdx">
+<Preview code={tipSource} lang="mdx" class="block w-full">
   <Callout type="tip" title="Tip">
     Use MDX only for pages that need components or custom layout.
   </Callout>
 </Preview>
 
-<Preview code={warningSource} lang="mdx">
+<Preview code={warningSource} lang="mdx" class="block w-full">
   <Callout type="warning" title="Warning">
     Avoid putting app-only imports in reusable documentation examples.
   </Callout>
 </Preview>
 
-<Preview code={destructiveSource} lang="mdx">
+<Preview code={destructiveSource} lang="mdx" class="block w-full">
   <Callout type="danger" title="Destructive">
     This variant is for irreversible actions, security risks, or migration warnings.
   </Callout>
 </Preview>
 
-<Preview code={noIconSource} lang="mdx">
+<Preview code={noIconSource} lang="mdx" class="block w-full">
   <Callout type="note" icon={false} title="No icon">
     Set `icon={false}` when the message should read like normal copy.
   </Callout>
 </Preview>
-
-## Options
-
-| Prop | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `type` | `"note" \| "tip" \| "warning" \| "danger"` | `"note"` | Main variant. |
-| `variant` | `"note" \| "tip" \| "warning" \| "danger"` | `undefined` | Alias for `type`; wins when both are set. |
-| `title` | `string` | Variant label | Heading displayed in the alert. |
-| `icon` | `false` | `undefined` | Set to `false` to hide the icon. |
-| `class` | `string` | `""` | Extra classes applied to the alert root. |

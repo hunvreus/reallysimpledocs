@@ -7,15 +7,18 @@ import { addSvgClass } from "../../lib/html.js";
 
 const { type, variant, title, icon: showIcon = true, class: className = "" } = Astro.props;
 const normalizedType = String(variant || type || "note").toLowerCase();
-const destructive = normalizedType === "danger";
+const calloutType = normalizedType === "note" ? "info" : normalizedType;
+const destructive = calloutType === "danger";
 const labels = {
   note: "Note",
+  info: "Info",
   tip: "Tip",
   warning: "Warning",
   danger: "Danger",
 };
 const icons = {
   note: Info,
+  info: Info,
   tip: Lightbulb,
   warning: TriangleAlert,
   danger: CircleAlert,
@@ -24,7 +27,7 @@ const icon = showIcon === false ? "" : addSvgClass(icons[normalizedType] || Info
 const heading = title || labels[normalizedType] || labels.note;
 ---
 
-<div class:list={[destructive ? "alert-destructive" : "alert", className]}>
+<div class:list={[destructive ? "alert-destructive" : "alert", className]} data-variant={calloutType}>
   {icon && <Fragment set:html={icon} />}
   <h3>{heading}</h3>
   <section>

@@ -156,6 +156,46 @@ html.dark .shiki span {
   @apply bg-search-highlight/50 text-foreground rounded-sm px-0.5 dark:bg-search-highlight/25;
 }
 
+.docs-card {
+  @apply block rounded-lg border border-border/50 p-4 text-sm no-underline transition-colors;
+}
+
+.docs-card-link {
+  @apply hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
+}
+
+.docs-card > h3 {
+  @apply text-base font-medium leading-none;
+}
+
+.docs-card > p {
+  @apply mt-2 text-muted-foreground;
+}
+
+.alert[data-variant='info'] > svg,
+.alert[data-variant='info'] > h3,
+.alert[data-variant='info'] > section {
+  @apply text-sky-700 dark:text-sky-300;
+}
+
+.alert[data-variant='tip'] > svg,
+.alert[data-variant='tip'] > h3,
+.alert[data-variant='tip'] > section {
+  @apply text-emerald-700 dark:text-emerald-300;
+}
+
+.alert[data-variant='warning'] > svg,
+.alert[data-variant='warning'] > h3,
+.alert[data-variant='warning'] > section {
+  @apply text-amber-700 dark:text-amber-300;
+}
+
+.alert-destructive[data-variant='danger'] > svg,
+.alert-destructive[data-variant='danger'] > h3,
+.alert-destructive[data-variant='danger'] > section {
+  @apply text-destructive;
+}
+
 .code-block {
   @apply relative my-6 max-w-full overflow-hidden rounded-lg;
 }
@@ -310,7 +350,7 @@ html.dark .shiki span {
 
 .prose > .alert,
 .prose > .alert-destructive,
-.prose > .card,
+.prose > .docs-card,
 .prose > .grid,
 .prose > .tabs {
   @apply my-6;

@@ -20,56 +20,26 @@ export const linkButtonSource = `<div class="flex flex-wrap gap-2">
 
 Use `Badge` for short status labels. Use `LinkButton` for navigation actions that should look like buttons but behave like links.
 
-## Badge usage
+## Usage
 
 <Code
   lang="mdx"
-  code={`import { Badge } from "reallysimpledocs/components";
+  code={`import { Badge, LinkButton } from "reallysimpledocs/components";
 
-<Badge variant="secondary">Beta</Badge>`}
+<Badge variant="secondary">Beta</Badge>
+<LinkButton href="/install/" variant="secondary">Install</LinkButton>`}
 />
 
-## Badge examples
+## Options
 
-<Preview code={badgeSource} lang="mdx" class="justify-start">
-  <div class="flex flex-wrap gap-2">
-  <Badge variant="primary">Primary</Badge>
-  <Badge variant="secondary">Secondary</Badge>
-  <Badge variant="outline">Outline</Badge>
-  <Badge variant="ghost">Ghost</Badge>
-  <Badge variant="destructive">Destructive</Badge>
-  </div>
-</Preview>
-
-## Badge options
+### Badge
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `variant` | `"primary" \| "secondary" \| "destructive" \| "outline" \| "ghost" \| "link"` | `"secondary"` | Basecoat badge class. |
 | `class` | `string` | `""` | Extra classes applied to the badge root. |
 
-## LinkButton usage
-
-<Code
-  lang="mdx"
-  code={`import { LinkButton } from "reallysimpledocs/components";
-
-<LinkButton href="/install/" variant="secondary">Install</LinkButton>`}
-/>
-
-## LinkButton examples
-
-<Preview code={linkButtonSource} lang="mdx" class="justify-start">
-  <div class="flex flex-wrap gap-2">
-  <LinkButton href="/install/">Install</LinkButton>
-  <LinkButton href="/customize/" variant="secondary">Customize</LinkButton>
-  <LinkButton href="https://github.com/hunvreus/reallysimpledocs" variant="outline" target="_blank" rel="noreferrer">
-    GitHub
-  </LinkButton>
-  </div>
-</Preview>
-
-## LinkButton options
+### LinkButton
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
@@ -78,3 +48,25 @@ Use `Badge` for short status labels. Use `LinkButton` for navigation actions tha
 | `target` | `string` | `undefined` | Link target attribute. |
 | `rel` | `string` | `undefined` | Link rel attribute. |
 | `class` | `string` | `""` | Extra classes applied to the link root. |
+
+## Examples
+
+<Preview code={badgeSource} lang="mdx" class="block w-full items-start justify-start">
+  <div class="flex flex-wrap gap-2">
+    <Badge variant="primary">Primary</Badge>
+    <Badge variant="secondary">Secondary</Badge>
+    <Badge variant="outline">Outline</Badge>
+    <Badge variant="ghost">Ghost</Badge>
+    <Badge variant="destructive">Destructive</Badge>
+  </div>
+</Preview>
+
+<Preview code={linkButtonSource} lang="mdx" class="block w-full items-start justify-start">
+  <div class="flex flex-wrap gap-2">
+    <LinkButton href="/install/">Install</LinkButton>
+    <LinkButton href="/customize/" variant="secondary">Customize</LinkButton>
+    <LinkButton href="https://github.com/hunvreus/reallysimpledocs" variant="outline" target="_blank" rel="noreferrer">
+      GitHub
+    </LinkButton>
+  </div>
+</Preview>

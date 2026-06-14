@@ -1,21 +1,15 @@
 import { Card, CardGrid, Code, Preview } from "reallysimpledocs/components";
 
 export const gridSource = `<CardGrid>
-  <Card title="Markdown" description="The default content format.">
-    Best for normal docs pages.
-  </Card>
-  <Card title="MDX" description="The advanced content format." href="/components/">
-    Best for components and previews.
-  </Card>
+  <Card title="Markdown" description="Write regular docs pages." href="/content/pages/" />
+  <Card title="MDX" description="Use components for richer examples." href="/components/" />
 </CardGrid>`;
 
-export const cardSource = `<Card title="Custom width" description="Use class overrides for layout changes." class="max-w-sm">
-  This card keeps Basecoat styling and only changes its outer sizing.
-</Card>`;
+export const cardSource = `<Card title="Custom width" description="Use class overrides when the layout needs it." class="max-w-sm" />`;
 
 # Card and CardGrid
 
-Use `Card` and `CardGrid` for small groups of related links, concepts, or next actions.
+Use `Card` and `CardGrid` for small groups of related links, concepts, or next actions. Cards are intentionally simple: title, description, and an optional link.
 
 ## Usage
 
@@ -24,33 +18,10 @@ Use `Card` and `CardGrid` for small groups of related links, concepts, or next a
   code={`import { Card, CardGrid } from "reallysimpledocs/components";
 
 <CardGrid>
-  <Card title="Markdown" description="The default content format.">
-    Best for normal docs pages.
-  </Card>
-  <Card title="MDX" href="/components/">
-    Best for component examples.
-  </Card>
+  <Card title="Markdown" description="Write regular docs pages." href="/content/pages/" />
+  <Card title="MDX" description="Use components for richer examples." href="/components/" />
 </CardGrid>`}
 />
-
-## Examples
-
-<Preview code={gridSource} lang="mdx" class="block">
-  <CardGrid>
-    <Card title="Markdown" description="The default content format.">
-      Best for normal docs pages.
-    </Card>
-    <Card title="MDX" description="The advanced content format." href="/components/">
-      Best for components and previews.
-    </Card>
-  </CardGrid>
-</Preview>
-
-<Preview code={cardSource} lang="mdx" class="justify-start">
-  <Card title="Custom width" description="Use class overrides for layout changes." class="max-w-sm">
-    This card keeps Basecoat styling and only changes its outer sizing.
-  </Card>
-</Preview>
 
 ## Options
 
@@ -61,3 +32,16 @@ Use `Card` and `CardGrid` for small groups of related links, concepts, or next a
 | `Card` | `href` | `string` | `undefined` | Renders the card as a link. |
 | `Card` | `class` | `string` | `""` | Extra classes applied to the card root. |
 | `CardGrid` | `class` | `string` | `""` | Extra classes applied to the grid root. |
+
+## Examples
+
+<Preview code={gridSource} lang="mdx" class="block w-full">
+  <CardGrid>
+    <Card title="Markdown" description="Write regular docs pages." href="/content/pages/" />
+    <Card title="MDX" description="Use components for richer examples." href="/components/" />
+  </CardGrid>
+</Preview>
+
+<Preview code={cardSource} lang="mdx" class="block w-full items-start justify-start">
+  <Card title="Custom width" description="Use class overrides when the layout needs it." class="max-w-sm" />
+</Preview>

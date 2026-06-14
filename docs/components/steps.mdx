@@ -44,6 +44,14 @@ Use `Steps` for ordered setup and installation flows. It renders a numbered rail
 </Steps>`}
 />
 
+## Options
+
+| Component | Prop | Type | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `Steps` | `class` | `string` | `""` | Extra classes applied to the ordered list. |
+| `Step` | `title` | `string` | `undefined` | Optional heading. |
+| `Step` | `class` | `string` | `""` | Extra classes applied to the list item. |
+
 ## Examples
 
 <Preview code={stepsSource} lang="mdx" class="block w-full items-stretch justify-start">
@@ -71,11 +79,3 @@ Use `Steps` for ordered setup and installation flows. It renders a numbered rail
     </Step>
   </Steps>
 </Preview>
-
-## Options
-
-| Component | Prop | Type | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `Steps` | `class` | `string` | `""` | Extra classes applied to the ordered list. |
-| `Step` | `title` | `string` | `undefined` | Optional heading. |
-| `Step` | `class` | `string` | `""` | Extra classes applied to the list item. |

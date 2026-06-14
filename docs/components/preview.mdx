@@ -27,18 +27,6 @@ Use `Preview` for component examples where readers need to see the rendered resu
 </Preview>`}
 />
 
-## Examples
-
-<Preview code={buttonSource} lang="html">
-  <button type="button" class="btn">Save changes</button>
-</Preview>
-
-<Preview code={astroConfig} lang="js" title="astro.config.mjs">
-  <Callout type="tip" title="Configuration">
-    The source remains available from the Code tab.
-  </Callout>
-</Preview>
-
 ## Options
 
 | Prop | Type | Default | Notes |
@@ -47,3 +35,15 @@ Use `Preview` for component examples where readers need to see the rendered resu
 | `lang` | `string` | `"html"` | Language passed to Shiki. |
 | `title` | `string` | `undefined` | Label for the preview tab. |
 | `class` | `string` | `""` | Extra classes applied to the preview canvas. |
+
+## Examples
+
+<Preview code={buttonSource} lang="html" class="block w-full">
+  <button type="button" class="btn">Save changes</button>
+</Preview>
+
+<Preview code={astroConfig} lang="js" title="astro.config.mjs" class="block w-full">
+  <Callout type="tip" title="Configuration">
+    The source remains available from the Code tab.
+  </Callout>
+</Preview>

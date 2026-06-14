@@ -51,9 +51,19 @@ The API is data-driven because Astro components cannot reliably inspect child co
 </Tabs>`}
 />
 
+## Options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `tabs` | `{ label, slot, value?, disabled? }[]` | `[]` | Tab metadata. `slot` must match a slotted child. |
+| `defaultTab` | `string` | First enabled tab | Initial active tab value. |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Passed to the tablist. |
+| `variant` | `string` | `undefined` | Basecoat tab variant, such as `"line"`. |
+| `class` | `string` | `""` | Extra classes applied to the tabs root. |
+
 ## Examples
 
-<Preview code={packageTabsSource} lang="mdx" class="block">
+<Preview code={packageTabsSource} lang="mdx" class="block w-full">
   <Tabs
     tabs={[
       { label: "npm", slot: "npm" },
@@ -67,7 +77,7 @@ The API is data-driven because Astro components cannot reliably inspect child co
   </Tabs>
 </Preview>
 
-<Preview code={lineTabsSource} lang="mdx" class="block">
+<Preview code={lineTabsSource} lang="mdx" class="block w-full">
   <Tabs
     variant="line"
     defaultTab="manual"
@@ -84,13 +94,3 @@ The API is data-driven because Astro components cannot reliably inspect child co
     </Callout>
   </Tabs>
 </Preview>
-
-## Options
-
-| Prop | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `tabs` | `{ label, slot, value?, disabled? }[]` | `[]` | Tab metadata. `slot` must match a slotted child. |
-| `defaultTab` | `string` | First enabled tab | Initial active tab value. |
-| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Passed to the tablist. |
-| `variant` | `string` | `undefined` | Basecoat tab variant, such as `"line"`. |
-| `class` | `string` | `""` | Extra classes applied to the tabs root. |

@@ -25,7 +25,7 @@ export const codeGroupSource = `<CodeGroup
 
 # Code
 
-Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the same example has package-manager, framework, or platform variants.
+Use `Code` for a single syntax-highlighted code block. Use [`CodeGroup`](/components/code-group/) when the same example has package-manager, framework, or platform variants.
 
 ## Usage
 
@@ -36,16 +36,6 @@ Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the 
 <Code title="Install" lang="bash" code={installCommand} />`}
 />
 
-## Examples
-
-<Preview code={installCodeSource} lang="mdx">
-  <Code title="Install" lang="bash" code={installCommand} />
-</Preview>
-
-<Preview code={configCodeSource} lang="mdx">
-  <Code title="astro.config.mjs" lang="js" code={astroConfig} />
-</Preview>
-
 ## Options
 
 | Prop | Type | Default | Notes |
@@ -55,23 +45,19 @@ Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the 
 | `title` | `string` | `undefined` | Optional header label. |
 | `class` | `string` | `""` | Extra classes applied to the code wrapper. |
 
-## Tabbed code
+## Examples
 
-Use `CodeGroup` for compact tabbed code blocks.
+<Preview code={installCodeSource} lang="mdx" class="block w-full">
+  <Code title="Install" lang="bash" code={installCommand} />
+</Preview>
 
-<Code
-  lang="mdx"
-  code={`import { CodeGroup } from "reallysimpledocs/components";
+<Preview code={configCodeSource} lang="mdx" class="block w-full">
+  <Code title="astro.config.mjs" lang="js" code={astroConfig} />
+</Preview>
 
-<CodeGroup
-  tabs={[
-    { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta" },
-    { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta" },
-  ]}
-/>`}
-/>
+This example uses [`CodeGroup`](/components/code-group/) for tabbed code. Its options are documented on the CodeGroup page.
 
-<Preview code={codeGroupSource} lang="mdx">
+<Preview code={codeGroupSource} lang="mdx" class="block w-full">
   <CodeGroup
     defaultTab="npm"
     tabs={[
@@ -82,11 +68,3 @@ Use `CodeGroup` for compact tabbed code blocks.
     ]}
   />
 </Preview>
-
-### CodeGroup options
-
-| Prop | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `tabs` | `{ label, lang?, code, value? }[]` | `[]` | Tabbed code entries. |
-| `defaultTab` | `string` | First tab | Initial active tab value. |
-| `class` | `string` | `""` | Extra classes applied to the wrapper. |
