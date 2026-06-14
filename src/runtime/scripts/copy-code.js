@@ -25,13 +25,16 @@ const initCopyCode = (codeBlock) => {
   const codeEl = codeBlock.querySelector(":scope > code");
   if (!codeEl) return;
 
+  let target = null;
   let frame = codeBlock.closest(".code-group");
   let getCode = frame ? () => activePanelCode(frame) || codeEl : () => codeEl;
+  if (frame) target = frame.querySelector(":scope > .tabs > nav");
 
   const preview = codeBlock.closest(".preview");
   const previewCodePanel = preview?.querySelector(':scope > .tabs > [role="tabpanel"]:last-of-type');
   if (!frame && previewCodePanel?.contains(codeBlock)) {
     frame = preview;
+    target = frame.querySelector(":scope > .tabs > nav");
     getCode = () => codeEl;
   }
 
@@ -45,7 +48,9 @@ const initCopyCode = (codeBlock) => {
     }
   }
 
-  if (frame.querySelector(":scope > button")) {
+  target ||= frame.querySelector(":scope > header") || frame;
+
+  if (target.querySelector(":scope > button[aria-label='Copy code']")) {
     codeBlock.dataset.copyCodeInitialized = true;
     return;
   }
@@ -73,7 +78,7 @@ const initCopyCode = (codeBlock) => {
     }, 1200);
   });
 
-  frame.appendChild(button);
+  target.appendChild(button);
   codeBlock.dataset.copyCodeInitialized = true;
 };
 

@@ -161,7 +161,11 @@ html.dark .shiki span {
 }
 
 .code-block > header {
-  @apply border-b border-border/50 px-4 py-2 text-sm font-medium;
+  @apply flex min-h-10 items-center gap-2 border-b border-border/50 px-4 py-2 text-sm font-medium;
+}
+
+.code-block > header > :first-child {
+  @apply mr-auto;
 }
 
 .code-block > pre {
@@ -176,10 +180,14 @@ html.dark .shiki span {
   @apply my-0 rounded-none border-0;
 }
 
-.code-block > button,
-.code-group > button,
-.preview > button {
-  @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
+.code-block > button {
+  @apply absolute right-2.5 top-2.5;
+}
+
+.code-block button,
+.code-group button[aria-label='Copy code'],
+.preview button[aria-label='Copy code'] {
+  @apply flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:hover:bg-accent/50 [&_svg]:size-4;
 }
 
 .code-group {
@@ -192,6 +200,10 @@ html.dark .shiki span {
 
 .code-group > .tabs > nav {
   @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
+}
+
+.code-group > .tabs > nav > button[aria-label='Copy code'] {
+  @apply ml-auto;
 }
 
 .code-group > .tabs > [role='tabpanel'] {
@@ -222,6 +234,10 @@ html.dark .shiki span {
   @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
 }
 
+.preview > .tabs > nav > button[aria-label='Copy code'] {
+  @apply ml-auto hidden;
+}
+
 .preview > .tabs > [role='tabpanel'] {
   @apply border-t border-border/50;
 }
@@ -234,16 +250,12 @@ html.dark .shiki span {
   @apply bg-transparent dark:bg-transparent;
 }
 
-.preview > button {
-  @apply hidden;
-}
-
-.preview:has(> .tabs > [role='tabpanel']:last-of-type:not([hidden])) > button {
+.preview:has(> .tabs > [role='tabpanel']:last-of-type:not([hidden])) > .tabs > nav > button[aria-label='Copy code'] {
   @apply flex;
 }
 
 .preview > .tabs > [role='tabpanel']:first-of-type > div {
-  @apply flex min-h-64 w-full items-center justify-center p-6;
+  @apply flex min-h-64 w-full items-center justify-center bg-background p-6;
 }
 
 .steps {

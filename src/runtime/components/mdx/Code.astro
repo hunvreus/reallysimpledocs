@@ -14,6 +14,6 @@ const html = await codeToHtml(String(code || ""), {
 ---
 
 <div class:list={["code-block", className]}>
-  {title && <header>{title}</header>}
+  {title && <header><span>{title}</span></header>}
   <Fragment set:html={html} />
 </div>
