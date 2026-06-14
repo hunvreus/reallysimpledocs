@@ -40,7 +40,7 @@ const id = `preview-${Math.random().toString(36).slice(2)}`;
     tabindex="-1"
     aria-selected="true"
   >
-    <div class={className}>
+    <div class:list={["w-full", className]}>
       <slot />
     </div>
   </section>
