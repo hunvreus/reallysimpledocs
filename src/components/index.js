@@ -11,5 +11,4 @@ export { default as LinkButton } from "../runtime/components/mdx/LinkButton.astr
 export { default as Preview } from "../runtime/components/mdx/Preview.astro";
 export { default as Step } from "../runtime/components/mdx/Step.astro";
 export { default as Steps } from "../runtime/components/mdx/Steps.astro";
-export { default as TabItem } from "../runtime/components/mdx/TabItem.astro";
 export { default as Tabs } from "../runtime/components/mdx/Tabs.astro";

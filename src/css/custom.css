@@ -180,17 +180,32 @@ html.dark .shiki span {
 }
 
 .rsd-steps {
-  @apply my-6 ml-0 list-none space-y-6 border-l pl-6;
+  @apply my-6 ml-0 list-none space-y-8 border-l pl-8;
+  counter-reset: rsd-step;
 }
 
 .rsd-steps > li {
   @apply relative mt-0;
+  counter-increment: rsd-step;
 }
 
 .rsd-steps > li::before {
-  @apply absolute -left-[2.0625rem] top-1 flex size-4 rounded-full border bg-background content-[''];
+  @apply absolute -left-[2.875rem] top-0 flex size-7 items-center justify-center rounded-full border bg-background text-xs font-medium text-muted-foreground shadow-sm;
+  content: counter(rsd-step);
 }
 
 .rsd-steps > li > h3 {
-  @apply mb-2 text-base font-semibold;
+  @apply mb-2 mt-0 text-base font-semibold;
+}
+
+.rsd-steps > li > div {
+  @apply text-muted-foreground;
+}
+
+.rsd-steps > li > div > :first-child {
+  @apply mt-0;
+}
+
+.rsd-steps > li > div > :last-child {
+  @apply mb-0;
 }
