@@ -1,4 +1,24 @@
-import { Callout, Code } from "reallysimpledocs/components";
+import { Callout, Code, Preview } from "reallysimpledocs/components";
+
+export const noteSource = `<Callout type="note" title="Note">
+  Use a callout when the surrounding paragraph is not enough.
+</Callout>`;
+
+export const tipSource = `<Callout type="tip" title="Tip">
+  Use MDX only for pages that need components or custom layout.
+</Callout>`;
+
+export const warningSource = `<Callout type="warning" title="Warning">
+  Avoid putting app-only imports in reusable documentation examples.
+</Callout>`;
+
+export const destructiveSource = `<Callout type="danger" title="Destructive">
+  This variant is for irreversible actions, security risks, or migration warnings.
+</Callout>`;
+
+export const noIconSource = `<Callout type="note" icon={false} title="No icon">
+  Set icon={false} when the message should read like normal copy.
+</Callout>`;
 
 # Callout
 
@@ -17,25 +37,35 @@ Use `Callout` for important notes, warnings, and destructive or irreversible act
 
 ## Examples
 
-<Callout type="note" title="Note">
+<Preview code={noteSource} lang="mdx">
+  <Callout type="note" title="Note">
   Use a callout when the surrounding paragraph is not enough.
-</Callout>
+  </Callout>
+</Preview>
 
-<Callout type="tip" title="Tip">
-  Use MDX only for pages that need components or custom layout.
-</Callout>
+<Preview code={tipSource} lang="mdx">
+  <Callout type="tip" title="Tip">
+    Use MDX only for pages that need components or custom layout.
+  </Callout>
+</Preview>
 
-<Callout type="warning" title="Warning">
-  Avoid putting app-only imports in reusable documentation examples.
-</Callout>
+<Preview code={warningSource} lang="mdx">
+  <Callout type="warning" title="Warning">
+    Avoid putting app-only imports in reusable documentation examples.
+  </Callout>
+</Preview>
 
-<Callout type="danger" title="Destructive">
-  This variant is for irreversible actions, security risks, or migration warnings.
-</Callout>
+<Preview code={destructiveSource} lang="mdx">
+  <Callout type="danger" title="Destructive">
+    This variant is for irreversible actions, security risks, or migration warnings.
+  </Callout>
+</Preview>
 
-<Callout type="note" icon={false} title="No icon">
-  Set `icon={false}` when the message should read like normal copy.
-</Callout>
+<Preview code={noIconSource} lang="mdx">
+  <Callout type="note" icon={false} title="No icon">
+    Set `icon={false}` when the message should read like normal copy.
+  </Callout>
+</Preview>
 
 ## Options
 

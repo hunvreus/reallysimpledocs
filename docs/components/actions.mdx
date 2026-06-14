@@ -1,4 +1,20 @@
-import { Badge, Code, LinkButton } from "reallysimpledocs/components";
+import { Badge, Code, LinkButton, Preview } from "reallysimpledocs/components";
+
+export const badgeSource = `<div class="flex flex-wrap gap-2">
+  <Badge variant="primary">Primary</Badge>
+  <Badge variant="secondary">Secondary</Badge>
+  <Badge variant="outline">Outline</Badge>
+  <Badge variant="ghost">Ghost</Badge>
+  <Badge variant="destructive">Destructive</Badge>
+</div>`;
+
+export const linkButtonSource = `<div class="flex flex-wrap gap-2">
+  <LinkButton href="/install/">Install</LinkButton>
+  <LinkButton href="/customize/" variant="secondary">Customize</LinkButton>
+  <LinkButton href="https://github.com/hunvreus/reallysimpledocs" variant="outline" target="_blank" rel="noreferrer">
+    GitHub
+  </LinkButton>
+</div>`;
 
 # Badge and LinkButton
 
@@ -15,13 +31,15 @@ Use `Badge` for short status labels. Use `LinkButton` for navigation actions tha
 
 ## Badge examples
 
-<div class="my-6 flex flex-wrap gap-2">
+<Preview code={badgeSource} lang="mdx" class="justify-start">
+  <div class="flex flex-wrap gap-2">
   <Badge variant="primary">Primary</Badge>
   <Badge variant="secondary">Secondary</Badge>
   <Badge variant="outline">Outline</Badge>
   <Badge variant="ghost">Ghost</Badge>
   <Badge variant="destructive">Destructive</Badge>
-</div>
+  </div>
+</Preview>
 
 ## Badge options
 
@@ -41,13 +59,15 @@ Use `Badge` for short status labels. Use `LinkButton` for navigation actions tha
 
 ## LinkButton examples
 
-<div class="my-6 flex flex-wrap gap-2">
+<Preview code={linkButtonSource} lang="mdx" class="justify-start">
+  <div class="flex flex-wrap gap-2">
   <LinkButton href="/install/">Install</LinkButton>
   <LinkButton href="/customize/" variant="secondary">Customize</LinkButton>
   <LinkButton href="https://github.com/hunvreus/reallysimpledocs" variant="outline" target="_blank" rel="noreferrer">
     GitHub
   </LinkButton>
-</div>
+  </div>
+</Preview>
 
 ## LinkButton options
 

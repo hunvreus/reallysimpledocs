@@ -1,4 +1,32 @@
-import { Callout, Code, Tabs } from "reallysimpledocs/components";
+import { Callout, Code, Preview, Tabs } from "reallysimpledocs/components";
+
+export const packageTabsSource = `<Tabs
+  tabs={[
+    { label: "npm", slot: "npm" },
+    { label: "pnpm", slot: "pnpm" },
+    { label: "bun", slot: "bun" },
+  ]}
+>
+  <Code slot="npm" lang="bash" code={\`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss\`} />
+  <Code slot="pnpm" lang="bash" code={\`pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss\`} />
+  <Code slot="bun" lang="bash" code={\`bun add reallysimpledocs@beta basecoat-css@beta tailwindcss\`} />
+</Tabs>`;
+
+export const lineTabsSource = `<Tabs
+  variant="line"
+  defaultTab="manual"
+  tabs={[
+    { label: "Integration", slot: "integration" },
+    { label: "Manual", slot: "manual" },
+  ]}
+>
+  <Callout slot="integration" type="tip" title="Recommended">
+    Let the integration wire routes and assets for the docs section.
+  </Callout>
+  <Callout slot="manual" type="warning" title="Manual setup">
+    Manual wiring is useful for debugging, but it is not the normal install path.
+  </Callout>
+</Tabs>`;
 
 # Tabs
 
@@ -25,33 +53,37 @@ The API is data-driven because Astro components cannot reliably inspect child co
 
 ## Examples
 
-<Tabs
-  tabs={[
-    { label: "npm", slot: "npm" },
-    { label: "pnpm", slot: "pnpm" },
-    { label: "bun", slot: "bun" },
-  ]}
->
-  <Code slot="npm" lang="bash" code={`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
-  <Code slot="pnpm" lang="bash" code={`pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
-  <Code slot="bun" lang="bash" code={`bun add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
-</Tabs>
+<Preview code={packageTabsSource} lang="mdx" class="block">
+  <Tabs
+    tabs={[
+      { label: "npm", slot: "npm" },
+      { label: "pnpm", slot: "pnpm" },
+      { label: "bun", slot: "bun" },
+    ]}
+  >
+    <Code slot="npm" lang="bash" code={`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+    <Code slot="pnpm" lang="bash" code={`pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+    <Code slot="bun" lang="bash" code={`bun add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+  </Tabs>
+</Preview>
 
-<Tabs
-  variant="line"
-  defaultTab="manual"
-  tabs={[
-    { label: "Integration", slot: "integration" },
-    { label: "Manual", slot: "manual" },
-  ]}
->
-  <Callout slot="integration" type="tip" title="Recommended">
-    Let the integration wire routes and assets for the docs section.
-  </Callout>
-  <Callout slot="manual" type="warning" title="Manual setup">
-    Manual wiring is useful for debugging, but it is not the normal install path.
-  </Callout>
-</Tabs>
+<Preview code={lineTabsSource} lang="mdx" class="block">
+  <Tabs
+    variant="line"
+    defaultTab="manual"
+    tabs={[
+      { label: "Integration", slot: "integration" },
+      { label: "Manual", slot: "manual" },
+    ]}
+  >
+    <Callout slot="integration" type="tip" title="Recommended">
+      Let the integration wire routes and assets for the docs section.
+    </Callout>
+    <Callout slot="manual" type="warning" title="Manual setup">
+      Manual wiring is useful for debugging, but it is not the normal install path.
+    </Callout>
+  </Tabs>
+</Preview>
 
 ## Options
 

@@ -1,4 +1,4 @@
-import { Code, CodeGroup } from "reallysimpledocs/components";
+import { Code, CodeGroup, Preview } from "reallysimpledocs/components";
 
 export const installCommand = `npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`;
 export const astroConfig = `import { defineConfig } from "astro/config";
@@ -11,6 +11,17 @@ export default defineConfig({
     }),
   ],
 });`;
+export const installCodeSource = `<Code title="Install" lang="bash" code={installCommand} />`;
+export const configCodeSource = `<Code title="astro.config.mjs" lang="js" code={astroConfig} />`;
+export const codeGroupSource = `<CodeGroup
+  defaultTab="npm"
+  tabs={[
+    { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+    { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+    { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+    { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+  ]}
+/>`;
 
 # Code
 
@@ -27,9 +38,13 @@ Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the 
 
 ## Examples
 
-<Code title="Install" lang="bash" code={installCommand} />
+<Preview code={installCodeSource} lang="mdx" defaultTab="code">
+  <Code title="Install" lang="bash" code={installCommand} />
+</Preview>
 
-<Code title="astro.config.mjs" lang="js" code={astroConfig} />
+<Preview code={configCodeSource} lang="mdx" defaultTab="code">
+  <Code title="astro.config.mjs" lang="js" code={astroConfig} />
+</Preview>
 
 ## Options
 
@@ -56,15 +71,17 @@ Use `CodeGroup` for compact tabbed code blocks.
 />`}
 />
 
-<CodeGroup
-  defaultTab="npm"
-  tabs={[
-    { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-    { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-    { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-    { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-  ]}
-/>
+<Preview code={codeGroupSource} lang="mdx" defaultTab="code">
+  <CodeGroup
+    defaultTab="npm"
+    tabs={[
+      { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+      { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+      { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+      { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+    ]}
+  />
+</Preview>
 
 ### CodeGroup options
 

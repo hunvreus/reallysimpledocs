@@ -1,4 +1,28 @@
-import { Code, CodeGroup, LinkButton, Step, Steps } from "reallysimpledocs/components";
+import { Code, CodeGroup, LinkButton, Preview, Step, Steps } from "reallysimpledocs/components";
+
+export const stepsSource = `<Steps>
+  <Step title="Install packages">
+    Add RSD, Basecoat, and Tailwind CSS to your Astro app.
+    <CodeGroup
+      defaultTab="npm"
+      tabs={[
+        { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+        { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+        { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+        { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+      ]}
+    />
+  </Step>
+  <Step title="Create docs">
+    Add docs/docs.json and one or more Markdown or MDX pages.
+  </Step>
+  <Step title="Run Astro">
+    Start the dev server and open the URL printed by Astro.
+    <div class="mt-6">
+      <LinkButton href="/install/" variant="secondary">Read install docs</LinkButton>
+    </div>
+  </Step>
+</Steps>`;
 
 # Steps
 
@@ -22,29 +46,31 @@ Use `Steps` for ordered setup and installation flows. It renders a numbered rail
 
 ## Examples
 
-<Steps>
-  <Step title="Install packages">
-    Add RSD, Basecoat, and Tailwind CSS to your Astro app.
-    <CodeGroup
-      defaultTab="npm"
-      tabs={[
-        { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-        { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-        { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-        { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-      ]}
-    />
-  </Step>
-  <Step title="Create docs">
-    Add `docs/docs.json` and one or more Markdown or MDX pages.
-  </Step>
-  <Step title="Run Astro">
-    Start the dev server and open the URL printed by Astro.
-    <div class="mt-6">
-      <LinkButton href="/install/" variant="secondary">Read install docs</LinkButton>
-    </div>
-  </Step>
-</Steps>
+<Preview code={stepsSource} lang="mdx" class="block items-stretch justify-start">
+  <Steps>
+    <Step title="Install packages">
+      Add RSD, Basecoat, and Tailwind CSS to your Astro app.
+      <CodeGroup
+        defaultTab="npm"
+        tabs={[
+          { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+          { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+          { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+          { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+        ]}
+      />
+    </Step>
+    <Step title="Create docs">
+      Add `docs/docs.json` and one or more Markdown or MDX pages.
+    </Step>
+    <Step title="Run Astro">
+      Start the dev server and open the URL printed by Astro.
+      <div class="mt-6">
+        <LinkButton href="/install/" variant="secondary">Read install docs</LinkButton>
+      </div>
+    </Step>
+  </Steps>
+</Preview>
 
 ## Options
 

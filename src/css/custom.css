@@ -180,7 +180,11 @@ html.dark .shiki span {
 }
 
 .rsd-code-group > .tabs > nav {
-  @apply h-auto w-full justify-start rounded-none border-b border-border/50 bg-transparent px-3 py-1;
+  @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
+}
+
+.rsd-code-group > .tabs > [role='tabpanel'] {
+  @apply border-t border-border/50;
 }
 
 .rsd-code-group .rsd-code {
@@ -204,7 +208,11 @@ html.dark .shiki span {
 }
 
 .rsd-preview > .tabs > nav {
-  @apply h-auto w-full justify-start rounded-none border-b border-border/50 bg-transparent px-3 py-1;
+  @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
+}
+
+.rsd-preview > .tabs > [role='tabpanel'] {
+  @apply border-t border-border/50;
 }
 
 .rsd-preview .rsd-code {

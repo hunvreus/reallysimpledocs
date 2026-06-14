@@ -1,4 +1,17 @@
-import { Card, CardGrid, Code } from "reallysimpledocs/components";
+import { Card, CardGrid, Code, Preview } from "reallysimpledocs/components";
+
+export const gridSource = `<CardGrid>
+  <Card title="Markdown" description="The default content format.">
+    Best for normal docs pages.
+  </Card>
+  <Card title="MDX" description="The advanced content format." href="/components/">
+    Best for components and previews.
+  </Card>
+</CardGrid>`;
+
+export const cardSource = `<Card title="Custom width" description="Use class overrides for layout changes." class="max-w-sm">
+  This card keeps Basecoat styling and only changes its outer sizing.
+</Card>`;
 
 # Card and CardGrid
 
@@ -22,18 +35,22 @@ Use `Card` and `CardGrid` for small groups of related links, concepts, or next a
 
 ## Examples
 
-<CardGrid>
-  <Card title="Markdown" description="The default content format.">
-    Best for normal docs pages.
-  </Card>
-  <Card title="MDX" description="The advanced content format." href="/components/">
-    Best for components and previews.
-  </Card>
-</CardGrid>
+<Preview code={gridSource} lang="mdx" class="block">
+  <CardGrid>
+    <Card title="Markdown" description="The default content format.">
+      Best for normal docs pages.
+    </Card>
+    <Card title="MDX" description="The advanced content format." href="/components/">
+      Best for components and previews.
+    </Card>
+  </CardGrid>
+</Preview>
 
-<Card title="Custom width" description="Use class overrides for layout changes." class="max-w-sm">
-  This card keeps Basecoat styling and only changes its outer sizing.
-</Card>
+<Preview code={cardSource} lang="mdx" class="justify-start">
+  <Card title="Custom width" description="Use class overrides for layout changes." class="max-w-sm">
+    This card keeps Basecoat styling and only changes its outer sizing.
+  </Card>
+</Preview>
 
 ## Options
 
