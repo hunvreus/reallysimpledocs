@@ -43,12 +43,8 @@
   pre:has(> code) {
     @apply relative max-w-full overflow-x-auto;
   }
-  pre:has(> code)::after {
-    @apply pointer-events-none absolute inset-y-0 right-0 z-10 w-16 rounded-r-lg bg-gradient-to-r from-transparent to-muted dark:to-muted/50;
-    content: "";
-  }
   pre:has(> code) > button {
-    @apply z-20 flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
+    @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
   }
   blockquote {
     @apply border-l-4 border-border pl-4;
