@@ -1,0 +1,75 @@
+import { Code, CodeGroup } from "reallysimpledocs/components";
+
+export const installCommand = `npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`;
+export const astroConfig = `import { defineConfig } from "astro/config";
+import reallySimpleDocs from "reallysimpledocs";
+
+export default defineConfig({
+  integrations: [
+    reallySimpleDocs({
+      title: "Acme Docs",
+    }),
+  ],
+});`;
+
+# Code
+
+Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the same example has package-manager, framework, or platform variants.
+
+## Usage
+
+<Code
+  lang="mdx"
+  code={`import { Code } from "reallysimpledocs/components";
+
+<Code title="Install" lang="bash" code={installCommand} />`}
+/>
+
+## Examples
+
+<Code title="Install" lang="bash" code={installCommand} />
+
+<Code title="astro.config.mjs" lang="js" code={astroConfig} />
+
+## Options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `code` | `string` | `""` | Code to highlight. |
+| `lang` | `string` | `"text"` | Language passed to Shiki. |
+| `title` | `string` | `undefined` | Optional header label. |
+| `class` | `string` | `""` | Extra classes applied to the code wrapper. |
+
+## Tabbed code
+
+Use `CodeGroup` for compact tabbed code blocks.
+
+<Code
+  lang="mdx"
+  code={`import { CodeGroup } from "reallysimpledocs/components";
+
+<CodeGroup
+  tabs={[
+    { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta" },
+    { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta" },
+  ]}
+/>`}
+/>
+
+<CodeGroup
+  defaultTab="npm"
+  tabs={[
+    { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+    { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+    { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+    { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
+  ]}
+/>
+
+### CodeGroup options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `tabs` | `{ label, lang?, code, value? }[]` | `[]` | Tabbed code entries. |
+| `defaultTab` | `string` | First tab | Initial active tab value. |
+| `class` | `string` | `""` | Extra classes applied to the wrapper. |

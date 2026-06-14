@@ -1,0 +1,46 @@
+import { Card, CardGrid, Code } from "reallysimpledocs/components";
+
+# Card and CardGrid
+
+Use `Card` and `CardGrid` for small groups of related links, concepts, or next actions.
+
+## Usage
+
+<Code
+  lang="mdx"
+  code={`import { Card, CardGrid } from "reallysimpledocs/components";
+
+<CardGrid>
+  <Card title="Markdown" description="The default content format.">
+    Best for normal docs pages.
+  </Card>
+  <Card title="MDX" href="/components/">
+    Best for component examples.
+  </Card>
+</CardGrid>`}
+/>
+
+## Examples
+
+<CardGrid>
+  <Card title="Markdown" description="The default content format.">
+    Best for normal docs pages.
+  </Card>
+  <Card title="MDX" description="The advanced content format." href="/components/">
+    Best for components and previews.
+  </Card>
+</CardGrid>
+
+<Card title="Custom width" description="Use class overrides for layout changes." class="max-w-sm">
+  This card keeps Basecoat styling and only changes its outer sizing.
+</Card>
+
+## Options
+
+| Component | Prop | Type | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `Card` | `title` | `string` | `undefined` | Main card heading. |
+| `Card` | `description` | `string` | `undefined` | Muted text below the title. |
+| `Card` | `href` | `string` | `undefined` | Renders the card as a link. |
+| `Card` | `class` | `string` | `""` | Extra classes applied to the card root. |
+| `CardGrid` | `class` | `string` | `""` | Extra classes applied to the grid root. |

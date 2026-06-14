@@ -160,7 +160,7 @@ html.dark .shiki span {
 }
 
 .rsd-code {
-  @apply my-6 overflow-hidden rounded-lg border bg-muted dark:bg-muted/50;
+  @apply my-6 overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
 }
 
 .rsd-code-title {
@@ -169,6 +169,26 @@ html.dark .shiki span {
 
 .rsd-code > .shiki {
   @apply my-0 rounded-none border-0;
+}
+
+.rsd-code-group {
+  @apply my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
+}
+
+.rsd-code-group > .tabs {
+  @apply my-0 min-w-0 max-w-full;
+}
+
+.rsd-code-group > .tabs > nav {
+  @apply border-b border-border/50 px-3 py-1;
+}
+
+.rsd-code-group .rsd-code {
+  @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
+}
+
+.rsd-code-group .rsd-code-title {
+  @apply hidden;
 }
 
 .rsd-preview {
@@ -180,7 +200,7 @@ html.dark .shiki span {
 }
 
 .rsd-steps {
-  @apply my-6 ml-0 list-none space-y-8 border-l pl-8;
+  @apply mb-12 ml-3 mt-6 list-none space-y-10 border-l pl-6 sm:ml-4 sm:pl-8;
   counter-reset: rsd-step;
 }
 
@@ -190,16 +210,16 @@ html.dark .shiki span {
 }
 
 .rsd-steps > li::before {
-  @apply absolute -left-[2.875rem] top-0 flex size-7 items-center justify-center rounded-full border bg-background text-xs font-medium text-muted-foreground shadow-sm;
+  @apply absolute -left-[2.375rem] top-0 flex size-7 items-center justify-center rounded-full border bg-background text-xs font-medium text-muted-foreground shadow-sm sm:-left-[2.875rem];
   content: counter(rsd-step);
 }
 
 .rsd-steps > li > h3 {
-  @apply mb-2 mt-0 text-base font-semibold;
+  @apply mb-4 mt-0 text-lg font-medium tracking-tight;
 }
 
 .rsd-steps > li > div {
-  @apply text-muted-foreground;
+  @apply leading-relaxed;
 }
 
 .rsd-steps > li > div > :first-child {
@@ -208,4 +228,12 @@ html.dark .shiki span {
 
 .rsd-steps > li > div > :last-child {
   @apply mb-0;
+}
+
+.prose > .alert,
+.prose > .alert-destructive,
+.prose > .card,
+.prose > .grid,
+.prose > .tabs {
+  @apply my-6;
 }

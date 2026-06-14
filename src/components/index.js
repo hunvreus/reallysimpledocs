@@ -7,6 +7,7 @@ export { default as Callout } from "../runtime/components/mdx/Callout.astro";
 export { default as Card } from "../runtime/components/mdx/Card.astro";
 export { default as CardGrid } from "../runtime/components/mdx/CardGrid.astro";
 export { default as Code } from "../runtime/components/mdx/Code.astro";
+export { default as CodeGroup } from "../runtime/components/mdx/CodeGroup.astro";
 export { default as LinkButton } from "../runtime/components/mdx/LinkButton.astro";
 export { default as Preview } from "../runtime/components/mdx/Preview.astro";
 export { default as Step } from "../runtime/components/mdx/Step.astro";

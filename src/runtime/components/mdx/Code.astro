@@ -2,8 +2,9 @@
 import { codeToHtml } from "shiki";
 
 const { code = "", lang = "text", title, class: className = "" } = Astro.props;
+const highlightLang = String(lang || "text").toLowerCase() === "mdx" ? "tsx" : String(lang || "text");
 const html = await codeToHtml(String(code || ""), {
-  lang: String(lang || "text"),
+  lang: highlightLang,
   themes: {
     light: "github-light",
     dark: "github-dark",

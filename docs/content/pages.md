@@ -40,6 +40,7 @@ RSD ships a small component set for MDX pages:
 - `Callout`
 - `Tabs`
 - `Code`
+- `CodeGroup`
 - `Preview`
 - `Steps`
 - `Card` and `CardGrid`

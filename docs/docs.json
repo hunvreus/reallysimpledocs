@@ -9,7 +9,23 @@
         { "slug": "index", "icon": "info" },
         { "slug": "install", "icon": "package" },
         { "slug": "customize", "icon": "slidersVertical" },
-        { "slug": "components", "icon": "blocks" },
+        {
+          "type": "submenu",
+          "label": "Components",
+          "icon": "blocks",
+          "open": true,
+          "items": [
+            { "slug": "components/index", "label": "Overview" },
+            "components/callout",
+            "components/code",
+            "components/code-group",
+            "components/preview",
+            "components/tabs",
+            "components/steps",
+            "components/cards",
+            "components/actions"
+          ]
+        },
         {
           "type": "submenu",
           "label": "Manage content",

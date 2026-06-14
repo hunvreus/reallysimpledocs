@@ -1,0 +1,60 @@
+import { Badge, Code, LinkButton } from "reallysimpledocs/components";
+
+# Badge and LinkButton
+
+Use `Badge` for short status labels. Use `LinkButton` for navigation actions that should look like buttons but behave like links.
+
+## Badge usage
+
+<Code
+  lang="mdx"
+  code={`import { Badge } from "reallysimpledocs/components";
+
+<Badge variant="secondary">Beta</Badge>`}
+/>
+
+## Badge examples
+
+<div class="my-6 flex flex-wrap gap-2">
+  <Badge variant="primary">Primary</Badge>
+  <Badge variant="secondary">Secondary</Badge>
+  <Badge variant="outline">Outline</Badge>
+  <Badge variant="ghost">Ghost</Badge>
+  <Badge variant="destructive">Destructive</Badge>
+</div>
+
+## Badge options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `variant` | `"primary" \| "secondary" \| "destructive" \| "outline" \| "ghost" \| "link"` | `"secondary"` | Basecoat badge class. |
+| `class` | `string` | `""` | Extra classes applied to the badge root. |
+
+## LinkButton usage
+
+<Code
+  lang="mdx"
+  code={`import { LinkButton } from "reallysimpledocs/components";
+
+<LinkButton href="/install/" variant="secondary">Install</LinkButton>`}
+/>
+
+## LinkButton examples
+
+<div class="my-6 flex flex-wrap gap-2">
+  <LinkButton href="/install/">Install</LinkButton>
+  <LinkButton href="/customize/" variant="secondary">Customize</LinkButton>
+  <LinkButton href="https://github.com/hunvreus/reallysimpledocs" variant="outline" target="_blank" rel="noreferrer">
+    GitHub
+  </LinkButton>
+</div>
+
+## LinkButton options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `href` | `string` | Required | Link target. |
+| `variant` | `"default" \| "secondary" \| "outline" \| "ghost" \| "link"` | `"default"` | Basecoat button class. |
+| `target` | `string` | `undefined` | Link target attribute. |
+| `rel` | `string` | `undefined` | Link rel attribute. |
+| `class` | `string` | `""` | Extra classes applied to the link root. |

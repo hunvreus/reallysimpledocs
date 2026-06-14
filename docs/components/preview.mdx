@@ -1,0 +1,50 @@
+import { Callout, Code, Preview } from "reallysimpledocs/components";
+
+export const buttonSource = `<button type="button" class="btn">Save changes</button>`;
+export const astroConfig = `import { defineConfig } from "astro/config";
+import reallySimpleDocs from "reallysimpledocs";
+
+export default defineConfig({
+  integrations: [
+    reallySimpleDocs({
+      title: "Acme Docs",
+    }),
+  ],
+});`;
+
+# Preview
+
+Use `Preview` for component examples where readers need to see the rendered result and the source code together.
+
+## Usage
+
+<Code
+  lang="mdx"
+  code={`import { Preview } from "reallysimpledocs/components";
+
+<Preview code={source} lang="html" class="max-w-sm">
+  <button type="button" class="btn">Save changes</button>
+</Preview>`}
+/>
+
+## Examples
+
+<Preview code={buttonSource} lang="html" class="max-w-sm">
+  <button type="button" class="btn">Save changes</button>
+</Preview>
+
+<Preview code={astroConfig} lang="js" title="astro.config.mjs" defaultTab="code">
+  <Callout type="tip" title="Configuration">
+    This example opens on the source tab.
+  </Callout>
+</Preview>
+
+## Options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `code` | `string` | `""` | Source shown in the code tab. |
+| `lang` | `string` | `"html"` | Language passed to Shiki. |
+| `title` | `string` | `undefined` | Label for the preview tab. |
+| `defaultTab` | `"preview" \| "code"` | `"preview"` | Initial active tab. |
+| `class` | `string` | `""` | Extra classes applied to the preview canvas. |

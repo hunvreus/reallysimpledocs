@@ -179,7 +179,7 @@ export function buildMenus(config, currentSlug) {
       type: "item",
       icon,
       url: page.path,
-      label: page.title,
+      label: item.label || page.title,
       current: page.slug === currentSlug,
       keywords: page.title,
     };
@@ -330,6 +330,7 @@ async function highlightToken(token) {
 function normalizeLanguage(lang) {
   const value = lang?.trim().split(/\s+/)[0].toLowerCase() || "text";
   if (value === "njk") return "html";
+  if (value === "mdx") return "tsx";
   if (value === "sh" || value === "shell") return "bash";
   return value;
 }

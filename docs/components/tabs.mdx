@@ -1,0 +1,64 @@
+import { Callout, Code, Tabs } from "reallysimpledocs/components";
+
+# Tabs
+
+Use `Tabs` for mutually exclusive examples, such as package managers, frameworks, or operating systems. Use `CodeGroup` instead when the only content in each tab is code.
+
+The API is data-driven because Astro components cannot reliably inspect child component props at runtime.
+
+## Usage
+
+<Code
+  lang="mdx"
+  code={`import { Code, Tabs } from "reallysimpledocs/components";
+
+<Tabs
+  tabs={[
+    { label: "npm", slot: "npm" },
+    { label: "pnpm", slot: "pnpm" },
+  ]}
+>
+  <Code slot="npm" lang="bash" code="npm install reallysimpledocs@beta" />
+  <Code slot="pnpm" lang="bash" code="pnpm add reallysimpledocs@beta" />
+</Tabs>`}
+/>
+
+## Examples
+
+<Tabs
+  tabs={[
+    { label: "npm", slot: "npm" },
+    { label: "pnpm", slot: "pnpm" },
+    { label: "bun", slot: "bun" },
+  ]}
+>
+  <Code slot="npm" lang="bash" code={`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+  <Code slot="pnpm" lang="bash" code={`pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+  <Code slot="bun" lang="bash" code={`bun add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+</Tabs>
+
+<Tabs
+  variant="line"
+  defaultTab="manual"
+  tabs={[
+    { label: "Integration", slot: "integration" },
+    { label: "Manual", slot: "manual" },
+  ]}
+>
+  <Callout slot="integration" type="tip" title="Recommended">
+    Let the integration wire routes and assets for the docs section.
+  </Callout>
+  <Callout slot="manual" type="warning" title="Manual setup">
+    Manual wiring is useful for debugging, but it is not the normal install path.
+  </Callout>
+</Tabs>
+
+## Options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `tabs` | `{ label, slot, value?, disabled? }[]` | `[]` | Tab metadata. `slot` must match a slotted child. |
+| `defaultTab` | `string` | First enabled tab | Initial active tab value. |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Passed to the tablist. |
+| `variant` | `string` | `undefined` | Basecoat tab variant, such as `"line"`. |
+| `class` | `string` | `""` | Extra classes applied to the tabs root. |
