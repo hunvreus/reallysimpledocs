@@ -164,7 +164,7 @@ html.dark .shiki span {
 }
 
 .rsd-code-title {
-  @apply border-b px-4 py-2 text-sm font-medium;
+  @apply border-b border-border/50 px-4 py-2 text-sm font-medium;
 }
 
 .rsd-code > .shiki {
