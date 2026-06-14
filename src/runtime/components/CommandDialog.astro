@@ -4,7 +4,7 @@ import { renderCommandDialog } from "../lib/macros.js";
 const { indexUrl } = Astro.props;
 ---
 
-<div data-rsd-command-search data-index-url={indexUrl}>
+<div data-search data-index-url={indexUrl}>
   <Fragment
     set:html={renderCommandDialog({
       id: "command-search",
@@ -18,7 +18,7 @@ const { indexUrl } = Astro.props;
 <script>
   import lunr from "lunr";
 
-  const root = document.querySelector("[data-rsd-command-search]");
+  const root = document.querySelector("[data-search]");
   const indexUrl = root?.getAttribute("data-index-url");
   const dialog = document.getElementById("command-search");
   const command = dialog?.querySelector(".command");
@@ -178,9 +178,9 @@ const { indexUrl } = Astro.props;
       ${items
         .map((item, index) => {
           const view = resultView(item, query);
-          return `<a id="command-search-result-${index}" role="menuitem" data-force data-rsd-search-result href="${escapeHtml(view.path)}">
-            <span data-rsd-search-title>${view.title}</span>
-            ${view.snippet ? `<span data-rsd-search-snippet>${view.snippet}</span>` : ""}
+          return `<a id="command-search-result-${index}" role="menuitem" data-force href="${escapeHtml(view.path)}">
+            <strong>${view.title}</strong>
+            ${view.snippet ? `<span>${view.snippet}</span>` : ""}
           </a>`;
         })
       .join("")}

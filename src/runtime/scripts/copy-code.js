@@ -23,14 +23,21 @@ const initCopyCode = (codeBlock) => {
   const codeEl = codeBlock.querySelector(":scope > code");
   if (!codeEl) return;
 
-  const frame = document.createElement("div");
-  frame.className = "code-block-frame";
-  codeBlock.parentNode.insertBefore(frame, codeBlock);
-  frame.appendChild(codeBlock);
+  let frame = codeBlock.parentElement?.classList.contains("code-block") ? codeBlock.parentElement : null;
+  if (!frame) {
+    frame = document.createElement("div");
+    frame.className = "code-block";
+    codeBlock.parentNode.insertBefore(frame, codeBlock);
+    frame.appendChild(codeBlock);
+  }
+
+  if (frame.querySelector(":scope > button")) {
+    codeBlock.dataset.copyCodeInitialized = true;
+    return;
+  }
 
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "code-block-copy";
   button.setAttribute("aria-label", "Copy code");
   button.innerHTML = Copy;
 

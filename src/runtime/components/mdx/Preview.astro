@@ -2,10 +2,10 @@
 import Code from "./Code.astro";
 
 const { code = "", lang = "html", title = "Preview", class: className = "" } = Astro.props;
-const id = `rsd-preview-${Math.random().toString(36).slice(2)}`;
+const id = `preview-${Math.random().toString(36).slice(2)}`;
 ---
 
-<div class="rsd-preview">
+<section class="preview">
   <div class="tabs">
     <nav role="tablist" aria-orientation="horizontal" data-variant="line">
       <button
@@ -29,18 +29,18 @@ const id = `rsd-preview-${Math.random().toString(36).slice(2)}`;
         Code
       </button>
     </nav>
-    <div
+    <section
       role="tabpanel"
       id={`${id}-preview-panel`}
       aria-labelledby={`${id}-preview-tab`}
       tabindex="-1"
       aria-selected="true"
     >
-      <div class:list={["rsd-preview-canvas", className]}>
+      <div class={className}>
         <slot />
       </div>
-    </div>
-    <div
+    </section>
+    <section
       role="tabpanel"
       id={`${id}-code-panel`}
       aria-labelledby={`${id}-code-tab`}
@@ -49,6 +49,6 @@ const id = `rsd-preview-${Math.random().toString(36).slice(2)}`;
       hidden
     >
       <Code code={code} lang={lang} />
-    </div>
+    </section>
   </div>
-</div>
+</section>

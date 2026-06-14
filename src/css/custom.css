@@ -43,15 +43,6 @@
   pre:has(> code) {
     @apply max-w-full overflow-x-auto;
   }
-  .code-block-frame {
-    @apply relative max-w-full;
-  }
-  .code-block-frame > pre {
-    @apply my-0;
-  }
-  .code-block-copy {
-    @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
-  }
   blockquote {
     @apply border-l-4 border-border pl-4;
   }
@@ -149,15 +140,15 @@ html.dark .shiki span {
   @apply sm:max-w-2xl;
 }
 
-.command [data-rsd-search-result] {
+[data-search] .command a[role='menuitem'] {
   @apply flex-col items-start gap-1;
 }
 
-.command [data-rsd-search-title] {
+[data-search] .command a[role='menuitem'] > strong {
   @apply font-medium;
 }
 
-.command [data-rsd-search-snippet] {
+[data-search] .command a[role='menuitem'] > span {
   @apply text-muted-foreground line-clamp-2 text-xs font-normal leading-snug;
 }
 
@@ -165,98 +156,110 @@ html.dark .shiki span {
   @apply bg-search-highlight/50 text-foreground rounded-sm px-0.5 dark:bg-search-highlight/25;
 }
 
-.rsd-code {
-  @apply my-6 overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
+.code-block {
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
 }
 
-.rsd-code-title {
+.code-block > header {
   @apply border-b border-border/50 px-4 py-2 text-sm font-medium;
 }
 
-.rsd-code > .shiki {
+.code-block > pre {
+  @apply my-0 max-w-full overflow-x-auto rounded-none border-0;
+}
+
+.code-block > pre > code {
+  @apply block min-w-full w-max px-4 py-3 text-[13px];
+}
+
+.code-block > .shiki {
   @apply my-0 rounded-none border-0;
 }
 
-.rsd-code-group {
+.code-block > button {
+  @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
+}
+
+.code-group {
   @apply my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
 }
 
-.rsd-code-group > .tabs {
+.code-group > .tabs {
   @apply my-0 min-w-0 max-w-full gap-0;
 }
 
-.rsd-code-group > .tabs > nav {
+.code-group > .tabs > nav {
   @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
 }
 
-.rsd-code-group > .tabs > [role='tabpanel'] {
+.code-group > .tabs > [role='tabpanel'] {
   @apply border-t border-border/50;
 }
 
-.rsd-code-group .rsd-code {
+.code-group .code-block {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
 }
 
-.rsd-code-group .shiki {
+.code-group .shiki {
   @apply bg-transparent dark:bg-transparent;
 }
 
-.rsd-code-group .rsd-code-title {
+.code-group .code-block > header {
   @apply hidden;
 }
 
-.rsd-preview {
+.preview {
   @apply my-6 max-w-full overflow-hidden rounded-lg border border-border/50 bg-muted dark:bg-muted/50;
 }
 
-.rsd-preview > .tabs {
+.preview > .tabs {
   @apply my-0 min-w-0 max-w-full gap-0;
 }
 
-.rsd-preview > .tabs > nav {
+.preview > .tabs > nav {
   @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
 }
 
-.rsd-preview > .tabs > [role='tabpanel'] {
+.preview > .tabs > [role='tabpanel'] {
   @apply border-t border-border/50;
 }
 
-.rsd-preview .rsd-code {
+.preview .code-block {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
 }
 
-.rsd-preview .shiki {
+.preview .shiki {
   @apply bg-transparent dark:bg-transparent;
 }
 
-.rsd-preview-canvas {
+.preview > .tabs > [role='tabpanel']:first-of-type > div {
   @apply flex min-h-64 w-full items-center justify-center p-6;
 }
 
-.rsd-steps {
+.steps {
   @apply mb-12 mt-6 md:ml-4 md:border-l md:pl-8;
-  counter-reset: rsd-step;
+  counter-reset: step;
 }
 
-.rsd-step {
-  counter-increment: rsd-step;
+.steps > section {
+  counter-increment: step;
 }
 
-.rsd-step > h3 {
+.steps > section > h3 {
   @apply relative mt-12 scroll-m-28 text-lg font-medium tracking-tight;
 }
 
-.rsd-step:first-child > h3 {
+.steps > section:first-child > h3 {
   @apply mt-0;
 }
 
-.rsd-step > h3::before {
+.steps > section > h3::before {
   @apply mr-4 inline-flex size-7 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground;
-  content: counter(rsd-step);
+  content: counter(step);
 }
 
 @media (width >= 48rem) {
-  .rsd-step > h3::before {
+  .steps > section > h3::before {
     position: absolute;
     left: 0;
     top: 0;
@@ -265,19 +268,23 @@ html.dark .shiki span {
   }
 }
 
-.rsd-step-body {
-  @apply mt-4 leading-relaxed;
-}
-
-.rsd-step-body > * + * {
+.steps > section > * + * {
   @apply mt-6;
 }
 
-.rsd-step-body > *:first-child {
+.steps > section > h3 + * {
+  @apply mt-4;
+}
+
+.steps > section > * {
+  @apply leading-relaxed;
+}
+
+.steps > section > *:first-child {
   @apply mt-0;
 }
 
-.rsd-step-body > *:last-child {
+.steps > section > *:last-child {
   @apply mb-0;
 }
 

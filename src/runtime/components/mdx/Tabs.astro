@@ -1,6 +1,6 @@
 ---
 const { tabs = [], defaultTab, orientation = "horizontal", variant, class: className = "" } = Astro.props;
-const id = `rsd-tabs-${Math.random().toString(36).slice(2)}`;
+const id = `tabs-${Math.random().toString(36).slice(2)}`;
 const normalizedTabs = tabs.map((tab, index) => ({
   ...tab,
   slot: tab.slot || String(index),

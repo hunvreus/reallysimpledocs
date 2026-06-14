@@ -13,7 +13,7 @@ const html = await codeToHtml(String(code || ""), {
 });
 ---
 
-<div class:list={["rsd-code", className]}>
-  {title && <div class="rsd-code-title">{title}</div>}
+<div class:list={["code-block", className]}>
+  {title && <header>{title}</header>}
   <Fragment set:html={html} />
 </div>

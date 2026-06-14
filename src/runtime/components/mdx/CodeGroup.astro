@@ -2,7 +2,7 @@
 import Code from "./Code.astro";
 
 const { tabs = [], defaultTab, class: className = "" } = Astro.props;
-const id = `rsd-code-group-${Math.random().toString(36).slice(2)}`;
+const id = `code-group-${Math.random().toString(36).slice(2)}`;
 const normalizedTabs = tabs.map((tab, index) => ({
   ...tab,
   value: tab.value || tab.label || String(index),
@@ -12,7 +12,7 @@ const normalizedTabs = tabs.map((tab, index) => ({
 const defaultValue = defaultTab || normalizedTabs[0]?.value;
 ---
 
-<div class:list={["rsd-code-group", className]}>
+<div class:list={["code-group", className]}>
   <div class="tabs">
     <nav role="tablist" aria-orientation="horizontal" data-variant="line">
       {
