@@ -30,11 +30,11 @@
     "shiki": "^4.1.0"
   },
   "peerDependencies": {
-    "basecoat-css": "^1.0.0-beta.1",
+    "basecoat-css": "^1.0.0-beta.2",
     "tailwindcss": ">=4.1.17 <5"
   },
   "devDependencies": {
-    "basecoat-css": "^1.0.0-beta.1",
+    "basecoat-css": "1.0.0-beta.2",
     "tailwindcss": "4.1.17"
   },
   "overrides": {
