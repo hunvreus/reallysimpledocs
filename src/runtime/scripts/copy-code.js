@@ -23,6 +23,11 @@ const initCopyCode = (codeBlock) => {
   const codeEl = codeBlock.querySelector(":scope > code");
   if (!codeEl) return;
 
+  const frame = document.createElement("div");
+  frame.className = "code-block-frame";
+  codeBlock.parentNode.insertBefore(frame, codeBlock);
+  frame.appendChild(codeBlock);
+
   const button = document.createElement("button");
   button.type = "button";
   button.className = "code-block-copy";
@@ -47,8 +52,8 @@ const initCopyCode = (codeBlock) => {
     }, 1200);
   });
 
-  codeBlock.insertBefore(button, codeBlock.firstChild);
+  frame.appendChild(button);
   codeBlock.dataset.copyCodeInitialized = true;
 };
 
-window.basecoat?.register("copy-code", "pre:not([data-copy-code-initialized])", initCopyCode);
+window.basecoat?.register("copy-code", "pre:has(> code):not([data-copy-code-initialized])", initCopyCode);

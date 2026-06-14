@@ -41,9 +41,15 @@
     @apply block min-w-full w-max px-4 py-3 text-[13px];
   }
   pre:has(> code) {
-    @apply relative max-w-full overflow-x-auto;
+    @apply max-w-full overflow-x-auto;
   }
-  pre:has(> code) > button {
+  .code-block-frame {
+    @apply relative max-w-full;
+  }
+  .code-block-frame > pre {
+    @apply my-0;
+  }
+  .code-block-copy {
     @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
   }
   blockquote {
