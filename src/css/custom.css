@@ -181,7 +181,7 @@ html.dark .shiki span {
 }
 
 .code-block > .shiki {
-  @apply my-0 rounded-none border-0;
+  @apply my-0 rounded-none border-0 bg-transparent dark:bg-transparent;
 }
 
 .code-block > button {
