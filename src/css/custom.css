@@ -192,7 +192,7 @@ html.dark .shiki span {
 }
 
 .rsd-preview {
-  @apply my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
+  @apply my-6 max-w-full overflow-hidden rounded-lg border border-border/50 bg-muted dark:bg-muted/50;
 }
 
 .rsd-preview > .tabs {
@@ -205,10 +205,6 @@ html.dark .shiki span {
 
 .rsd-preview .rsd-code {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
-}
-
-.rsd-preview-frame {
-  @apply m-3 rounded-md border border-border/50 bg-background;
 }
 
 .rsd-preview-canvas {

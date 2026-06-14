@@ -8,7 +8,7 @@ const showCode = defaultTab === "code";
 
 <div class="rsd-preview">
   <div class="tabs">
-    <nav role="tablist" aria-orientation="horizontal">
+    <nav role="tablist" aria-orientation="horizontal" data-variant="line">
       <button
         type="button"
         role="tab"
@@ -38,10 +38,8 @@ const showCode = defaultTab === "code";
       aria-selected={showCode ? "false" : "true"}
       hidden={showCode}
     >
-      <div class="rsd-preview-frame">
-        <div class:list={["rsd-preview-canvas", className]}>
-          <slot />
-        </div>
+      <div class:list={["rsd-preview-canvas", className]}>
+        <slot />
       </div>
     </div>
     <div
