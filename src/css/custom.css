@@ -157,13 +157,13 @@ html.dark .shiki span {
 }
 
 .code-block {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg;
 }
 
 .code-block > header,
 .code-group > header,
 .preview > header {
-  @apply flex h-10 items-center gap-2 border-b border-border/50 px-3 text-sm font-medium;
+  @apply flex h-10 items-center gap-2 border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
 }
 
 .code-block > header > :first-child,
@@ -181,7 +181,7 @@ html.dark .shiki span {
 }
 
 .code-block > .shiki {
-  @apply my-0 rounded-none border-0 bg-transparent dark:bg-transparent;
+  @apply my-0 rounded-none border-0;
 }
 
 .code-block > button {
@@ -201,7 +201,7 @@ html.dark .shiki span {
 }
 
 .code-group {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg;
 }
 
 .code-group > header > .tabs {
@@ -217,11 +217,7 @@ html.dark .shiki span {
 }
 
 .code-group .code-block {
-  @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
-}
-
-.code-group .shiki {
-  @apply bg-transparent dark:bg-transparent;
+  @apply my-0 min-w-0 rounded-none;
 }
 
 .code-group .code-block > header {
@@ -245,11 +241,7 @@ html.dark .shiki span {
 }
 
 .preview > [data-code-panel] .code-block {
-  @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
-}
-
-.preview > [data-code-panel] .shiki {
-  @apply bg-transparent dark:bg-transparent;
+  @apply my-0 min-w-0 rounded-none;
 }
 
 .preview > header > button[aria-label='Copy code'] {
