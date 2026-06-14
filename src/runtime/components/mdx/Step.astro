@@ -2,9 +2,9 @@
 const { title, class: className = "" } = Astro.props;
 ---
 
-<li class:list={["rsd-step", className]}>
+<section role="listitem" class:list={["rsd-step", className]}>
   {title && <h3>{title}</h3>}
-  <div>
+  <div class="rsd-step-body">
     <slot />
   </div>
-</li>
+</section>

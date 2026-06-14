@@ -228,33 +228,50 @@ html.dark .shiki span {
 }
 
 .rsd-steps {
-  @apply mb-12 ml-3 mt-6 list-none space-y-10 border-l pl-6 sm:ml-4 sm:pl-8;
+  @apply mb-12 mt-6 md:ml-4 md:border-l md:pl-8;
   counter-reset: rsd-step;
 }
 
-.rsd-steps > li {
-  @apply relative mt-0;
+.rsd-step {
   counter-increment: rsd-step;
 }
 
-.rsd-steps > li::before {
-  @apply absolute -left-[2.375rem] top-0 flex size-7 items-center justify-center rounded-full border bg-background text-xs font-medium text-muted-foreground shadow-sm sm:-left-[2.875rem];
-  content: counter(rsd-step);
+.rsd-step > h3 {
+  @apply relative mt-12 scroll-m-28 text-lg font-medium tracking-tight;
 }
 
-.rsd-steps > li > h3 {
-  @apply mb-4 mt-0 text-lg font-medium tracking-tight;
-}
-
-.rsd-steps > li > div {
-  @apply leading-relaxed;
-}
-
-.rsd-steps > li > div > :first-child {
+.rsd-step:first-child > h3 {
   @apply mt-0;
 }
 
-.rsd-steps > li > div > :last-child {
+.rsd-step > h3::before {
+  @apply mr-4 inline-flex size-7 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground;
+  content: counter(rsd-step);
+}
+
+@media (width >= 48rem) {
+  .rsd-step > h3::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-right: 0;
+    transform: translateX(-3.35rem);
+  }
+}
+
+.rsd-step-body {
+  @apply mt-4 leading-relaxed;
+}
+
+.rsd-step-body > * + * {
+  @apply mt-6;
+}
+
+.rsd-step-body > *:first-child {
+  @apply mt-0;
+}
+
+.rsd-step-body > *:last-child {
   @apply mb-0;
 }
 

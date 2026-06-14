@@ -2,6 +2,6 @@
 const { class: className = "" } = Astro.props;
 ---
 
-<ol class:list={["rsd-steps", className]}>
+<div role="list" class:list={["rsd-steps", className]}>
   <slot />
-</ol>
+</div>
