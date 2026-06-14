@@ -14,7 +14,7 @@ const defaultValue = defaultTab || normalizedTabs[0]?.value;
 
 <div class:list={["rsd-code-group", className]}>
   <div class="tabs">
-    <nav role="tablist" aria-orientation="horizontal">
+    <nav role="tablist" aria-orientation="horizontal" data-variant="line">
       {
         normalizedTabs.map((tab, index) => {
           const selected = tab.value === defaultValue;
