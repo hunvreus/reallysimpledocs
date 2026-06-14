@@ -1,6 +1,7 @@
 import { Code, CodeGroup, Preview } from "reallysimpledocs/components";
 
 export const packageManagerSource = `<CodeGroup
+  class="w-full"
   defaultTab="npm"
   tabs={[
     { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
@@ -11,6 +12,7 @@ export const packageManagerSource = `<CodeGroup
 />`;
 
 export const languageSource = `<CodeGroup
+  class="w-full"
   tabs={[
     { label: "Astro", lang: "js", code: "import { defineConfig } from \\"astro/config\\";\\nimport reallySimpleDocs from \\"reallysimpledocs\\";\\n\\nexport default defineConfig({\\n  integrations: [reallySimpleDocs()],\\n});" },
     { label: "Markdown", lang: "md", code: "# Introduction\\n\\nStart writing docs in Markdown." },
@@ -45,8 +47,9 @@ Use `CodeGroup` for tabbed code examples, usually package-manager commands or pl
 
 ## Examples
 
-<Preview code={packageManagerSource} lang="mdx" class="block">
+<Preview code={packageManagerSource} lang="mdx" class="block w-full">
   <CodeGroup
+    class="w-full"
     defaultTab="npm"
     tabs={[
       { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
@@ -57,8 +60,9 @@ Use `CodeGroup` for tabbed code examples, usually package-manager commands or pl
   />
 </Preview>
 
-<Preview code={languageSource} lang="mdx" class="block">
+<Preview code={languageSource} lang="mdx" class="block w-full">
   <CodeGroup
+    class="w-full"
     tabs={[
       { label: "Astro", lang: "js", code: `import { defineConfig } from "astro/config";
 import reallySimpleDocs from "reallysimpledocs";

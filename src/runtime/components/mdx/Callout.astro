@@ -3,6 +3,7 @@ import CircleAlert from "lucide-static/icons/circle-alert.svg?raw";
 import Info from "lucide-static/icons/info.svg?raw";
 import Lightbulb from "lucide-static/icons/lightbulb.svg?raw";
 import TriangleAlert from "lucide-static/icons/triangle-alert.svg?raw";
+import * as lucideIcons from "lucide-static";
 import { addSvgClass } from "../../lib/html.js";
 
 const { type, variant, title, icon: showIcon = true, class: className = "" } = Astro.props;
@@ -23,7 +24,24 @@ const icons = {
   warning: TriangleAlert,
   danger: CircleAlert,
 };
-const icon = showIcon === false ? "" : addSvgClass(icons[normalizedType] || Info, "size-4");
+
+function resolveNamedIcon(name) {
+  if (!name || typeof name !== "string") return "";
+  const trimmed = name.trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("<svg")) return trimmed;
+  const pascalName = trimmed.includes("-")
+    ? trimmed
+        .split("-")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join("")
+    : trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+  return lucideIcons[pascalName] || "";
+}
+
+const iconSource =
+  showIcon === false ? "" : typeof showIcon === "string" ? resolveNamedIcon(showIcon) : icons[normalizedType] || Info;
+const icon = addSvgClass(iconSource, "size-4");
 const heading = title || labels[normalizedType] || labels.note;
 ---
 

@@ -160,18 +160,6 @@ html.dark .shiki span {
   @apply transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
 }
 
-.alert[data-variant='info'] > svg,
-.alert[data-variant='info'] > h3,
-.alert[data-variant='info'] > section {
-  @apply text-sky-700 dark:text-sky-300;
-}
-
-.alert[data-variant='tip'] > svg,
-.alert[data-variant='tip'] > h3,
-.alert[data-variant='tip'] > section {
-  @apply text-emerald-700 dark:text-emerald-300;
-}
-
 .alert[data-variant='warning'] > svg,
 .alert[data-variant='warning'] > h3,
 .alert[data-variant='warning'] > section {
