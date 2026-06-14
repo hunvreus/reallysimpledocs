@@ -19,16 +19,30 @@ const copyText = async (text) => {
   if (!ok) throw new Error("Copy failed");
 };
 
+const activePanelCode = (root) => root.querySelector(':scope > .tabs > [role="tabpanel"]:not([hidden]) code');
+
 const initCopyCode = (codeBlock) => {
   const codeEl = codeBlock.querySelector(":scope > code");
   if (!codeEl) return;
 
-  let frame = codeBlock.parentElement?.classList.contains("code-block") ? codeBlock.parentElement : null;
+  let frame = codeBlock.closest(".code-group");
+  let getCode = frame ? () => activePanelCode(frame) || codeEl : () => codeEl;
+
+  const preview = codeBlock.closest(".preview");
+  const previewCodePanel = preview?.querySelector(':scope > .tabs > [role="tabpanel"]:last-of-type');
+  if (!frame && previewCodePanel?.contains(codeBlock)) {
+    frame = preview;
+    getCode = () => codeEl;
+  }
+
   if (!frame) {
-    frame = document.createElement("div");
-    frame.className = "code-block";
-    codeBlock.parentNode.insertBefore(frame, codeBlock);
-    frame.appendChild(codeBlock);
+    frame = codeBlock.parentElement?.classList.contains("code-block") ? codeBlock.parentElement : null;
+    if (!frame) {
+      frame = document.createElement("div");
+      frame.className = "code-block";
+      codeBlock.parentNode.insertBefore(frame, codeBlock);
+      frame.appendChild(codeBlock);
+    }
   }
 
   if (frame.querySelector(":scope > button")) {
@@ -42,7 +56,7 @@ const initCopyCode = (codeBlock) => {
   button.innerHTML = Copy;
 
   button.addEventListener("click", async () => {
-    const text = (codeEl.textContent || "").replace(/\n$/, "");
+    const text = (getCode()?.textContent || "").replace(/\n$/, "");
     if (!text) return;
 
     button.disabled = true;

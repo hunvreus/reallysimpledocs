@@ -176,12 +176,14 @@ html.dark .shiki span {
   @apply my-0 rounded-none border-0;
 }
 
-.code-block > button {
+.code-block > button,
+.code-group > button,
+.preview > button {
   @apply flex items-center justify-center size-6 absolute right-2.5 top-2.5 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md hover:bg-accent dark:hover:bg-accent/50 text-muted-foreground hover:text-foreground [&_svg]:size-4;
 }
 
 .code-group {
-  @apply my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
 }
 
 .code-group > .tabs {
@@ -209,7 +211,7 @@ html.dark .shiki span {
 }
 
 .preview {
-  @apply my-6 max-w-full overflow-hidden rounded-lg border border-border/50 bg-muted dark:bg-muted/50;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg border border-border/50 bg-muted dark:bg-muted/50;
 }
 
 .preview > .tabs {
@@ -224,12 +226,20 @@ html.dark .shiki span {
   @apply border-t border-border/50;
 }
 
-.preview .code-block {
+.preview > .tabs > [role='tabpanel']:last-of-type .code-block {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
 }
 
-.preview .shiki {
+.preview > .tabs > [role='tabpanel']:last-of-type .shiki {
   @apply bg-transparent dark:bg-transparent;
+}
+
+.preview > button {
+  @apply hidden;
+}
+
+.preview:has(> .tabs > [role='tabpanel']:last-of-type:not([hidden])) > button {
+  @apply flex;
 }
 
 .preview > .tabs > [role='tabpanel']:first-of-type > div {
