@@ -33,9 +33,9 @@ Use `Preview` for component examples where readers need to see the rendered resu
   <button type="button" class="btn">Save changes</button>
 </Preview>
 
-<Preview code={astroConfig} lang="js" title="astro.config.mjs" defaultTab="code">
+<Preview code={astroConfig} lang="js" title="astro.config.mjs">
   <Callout type="tip" title="Configuration">
-    This example opens on the source tab.
+    The source remains available from the Code tab.
   </Callout>
 </Preview>
 
@@ -46,5 +46,4 @@ Use `Preview` for component examples where readers need to see the rendered resu
 | `code` | `string` | `""` | Source shown in the code tab. |
 | `lang` | `string` | `"html"` | Language passed to Shiki. |
 | `title` | `string` | `undefined` | Label for the preview tab. |
-| `defaultTab` | `"preview" \| "code"` | `"preview"` | Initial active tab. |
 | `class` | `string` | `""` | Extra classes applied to the preview canvas. |

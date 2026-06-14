@@ -1,9 +1,8 @@
 ---
 import Code from "./Code.astro";
 
-const { code = "", lang = "html", title = "Preview", class: className = "", defaultTab = "preview" } = Astro.props;
+const { code = "", lang = "html", title = "Preview", class: className = "" } = Astro.props;
 const id = `rsd-preview-${Math.random().toString(36).slice(2)}`;
-const showCode = defaultTab === "code";
 ---
 
 <div class="rsd-preview">
@@ -14,8 +13,8 @@ const showCode = defaultTab === "code";
         role="tab"
         id={`${id}-preview-tab`}
         aria-controls={`${id}-preview-panel`}
-        aria-selected={showCode ? "false" : "true"}
-        tabindex={showCode ? "-1" : "0"}
+        aria-selected="true"
+        tabindex="0"
       >
         {title}
       </button>
@@ -24,8 +23,8 @@ const showCode = defaultTab === "code";
         role="tab"
         id={`${id}-code-tab`}
         aria-controls={`${id}-code-panel`}
-        aria-selected={showCode ? "true" : "false"}
-        tabindex={showCode ? "0" : "-1"}
+        aria-selected="false"
+        tabindex="-1"
       >
         Code
       </button>
@@ -35,8 +34,7 @@ const showCode = defaultTab === "code";
       id={`${id}-preview-panel`}
       aria-labelledby={`${id}-preview-tab`}
       tabindex="-1"
-      aria-selected={showCode ? "false" : "true"}
-      hidden={showCode}
+      aria-selected="true"
     >
       <div class:list={["rsd-preview-canvas", className]}>
         <slot />
@@ -47,8 +45,8 @@ const showCode = defaultTab === "code";
       id={`${id}-code-panel`}
       aria-labelledby={`${id}-code-tab`}
       tabindex="-1"
-      aria-selected={showCode ? "true" : "false"}
-      hidden={!showCode}
+      aria-selected="false"
+      hidden
     >
       <Code code={code} lang={lang} />
     </div>
