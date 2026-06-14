@@ -156,20 +156,8 @@ html.dark .shiki span {
   @apply bg-search-highlight/50 text-foreground rounded-sm px-0.5 dark:bg-search-highlight/25;
 }
 
-.docs-card {
-  @apply block rounded-lg border border-border/50 p-4 text-sm no-underline transition-colors;
-}
-
 .docs-card-link {
-  @apply hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
-}
-
-.docs-card > h3 {
-  @apply text-base font-medium leading-none;
-}
-
-.docs-card > p {
-  @apply mt-2 text-muted-foreground;
+  @apply transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
 }
 
 .alert[data-variant='info'] > svg,
@@ -350,7 +338,7 @@ html.dark .shiki span {
 
 .prose > .alert,
 .prose > .alert-destructive,
-.prose > .docs-card,
+.prose > .card,
 .prose > .grid,
 .prose > .tabs {
   @apply my-6;
