@@ -176,15 +176,19 @@ html.dark .shiki span {
 }
 
 .rsd-code-group > .tabs {
-  @apply my-0 min-w-0 max-w-full;
+  @apply my-0 min-w-0 max-w-full gap-0;
 }
 
 .rsd-code-group > .tabs > nav {
-  @apply border-b border-border/50 px-3 py-1;
+  @apply h-auto w-full justify-start rounded-none border-b border-border/50 bg-transparent px-3 py-1;
 }
 
 .rsd-code-group .rsd-code {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
+}
+
+.rsd-code-group .shiki {
+  @apply bg-transparent dark:bg-transparent;
 }
 
 .rsd-code-group .rsd-code-title {
@@ -196,15 +200,19 @@ html.dark .shiki span {
 }
 
 .rsd-preview > .tabs {
-  @apply my-0 min-w-0 max-w-full;
+  @apply my-0 min-w-0 max-w-full gap-0;
 }
 
 .rsd-preview > .tabs > nav {
-  @apply border-b border-border/50 px-3 py-1;
+  @apply h-auto w-full justify-start rounded-none border-b border-border/50 bg-transparent px-3 py-1;
 }
 
 .rsd-preview .rsd-code {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
+}
+
+.rsd-preview .shiki {
+  @apply bg-transparent dark:bg-transparent;
 }
 
 .rsd-preview-canvas {
