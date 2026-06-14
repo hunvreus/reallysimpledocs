@@ -20,6 +20,9 @@
   > h3 {
     @apply text-lg sm:text-xl lg:mt-8;
   }
+  > h1:first-child {
+    @apply hidden;
+  }
   p > a,
   li > a,
   dt > a,
@@ -154,4 +157,40 @@ html.dark .shiki span {
 
 .command mark {
   @apply bg-search-highlight/50 text-foreground rounded-sm px-0.5 dark:bg-search-highlight/25;
+}
+
+.rsd-code {
+  @apply my-6 overflow-hidden rounded-lg border bg-muted dark:bg-muted/50;
+}
+
+.rsd-code-title {
+  @apply border-b px-4 py-2 text-sm font-medium;
+}
+
+.rsd-code > .shiki {
+  @apply my-0 rounded-none border-0;
+}
+
+.rsd-preview {
+  @apply my-6;
+}
+
+.rsd-preview-canvas {
+  @apply flex min-h-64 w-full items-center justify-center p-6;
+}
+
+.rsd-steps {
+  @apply my-6 ml-0 list-none space-y-6 border-l pl-6;
+}
+
+.rsd-steps > li {
+  @apply relative mt-0;
+}
+
+.rsd-steps > li::before {
+  @apply absolute -left-[2.0625rem] top-1 flex size-4 rounded-full border bg-background content-[''];
+}
+
+.rsd-steps > li > h3 {
+  @apply mb-2 text-base font-semibold;
 }

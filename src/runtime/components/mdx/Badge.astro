@@ -1,0 +1,15 @@
+---
+const { variant = "secondary", class: className = "" } = Astro.props;
+const variants = {
+  primary: "badge-primary",
+  secondary: "badge-secondary",
+  destructive: "badge-destructive",
+  outline: "badge-outline",
+  ghost: "badge-ghost",
+  link: "badge-link",
+};
+---
+
+<span class:list={[variants[variant] || "badge-secondary", className]}>
+  <slot />
+</span>

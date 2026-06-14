@@ -14,7 +14,7 @@ export default defineConfig({
       style: "vega",
       site: {
         title: "ReallySimpleDocs",
-        subtitle: "v1.0.0-beta.1",
+        subtitle: "v1.0.0-beta.2",
         description: "A really simple documentation system for Astro.",
         url: "https://reallysimpledocs.com",
         assets: {

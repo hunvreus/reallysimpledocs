@@ -1,0 +1,18 @@
+---
+import { codeToHtml } from "shiki";
+
+const { code = "", lang = "text", title, class: className = "" } = Astro.props;
+const html = await codeToHtml(String(code || ""), {
+  lang: String(lang || "text"),
+  themes: {
+    light: "github-light",
+    dark: "github-dark",
+  },
+  defaultColor: false,
+});
+---
+
+<div class:list={["rsd-code", className]}>
+  {title && <div class="rsd-code-title">{title}</div>}
+  <Fragment set:html={html} />
+</div>

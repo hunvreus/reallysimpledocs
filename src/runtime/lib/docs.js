@@ -19,7 +19,16 @@ export const fallbackLabelFromSlug = (slug) => {
   return base.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
-export const slugToFile = (slug) => path.join(...String(slug).split("/")) + ".md";
+export const slugToFile = (slug, extension = ".md") => path.join(...String(slug).split("/")) + extension;
+
+export function resolveDocFile(config, slug) {
+  for (const extension of [".md", ".mdx"]) {
+    const file = slugToFile(slug, extension);
+    const filePath = path.join(config.docsDir, file);
+    if (fs.existsSync(filePath)) return { file, filePath, extension };
+  }
+  throw new Error(`Missing docs page for slug "${slug}". Expected .md or .mdx in ${config.docsDir}.`);
+}
 
 export function flattenMenuSlugs(menu) {
   const out = [];
@@ -44,13 +53,13 @@ export function flattenMenuSlugs(menu) {
 export function getPages(config) {
   const manifest = getManifest(config);
   return flattenMenuSlugs(manifest.menu || []).map((slug) => {
-    const file = slugToFile(slug);
-    const filePath = path.join(config.docsDir, file);
+    const { file, filePath, extension } = resolveDocFile(config, slug);
     const source = fs.readFileSync(filePath, "utf8");
     const parsed = parseDocMarkdown(source, fallbackLabelFromSlug(slug));
     return {
       slug,
       file,
+      extension,
       path: routePath(config.routeBase, slug),
       markdownPath: markdownPath(config.routeBase, slug),
       title: parsed.title,
@@ -111,6 +120,20 @@ export async function renderDoc(config, page) {
   await highlightCode(tokens);
   const html = marked.parser(tokens, { renderer });
   return { page, html, headings };
+}
+
+export function getDocHeadings(config, page) {
+  const parsed = parseDocMarkdown(getDocMarkdown(config, page), page.title);
+  const headings = [];
+  const slugger = new GithubSlugger();
+  const tokens = marked.lexer(parsed.body);
+  tokens.forEach((token) => {
+    if (token.type !== "heading" || token.depth <= 1 || token.depth >= 4) return;
+    const text = plainText(token.tokens || []).trim();
+    if (!text) return;
+    headings.push({ depth: token.depth, id: slugger.slug(text), text });
+  });
+  return headings;
 }
 
 export function renderNunjucksCompat(content) {
@@ -231,7 +254,7 @@ export function getPageItemSlug(item) {
 }
 
 function parseDocMarkdown(source, fallbackTitle) {
-  const content = String(source || "").trimStart();
+  const content = normalizeDocSource(source);
   const tokens = marked.lexer(content);
   const first = tokens[0];
 
@@ -249,7 +272,18 @@ function parseDocMarkdown(source, fallbackTitle) {
 }
 
 function markdownPlainText(markdown) {
-  return tokensText(marked.lexer(renderNunjucksCompat(markdown)));
+  return tokensText(marked.lexer(renderNunjucksCompat(normalizeDocSource(markdown))));
+}
+
+function normalizeDocSource(source) {
+  const withoutFrontmatter = String(source || "")
+    .trimStart()
+    .replace(/^---\s*\n[\s\S]*?\n---\s*\n?/, "");
+  const firstHeading = withoutFrontmatter.search(/^#\s+/m);
+  if (firstHeading > 0) return withoutFrontmatter.slice(firstHeading).trimStart();
+  return withoutFrontmatter
+    .replace(/^(\s*(?:import|export)\s+[^\n]*\n)+/m, "")
+    .trimStart();
 }
 
 async function highlightCode(tokens) {

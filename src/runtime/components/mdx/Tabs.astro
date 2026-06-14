@@ -1,0 +1,52 @@
+---
+const { tabs = [], defaultTab, orientation = "horizontal", variant, class: className = "" } = Astro.props;
+const id = `rsd-tabs-${Math.random().toString(36).slice(2)}`;
+const normalizedTabs = tabs.map((tab, index) => ({
+  ...tab,
+  slot: tab.slot || String(index),
+  value: tab.value || tab.slot || String(index),
+}));
+const defaultValue = defaultTab || normalizedTabs.find((tab) => !tab.disabled)?.value || normalizedTabs[0]?.value;
+---
+
+<div class:list={["tabs", className]}>
+  <nav role="tablist" aria-orientation={orientation} data-variant={variant}>
+    {
+      normalizedTabs.map((tab, index) => {
+        const selected = tab.value === defaultValue;
+        return (
+          <button
+            type="button"
+            role="tab"
+            id={`${id}-tab-${index + 1}`}
+            aria-controls={`${id}-panel-${index + 1}`}
+            aria-selected={selected ? "true" : "false"}
+            tabindex={selected && !tab.disabled ? "0" : "-1"}
+            disabled={tab.disabled}
+          >
+            {tab.label}
+          </button>
+        );
+      })
+    }
+  </nav>
+  {
+    await Promise.all(
+      normalizedTabs.map(async (tab, index) => {
+        const selected = tab.value === defaultValue;
+        return (
+          <div
+            role="tabpanel"
+            id={`${id}-panel-${index + 1}`}
+            aria-labelledby={`${id}-tab-${index + 1}`}
+            tabindex="-1"
+            aria-selected={selected ? "true" : "false"}
+            hidden={!selected}
+          >
+            <Fragment set:html={await Astro.slots.render(tab.slot)} />
+          </div>
+        );
+      }),
+    )
+  }
+</div>

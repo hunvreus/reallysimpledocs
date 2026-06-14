@@ -1,0 +1,33 @@
+---
+import CircleAlert from "lucide-static/icons/circle-alert.svg?raw";
+import Info from "lucide-static/icons/info.svg?raw";
+import Lightbulb from "lucide-static/icons/lightbulb.svg?raw";
+import TriangleAlert from "lucide-static/icons/triangle-alert.svg?raw";
+import { addSvgClass } from "../../lib/html.js";
+
+const { type = "note", title, class: className = "" } = Astro.props;
+const normalizedType = String(type || "note").toLowerCase();
+const destructive = normalizedType === "danger";
+const labels = {
+  note: "Note",
+  tip: "Tip",
+  warning: "Warning",
+  danger: "Danger",
+};
+const icons = {
+  note: Info,
+  tip: Lightbulb,
+  warning: TriangleAlert,
+  danger: CircleAlert,
+};
+const icon = addSvgClass(icons[normalizedType] || Info, "size-4");
+const heading = title || labels[normalizedType] || labels.note;
+---
+
+<div class:list={[destructive ? "alert-destructive" : "alert", className]}>
+  <Fragment set:html={icon} />
+  <h3>{heading}</h3>
+  <section>
+    <slot />
+  </section>
+</div>

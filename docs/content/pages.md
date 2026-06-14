@@ -2,7 +2,7 @@
 
 ## Title
 
-Each page is a regular Markdown file. Put one H1 at the top. RSD uses it as the page title:
+Each page is a Markdown or MDX file. Put one H1 at the top. RSD uses it as the page title:
 
 ```md
 # Page title
@@ -20,6 +20,31 @@ Use normal Markdown (headings, lists, tables, links). Headings power the “On t
 ## Section
 ### Subsection
 ```
+
+## MDX
+
+Use `.mdx` only when a page needs Astro components. Markdown remains the default format.
+
+```mdx
+import { Callout } from "reallysimpledocs/components";
+
+# Page title
+
+<Callout type="tip">
+  This page uses MDX.
+</Callout>
+```
+
+RSD ships a small component set for MDX pages:
+
+- `Callout`
+- `Tabs`
+- `Code`
+- `Preview`
+- `Steps`
+- `Card` and `CardGrid`
+- `Badge`
+- `LinkButton`
 
 ## Code
 

@@ -9,6 +9,7 @@
         { "slug": "index", "icon": "info" },
         { "slug": "install", "icon": "package" },
         { "slug": "customize", "icon": "slidersVertical" },
+        { "slug": "components", "icon": "blocks" },
         {
           "type": "submenu",
           "label": "Manage content",

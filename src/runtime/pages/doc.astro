@@ -1,7 +1,8 @@
 ---
 import config from "virtual:reallysimpledocs/config";
+import { getMdxPage } from "virtual:reallysimpledocs/mdx-pages";
 import DocsLayout from "../components/DocsLayout.astro";
-import { getPages, renderDoc } from "../lib/docs.js";
+import { getDocHeadings, getPages, renderDoc } from "../lib/docs.js";
 import { routeSlug } from "../lib/paths.js";
 
 export function getStaticPaths() {
@@ -12,9 +13,12 @@ export function getStaticPaths() {
 }
 
 const { page } = Astro.props;
-const doc = await renderDoc(config, page);
+const isMdx = page.extension === ".mdx";
+const mdxModule = isMdx ? await getMdxPage(page.slug) : null;
+const MdxContent = mdxModule?.Content || mdxModule?.default;
+const doc = isMdx ? { page, headings: getDocHeadings(config, page), html: "" } : await renderDoc(config, page);
 ---
 
 <DocsLayout page={page} headings={doc.headings}>
-  <Fragment set:html={doc.html} />
+  {MdxContent ? <MdxContent /> : <Fragment set:html={doc.html} />}
 </DocsLayout>

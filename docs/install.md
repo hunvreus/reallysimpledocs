@@ -50,6 +50,8 @@
 
 You can then [customize your site](/customize/) and [write docs](/content/pages/).
 
+Markdown is the default content format. Use `.mdx` when a page needs Astro components from `reallysimpledocs/components`.
+
 ## Deploy
 
 Build the site with `npm run build` and upload `dist/` to a static host:

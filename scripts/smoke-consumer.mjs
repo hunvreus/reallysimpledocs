@@ -102,6 +102,7 @@ writeJson(path.join(appDir, "docs", "docs.json"), {
           label: "Learn",
           items: [
             { slug: "guide", icon: "book-open" },
+            { slug: "interactive", icon: "blocks" },
             {
               type: "submenu",
               label: "Deep",
@@ -131,6 +132,27 @@ fs.writeFileSync(
 This is a second page for navigation.
 `,
 );
+fs.writeFileSync(
+  path.join(appDir, "docs", "interactive.mdx"),
+  `import { Callout, Code, Preview } from "reallysimpledocs/components";
+
+export const demoSource = \`<button type="button" class="btn">Smoke action</button>\`;
+
+# Interactive
+
+This page proves packaged MDX docs can render exported RSD components.
+
+<Callout type="tip" title="MDX works">
+  Consumer-only keyword: mdx-orbit-smoke.
+</Callout>
+
+<Preview code={demoSource} lang="html">
+  <button type="button" class="btn">Smoke action</button>
+</Preview>
+
+<Code title="Command" lang="bash" code={\`npm run build\`} />
+`,
+);
 fs.mkdirSync(path.join(appDir, "docs", "deep"), { recursive: true });
 fs.writeFileSync(
   path.join(appDir, "docs", "deep", "nested.md"),
@@ -145,10 +167,12 @@ run("npm", ["run", "build"], { cwd: appDir });
 
 assertFile(path.join(appDir, "dist", "docs", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "guide", "index.html"));
+assertFile(path.join(appDir, "dist", "docs", "interactive", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "deep", "nested", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "search-index.json"));
 assertFile(path.join(appDir, "dist", "docs", "index.md"));
 assertFile(path.join(appDir, "dist", "docs", "guide.md"));
+assertFile(path.join(appDir, "dist", "docs", "interactive.md"));
 assertFile(path.join(appDir, "dist", "docs", "deep", "nested.md"));
 assertFile(path.join(appDir, "dist", "llms.txt"));
 assertFile(path.join(appDir, "dist", "llms-full.txt"));
@@ -160,9 +184,13 @@ assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs/ind
 assertNotIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs.md"');
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "orbit");
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "smoke");
+assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "mdx");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "MDX works");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "Smoke action");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "Consumer docs");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Welcome](https://example.com/docs/)");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Guide](https://example.com/docs/guide/)");
+assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Interactive](https://example.com/docs/interactive/)");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Nested](https://example.com/docs/deep/nested/)");
 
 console.log("Consumer smoke test passed.");

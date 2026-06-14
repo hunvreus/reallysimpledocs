@@ -1,0 +1,16 @@
+---
+const { title, description, href, class: className = "" } = Astro.props;
+const Tag = href ? "a" : "div";
+---
+
+<Tag href={href} class:list={["card no-underline", className]}>
+  {(title || description) && (
+    <header>
+      {title && <h3>{title}</h3>}
+      {description && <p>{description}</p>}
+    </header>
+  )}
+  <section>
+    <slot />
+  </section>
+</Tag>

@@ -1,0 +1,77 @@
+import {
+  Callout,
+  Card,
+  CardGrid,
+  Code,
+  Preview,
+  Step,
+  Steps,
+  Tabs,
+} from "reallysimpledocs/components";
+
+export const buttonSource = `<button type="button" class="btn">Save changes</button>`;
+
+# Components
+
+RSD supports optional MDX pages for docs that need Astro components. The default content model is still plain Markdown.
+
+<Callout type="tip" title="Use MDX only when needed">
+  Keep normal pages as `.md`. Use `.mdx` for interactive examples, richer layout, or component-library documentation.
+</Callout>
+
+## Preview
+
+Use `Preview` when you want to show rendered markup and source code together.
+
+<Preview code={buttonSource} lang="html" class="max-w-sm">
+  <button type="button" class="btn">Save changes</button>
+</Preview>
+
+## Code
+
+Use `Code` when a fenced Markdown block is not enough and you need a title.
+
+<Code title="Install" lang="bash" code={`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+
+## Tabs
+
+Use `Tabs` for package manager, platform, or language variants.
+
+<Tabs
+  tabs={[
+    { label: "npm", slot: "npm" },
+    { label: "pnpm", slot: "pnpm" },
+  ]}
+>
+  <Code slot="npm" lang="bash" code={`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+  <Code slot="pnpm" lang="bash" code={`pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+</Tabs>
+
+## Steps
+
+Use `Steps` for setup flows.
+
+<Steps>
+  <Step title="Install packages">
+    Add RSD, Basecoat, and Tailwind CSS to your Astro app.
+  </Step>
+  <Step title="Create docs">
+    Add `docs/docs.json` and one or more Markdown or MDX pages.
+  </Step>
+  <Step title="Run Astro">
+    Start the dev server and open the URL printed by Astro.
+  </Step>
+</Steps>
+
+## Cards
+
+Use cards for small groups of related links or concepts.
+
+<CardGrid>
+  <Card title="Markdown" description="The default content format.">
+    Best for normal docs pages.
+  </Card>
+  <Card title="MDX" description="The advanced content format.">
+    Best for components and previews.
+  </Card>
+</CardGrid>

@@ -28,7 +28,7 @@ export default defineConfig({
       },
       site: {
         title: "ReallySimpleDocs",
-        subtitle: "v1.0.0-beta.1",
+        subtitle: "v1.0.0-beta.2",
         description: "A really simple documentation system.",
         url: "https://example.com",
         assets: {

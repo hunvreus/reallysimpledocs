@@ -61,6 +61,16 @@ Welcome to the docs.
 
 RSD injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
 
+Use `.md` for normal pages and `.mdx` when a page needs Astro components:
+
+```mdx
+import { Callout, Preview } from "reallysimpledocs/components";
+
+# Button
+
+<Callout type="tip">MDX is optional. Plain Markdown stays the default.</Callout>
+```
+
 ## Use Basecoat on the rest of the site
 
 RSD styles and scripts its generated docs pages. For custom Astro pages outside the docs route, use Basecoat directly in your own layout.

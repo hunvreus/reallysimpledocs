@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import fs from "node:fs";
 import path from "node:path";
+import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
 
 const basecoatStyles = new Set(["vega", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea"]);
@@ -22,6 +23,28 @@ const runtimePath = (relativePath) =>
 const cssPath = (relativePath) => fileURLToPath(new URL(`../css/${relativePath}`, import.meta.url));
 
 const normalizeArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
+
+const normalizeImportPath = (filePath) => filePath.replaceAll(path.sep, "/");
+
+function collectMdxModules(docsDir) {
+  if (!fs.existsSync(docsDir)) return {};
+  const modules = {};
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+        continue;
+      }
+      if (!entry.isFile() || !entry.name.endsWith(".mdx")) continue;
+      const relative = path.relative(docsDir, fullPath).replaceAll(path.sep, "/");
+      const slug = relative.replace(/\.mdx$/, "");
+      modules[slug] = normalizeImportPath(fullPath);
+    }
+  };
+  walk(docsDir);
+  return modules;
+}
 
 export default function reallySimpleDocs(options = {}) {
   const style = options.style || "vega";
@@ -47,13 +70,15 @@ export default function reallySimpleDocs(options = {}) {
         const root = fileURLToPath(config.root);
         const generatedDir = path.join(root, ".astro", "reallysimpledocs");
         const generatedStyles = path.join(generatedDir, "styles.css");
+        const docsDir = path.resolve(root, normalizedOptions.docsDir);
         const virtualConfig = {
           ...normalizedOptions,
           root,
-          docsDir: path.resolve(root, normalizedOptions.docsDir),
+          docsDir,
           siteFile: normalizedOptions.siteFile ? path.resolve(root, normalizedOptions.siteFile) : null,
           routeBase: normalizeRouteBase(normalizedOptions.routeBase),
         };
+        const mdxModules = collectMdxModules(docsDir);
         const resolveUserId = (id) => (id?.startsWith(".") ? path.resolve(root, id) : id);
         const components = {
           SidebarHeader:
@@ -71,7 +96,7 @@ export default function reallySimpleDocs(options = {}) {
             `@import ${JSON.stringify(cssPath("overrides.css"))};`,
             ...normalizedOptions.customCss.map((css) => `@import ${JSON.stringify(resolveUserId(css))};`),
             `@source ${JSON.stringify(runtimePath("**/*.{astro,js,ts}"))};`,
-            `@source ${JSON.stringify(path.join(virtualConfig.docsDir, "**/*.md"))};`,
+            `@source ${JSON.stringify(path.join(virtualConfig.docsDir, "**/*.{md,mdx}"))};`,
             "",
           ].join("\n"),
         );
@@ -98,6 +123,7 @@ export default function reallySimpleDocs(options = {}) {
         });
 
         updateConfig({
+          integrations: [mdx()],
           vite: {
             build: {
               cssMinify: false,
@@ -108,6 +134,7 @@ export default function reallySimpleDocs(options = {}) {
                 name: "reallysimpledocs-virtual-modules",
                 resolveId(id) {
                   if (id === "virtual:reallysimpledocs/config") return "\0virtual:reallysimpledocs/config";
+                  if (id === "virtual:reallysimpledocs/mdx-pages") return "\0virtual:reallysimpledocs/mdx-pages";
                   if (id === "virtual:reallysimpledocs/styles.css") return generatedStyles;
                   if (id === "virtual:reallysimpledocs/components/SidebarHeader") {
                     return "\0virtual:reallysimpledocs/components/SidebarHeader";
@@ -116,6 +143,22 @@ export default function reallySimpleDocs(options = {}) {
                 },
                 load(id) {
                   if (id === "\0virtual:reallysimpledocs/config") return `export default ${JSON.stringify(virtualConfig)};`;
+                  if (id === "\0virtual:reallysimpledocs/mdx-pages") {
+                    const imports = Object.entries(mdxModules)
+                      .map(([slug, filePath], index) => `import * as mdx${index} from ${JSON.stringify(filePath)};`)
+                      .join("\n");
+                    const moduleMap = Object.fromEntries(Object.keys(mdxModules).map((slug, index) => [slug, `mdx${index}`]));
+                    return `${imports}
+const modules = {
+${Object.entries(moduleMap)
+  .map(([slug, name]) => `  ${JSON.stringify(slug)}: ${name},`)
+  .join("\n")}
+};
+export async function getMdxPage(slug) {
+  return modules[slug || "index"] || null;
+}
+`;
+                  }
                   if (id === "\0virtual:reallysimpledocs/components/SidebarHeader") {
                     return `export { default } from ${JSON.stringify(resolveUserId(components.SidebarHeader))};`;
                   }
