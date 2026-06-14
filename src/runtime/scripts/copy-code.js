@@ -19,7 +19,7 @@ const copyText = async (text) => {
   if (!ok) throw new Error("Copy failed");
 };
 
-const activePanelCode = (root) => root.querySelector(':scope > .tabs > [role="tabpanel"]:not([hidden]) code');
+const activePanelCode = (root) => root.querySelector(':scope > [role="tabpanel"]:not([hidden]) code');
 
 const initCopyCode = (codeBlock) => {
   const codeEl = codeBlock.querySelector(":scope > code");
@@ -28,13 +28,13 @@ const initCopyCode = (codeBlock) => {
   let target = null;
   let frame = codeBlock.closest(".code-group");
   let getCode = frame ? () => activePanelCode(frame) || codeEl : () => codeEl;
-  if (frame) target = frame.querySelector(":scope > .tabs > header");
+  if (frame) target = frame.querySelector(":scope > header");
 
   const preview = codeBlock.closest(".preview");
-  const previewCodePanel = preview?.querySelector(":scope > .tabs > [data-code-panel]");
+  const previewCodePanel = preview?.querySelector(":scope > [data-code-panel]");
   if (!frame && previewCodePanel?.contains(codeBlock)) {
     frame = preview;
-    target = frame.querySelector(":scope > .tabs > header");
+    target = frame.querySelector(":scope > header");
     getCode = () => codeEl;
   }
 

@@ -161,14 +161,14 @@ html.dark .shiki span {
 }
 
 .code-block > header,
-.code-group > .tabs > header,
-.preview > .tabs > header {
+.code-group > header,
+.preview > header {
   @apply flex h-10 items-center gap-2 border-b border-border/50 px-3 text-sm font-medium;
 }
 
 .code-block > header > :first-child,
-.code-group > .tabs > header > :first-child,
-.preview > .tabs > header > :first-child {
+.code-group > header > :first-child,
+.preview > header > :first-child {
   @apply mr-auto;
 }
 
@@ -195,8 +195,8 @@ html.dark .shiki span {
 }
 
 .code-block > header > button,
-.code-group > .tabs > header > button,
-.preview > .tabs > header > button {
+.code-group > header > button,
+.preview > header > button {
   @apply ml-auto;
 }
 
@@ -204,15 +204,15 @@ html.dark .shiki span {
   @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
 }
 
-.code-group > .tabs {
+.code-group > header > .tabs {
   @apply my-0 min-w-0 max-w-full gap-0;
 }
 
-.code-group > .tabs > header > nav {
+.code-group > header > .tabs > nav {
   @apply h-full justify-start rounded-none bg-transparent p-0;
 }
 
-.code-group > .tabs > [role='tabpanel'] {
+.code-group > [role='tabpanel'] {
   @apply border-t-0;
 }
 
@@ -232,35 +232,35 @@ html.dark .shiki span {
   @apply relative my-6 max-w-full overflow-hidden rounded-lg border border-border/50 bg-muted dark:bg-muted/50;
 }
 
-.preview > .tabs {
+.preview > header > .tabs {
   @apply my-0 min-w-0 max-w-full gap-0;
 }
 
-.preview > .tabs > header > nav {
+.preview > header > .tabs > nav {
   @apply h-full justify-start rounded-none bg-transparent p-0;
 }
 
-.preview > .tabs > [role='tabpanel'] {
+.preview > [role='tabpanel'] {
   @apply border-t-0;
 }
 
-.preview > .tabs > [data-code-panel] .code-block {
+.preview > [data-code-panel] .code-block {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
 }
 
-.preview > .tabs > [data-code-panel] .shiki {
+.preview > [data-code-panel] .shiki {
   @apply bg-transparent dark:bg-transparent;
 }
 
-.preview > .tabs > header > button {
+.preview > header > button[aria-label='Copy code'] {
   display: none;
 }
 
-.preview:has(> .tabs > [data-code-panel]:not([hidden])) > .tabs > header > button {
+.preview:has(> [data-code-panel]:not([hidden])) > header > button[aria-label='Copy code'] {
   display: flex;
 }
 
-.preview > .tabs > [data-preview-panel] > div {
+.preview > [data-preview-panel] > div {
   @apply flex min-h-64 w-full items-center justify-center bg-background p-6;
 }
 
