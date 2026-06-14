@@ -7,30 +7,33 @@ const id = `preview-${Math.random().toString(36).slice(2)}`;
 
 <section class="preview">
   <div class="tabs">
-    <nav role="tablist" aria-orientation="horizontal" data-variant="line">
-      <button
-        type="button"
-        role="tab"
-        id={`${id}-preview-tab`}
-        aria-controls={`${id}-preview-panel`}
-        aria-selected="true"
-        tabindex="0"
-      >
-        {title}
-      </button>
-      <button
-        type="button"
-        role="tab"
-        id={`${id}-code-tab`}
-        aria-controls={`${id}-code-panel`}
-        aria-selected="false"
-        tabindex="-1"
-      >
-        Code
-      </button>
-    </nav>
+    <header>
+      <nav role="tablist" aria-orientation="horizontal" data-variant="line">
+        <button
+          type="button"
+          role="tab"
+          id={`${id}-preview-tab`}
+          aria-controls={`${id}-preview-panel`}
+          aria-selected="true"
+          tabindex="0"
+        >
+          {title}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id={`${id}-code-tab`}
+          aria-controls={`${id}-code-panel`}
+          aria-selected="false"
+          tabindex="-1"
+        >
+          Code
+        </button>
+      </nav>
+    </header>
     <section
       role="tabpanel"
+      data-preview-panel
       id={`${id}-preview-panel`}
       aria-labelledby={`${id}-preview-tab`}
       tabindex="-1"
@@ -42,6 +45,7 @@ const id = `preview-${Math.random().toString(36).slice(2)}`;
     </section>
     <section
       role="tabpanel"
+      data-code-panel
       id={`${id}-code-panel`}
       aria-labelledby={`${id}-code-tab`}
       tabindex="-1"

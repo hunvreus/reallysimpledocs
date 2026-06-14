@@ -14,25 +14,27 @@ const defaultValue = defaultTab || normalizedTabs[0]?.value;
 
 <div class:list={["code-group", className]}>
   <div class="tabs">
-    <nav role="tablist" aria-orientation="horizontal" data-variant="line">
-      {
-        normalizedTabs.map((tab, index) => {
-          const selected = tab.value === defaultValue;
-          return (
-            <button
-              type="button"
-              role="tab"
-              id={`${id}-tab-${index + 1}`}
-              aria-controls={`${id}-panel-${index + 1}`}
-              aria-selected={selected ? "true" : "false"}
-              tabindex={selected ? "0" : "-1"}
-            >
-              {tab.label}
-            </button>
-          );
-        })
-      }
-    </nav>
+    <header>
+      <nav role="tablist" aria-orientation="horizontal" data-variant="line">
+        {
+          normalizedTabs.map((tab, index) => {
+            const selected = tab.value === defaultValue;
+            return (
+              <button
+                type="button"
+                role="tab"
+                id={`${id}-tab-${index + 1}`}
+                aria-controls={`${id}-panel-${index + 1}`}
+                aria-selected={selected ? "true" : "false"}
+                tabindex={selected ? "0" : "-1"}
+              >
+                {tab.label}
+              </button>
+            );
+          })
+        }
+      </nav>
+    </header>
     {
       normalizedTabs.map((tab, index) => {
         const selected = tab.value === defaultValue;

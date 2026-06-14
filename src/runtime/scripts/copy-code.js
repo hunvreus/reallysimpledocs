@@ -28,13 +28,13 @@ const initCopyCode = (codeBlock) => {
   let target = null;
   let frame = codeBlock.closest(".code-group");
   let getCode = frame ? () => activePanelCode(frame) || codeEl : () => codeEl;
-  if (frame) target = frame.querySelector(":scope > .tabs > nav");
+  if (frame) target = frame.querySelector(":scope > .tabs > header");
 
   const preview = codeBlock.closest(".preview");
-  const previewCodePanel = preview?.querySelector(':scope > .tabs > [role="tabpanel"]:last-of-type');
+  const previewCodePanel = preview?.querySelector(":scope > .tabs > [data-code-panel]");
   if (!frame && previewCodePanel?.contains(codeBlock)) {
     frame = preview;
-    target = frame.querySelector(":scope > .tabs > nav");
+    target = frame.querySelector(":scope > .tabs > header");
     getCode = () => codeEl;
   }
 

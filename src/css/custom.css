@@ -160,11 +160,15 @@ html.dark .shiki span {
   @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
 }
 
-.code-block > header {
-  @apply flex min-h-10 items-center gap-2 border-b border-border/50 px-4 py-2 text-sm font-medium;
+.code-block > header,
+.code-group > .tabs > header,
+.preview > .tabs > header {
+  @apply flex h-10 items-center gap-2 border-b border-border/50 px-3 text-sm font-medium;
 }
 
-.code-block > header > :first-child {
+.code-block > header > :first-child,
+.code-group > .tabs > header > :first-child,
+.preview > .tabs > header > :first-child {
   @apply mr-auto;
 }
 
@@ -190,6 +194,12 @@ html.dark .shiki span {
   @apply flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:hover:bg-accent/50 [&_svg]:size-4;
 }
 
+.code-block > header > button,
+.code-group > .tabs > header > button,
+.preview > .tabs > header > button {
+  @apply ml-auto;
+}
+
 .code-group {
   @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted dark:bg-muted/50;
 }
@@ -198,16 +208,12 @@ html.dark .shiki span {
   @apply my-0 min-w-0 max-w-full gap-0;
 }
 
-.code-group > .tabs > nav {
-  @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
-}
-
-.code-group > .tabs > nav > button[aria-label='Copy code'] {
-  @apply ml-auto;
+.code-group > .tabs > header > nav {
+  @apply h-full justify-start rounded-none bg-transparent p-0;
 }
 
 .code-group > .tabs > [role='tabpanel'] {
-  @apply border-t border-border/50;
+  @apply border-t-0;
 }
 
 .code-group .code-block {
@@ -230,31 +236,31 @@ html.dark .shiki span {
   @apply my-0 min-w-0 max-w-full gap-0;
 }
 
-.preview > .tabs > nav {
-  @apply h-auto justify-start rounded-none bg-transparent px-3 py-1;
-}
-
-.preview > .tabs > nav > button[aria-label='Copy code'] {
-  @apply ml-auto hidden;
+.preview > .tabs > header > nav {
+  @apply h-full justify-start rounded-none bg-transparent p-0;
 }
 
 .preview > .tabs > [role='tabpanel'] {
-  @apply border-t border-border/50;
+  @apply border-t-0;
 }
 
-.preview > .tabs > [role='tabpanel']:last-of-type .code-block {
+.preview > .tabs > [data-code-panel] .code-block {
   @apply my-0 min-w-0 rounded-none bg-transparent dark:bg-transparent;
 }
 
-.preview > .tabs > [role='tabpanel']:last-of-type .shiki {
+.preview > .tabs > [data-code-panel] .shiki {
   @apply bg-transparent dark:bg-transparent;
 }
 
-.preview:has(> .tabs > [role='tabpanel']:last-of-type:not([hidden])) > .tabs > nav > button[aria-label='Copy code'] {
-  @apply flex;
+.preview > .tabs > header > button {
+  display: none;
 }
 
-.preview > .tabs > [role='tabpanel']:first-of-type > div {
+.preview:has(> .tabs > [data-code-panel]:not([hidden])) > .tabs > header > button {
+  display: flex;
+}
+
+.preview > .tabs > [data-preview-panel] > div {
   @apply flex min-h-64 w-full items-center justify-center bg-background p-6;
 }
 
