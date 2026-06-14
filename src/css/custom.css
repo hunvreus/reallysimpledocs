@@ -281,7 +281,7 @@ html.dark .shiki span {
 }
 
 .preview > [data-preview-panel] > div {
-  @apply flex min-h-64 w-full items-center justify-center bg-background p-6;
+  @apply flex min-h-64 w-full items-center justify-center bg-muted p-6 dark:bg-muted/50;
 }
 
 .steps {
