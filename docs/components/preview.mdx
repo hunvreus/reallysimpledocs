@@ -1,5 +1,3 @@
-import { Callout, Code, Preview } from "reallysimpledocs/components";
-
 export const buttonSource = `<button type="button" class="btn">Save changes</button>`;
 export const astroConfig = `import { defineConfig } from "astro/config";
 import reallySimpleDocs from "reallysimpledocs";
@@ -20,9 +18,7 @@ Use `Preview` for component examples where readers need to see the rendered resu
 
 <Code
   lang="mdx"
-  code={`import { Preview } from "reallysimpledocs/components";
-
-<Preview code={source} lang="html">
+  code={`<Preview code={source} lang="html">
   <button type="button" class="btn">Save changes</button>
 </Preview>`}
 />

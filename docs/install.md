@@ -50,7 +50,7 @@
 
 You can then [customize your site](/customize/) and [write docs](/content/pages/).
 
-Markdown is the default content format. Use `.mdx` when a page needs Astro components from `reallysimpledocs/components`.
+Markdown is the default content format. Use `.mdx` when a page needs RSD components. Common RSD components are available by default, so page-level imports are not required.
 
 ## Deploy
 

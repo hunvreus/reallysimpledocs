@@ -1,10 +1,8 @@
-import { Card, CardGrid } from "reallysimpledocs/components";
-
 # Components
 
-RSD ships Markdown directives and MDX components for documentation pages that need richer examples than plain Markdown. They are thin renderers built on Basecoat primitives where possible.
+RSD ships MDX components for documentation pages that need richer examples than plain Markdown. They are thin Astro components built on Basecoat primitives where possible.
 
-Use `.md` for normal pages and first-class directives like callouts and code groups. Use `.mdx` when a page needs custom Astro components or component-level control.
+Use `.md` for normal pages. Use `.mdx` when a page needs components. Common RSD components are available by default, so page-level imports are not required.
 
 <CardGrid>
   <Card title="Callout" description="Notes, tips, warnings, and destructive messages." href="/components/callout/" />

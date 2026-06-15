@@ -1,5 +1,3 @@
-import { Code, CodeGroup, Preview } from "reallysimpledocs/components";
-
 export const installCommand = `npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`;
 export const astroConfig = `import { defineConfig } from "astro/config";
 import reallySimpleDocs from "reallysimpledocs";
@@ -31,9 +29,7 @@ Use `Code` for a single syntax-highlighted code block. Use [`CodeGroup`](/compon
 
 <Code
   lang="mdx"
-  code={`import { Code } from "reallysimpledocs/components";
-
-<Code title="Install" lang="bash" code={installCommand} />`}
+  code={`<Code title="Install" lang="bash" code={installCommand} />`}
 />
 
 ## Options

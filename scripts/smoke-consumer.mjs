@@ -116,35 +116,14 @@ writeJson(path.join(appDir, "docs", "docs.json"), {
 });
 fs.writeFileSync(
   path.join(appDir, "docs", "index.md"),
-  [
-    "# Welcome",
-    "",
-    "This page proves the packaged integration can render a consumer docs site.",
-    "",
-    ":::warning Directive warning {icon=\"sparkles\"}",
-    "Consumer-only keyword: directive-orbit-smoke.",
-    ":::",
-    "",
-    ":::code-group",
-    "```js Astro",
-    "import { defineConfig } from \"astro/config\";",
-    "import reallySimpleDocs from \"reallysimpledocs\";",
-    "",
-    "export default defineConfig({",
-    "  integrations: [reallySimpleDocs()],",
-    "});",
-    "```",
-    "",
-    "```bash npm",
-    "npm run directive-smoke",
-    "```",
-    ":::",
-    "",
-    "## First section",
-    "",
-    "Search should find this consumer-only keyword: orbit-smoke.",
-    "",
-  ].join("\n"),
+  `# Welcome
+
+This page proves the packaged integration can render a consumer docs site.
+
+## First section
+
+Search should find this consumer-only keyword: orbit-smoke.
+`,
 );
 fs.writeFileSync(
   path.join(appDir, "docs", "guide.md"),
@@ -155,15 +134,13 @@ This is a second page for navigation.
 );
 fs.writeFileSync(
   path.join(appDir, "docs", "interactive.mdx"),
-  `import { Callout, Code, Preview } from "reallysimpledocs/components";
-
-export const demoSource = \`<button type="button" class="btn">Smoke action</button>\`;
+  `export const demoSource = \`<button type="button" class="btn">Smoke action</button>\`;
 
 # Interactive
 
-This page proves packaged MDX docs can render exported RSD components.
+This page proves packaged MDX docs can render default RSD components without imports.
 
-<Callout type="tip" title="MDX works">
+<Callout type="tip" title="MDX works" icon="sparkles">
   Consumer-only keyword: mdx-orbit-smoke.
 </Callout>
 
@@ -202,18 +179,14 @@ assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "Welcome");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "_astro/");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'data-md-url="/docs/index.md"');
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs/index.md"');
-assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'data-variant="warning"');
-assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "lucide-sparkles");
-assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "code-group");
-assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "defineConfig");
-assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "astro/config");
-assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "directive-smoke");
 assertNotIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs.md"');
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "orbit");
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "smoke");
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "mdx");
 assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "MDX works");
 assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "Smoke action");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "lucide-sparkles");
+assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), 'from "reallysimpledocs/components"');
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "Consumer docs");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Welcome](https://example.com/docs/)");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Guide](https://example.com/docs/guide/)");

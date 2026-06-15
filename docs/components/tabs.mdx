@@ -1,5 +1,3 @@
-import { Callout, Code, Preview, Tabs } from "reallysimpledocs/components";
-
 export const packageTabsSource = `<Tabs
   tabs={[
     { label: "npm", slot: "npm" },
@@ -38,9 +36,7 @@ The API is data-driven because Astro components cannot reliably inspect child co
 
 <Code
   lang="mdx"
-  code={`import { Code, Tabs } from "reallysimpledocs/components";
-
-<Tabs
+  code={`<Tabs
   tabs={[
     { label: "npm", slot: "npm" },
     { label: "pnpm", slot: "pnpm" },

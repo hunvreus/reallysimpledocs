@@ -61,29 +61,9 @@ Welcome to the docs.
 
 RSD injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
 
-Use Markdown-first directives for common richer docs blocks:
-
-````md
-:::warning Check this first {icon="triangle-alert"}
-Callouts support note, info, tip, warning, and danger variants.
-:::
-
-:::code-group
-```bash npm
-npm install reallysimpledocs@beta
-```
-
-```bash pnpm
-pnpm add reallysimpledocs@beta
-```
-:::
-````
-
-Use `.mdx` only when a page needs custom Astro components or component-level control:
+Use `.mdx` when a page needs RSD components. Common RSD components are available by default, so you do not need to import them in each page:
 
 ```mdx
-import { Callout, Preview } from "reallysimpledocs/components";
-
 # Button
 
 <Callout type="tip">MDX is optional. Plain Markdown stays the default.</Callout>

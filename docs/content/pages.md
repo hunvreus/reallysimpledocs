@@ -23,11 +23,9 @@ Use normal Markdown (headings, lists, tables, links). Headings power the “On t
 
 ## MDX
 
-Use `.mdx` only when a page needs Astro components. Markdown remains the default format.
+Use `.mdx` only when a page needs RSD or Astro components. Markdown remains the default format. Common RSD components are available by default, so page-level imports are not required.
 
 ```mdx
-import { Callout } from "reallysimpledocs/components";
-
 # Page title
 
 <Callout type="tip">

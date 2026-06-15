@@ -1,0 +1,65 @@
+# Callout
+
+Use `Callout` for notes, tips, warnings, and destructive or irreversible actions. Normal note, info, and tip callouts use the regular Basecoat alert color. Warning and danger callouts use variant colors.
+
+## Usage
+
+Use the component directly in MDX. RSD components are available by default, so no import is required.
+
+```mdx
+<Callout type="warning" title="Good to know">
+  Keep normal docs pages as Markdown. Use MDX when you need components.
+</Callout>
+```
+
+Set a custom Lucide icon with `icon`:
+
+```mdx
+<Callout icon="sparkles" title="Custom icon">
+  Use any Lucide icon name in camelCase or kebab-case.
+</Callout>
+```
+
+Hide the icon with `icon={false}`:
+
+```mdx
+<Callout icon={false} title="No icon">
+  This reads more like regular copy.
+</Callout>
+```
+
+## Options
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `type` | `"note"` \| `"tip"` \| `"warning"` \| `"danger"` | `"note"` | Main variant. |
+| `variant` | `"note"` \| `"tip"` \| `"warning"` \| `"danger"` | `undefined` | Alias for `type`; wins when both are set. |
+| `title` | `string` | Variant label | Heading displayed in the alert. |
+| `icon` | `string` \| `false` | Variant icon | Lucide icon name, custom SVG, or `false` to hide. |
+| `class` | `string` | `""` | Extra classes applied to the alert root. |
+
+## Examples
+
+<Callout title="Note">
+  Use a callout when the surrounding paragraph is not enough.
+</Callout>
+
+<Callout type="tip" title="Tip">
+  Use MDX only for pages that need components or custom layout.
+</Callout>
+
+<Callout type="warning" title="Warning">
+  Avoid putting app-only imports in reusable documentation examples.
+</Callout>
+
+<Callout type="danger" title="Destructive">
+  This variant is for irreversible actions, security risks, or migration warnings.
+</Callout>
+
+<Callout icon={false} title="No icon">
+  Set `icon={false}` when the message should read like normal copy.
+</Callout>
+
+<Callout icon="sparkles" title="Custom icon">
+  Use any Lucide icon name in camelCase or kebab-case.
+</Callout>
