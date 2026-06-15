@@ -2,10 +2,10 @@
 import * as lucideIcons from "lucide-static";
 import { addSvgClass } from "../../lib/html.js";
 
-const { type, variant, title = "Note", icon: iconName, class: className = "" } = Astro.props;
-const normalizedType = String(variant || type || "").toLowerCase();
-const calloutType = normalizedType === "danger" || normalizedType === "destructive" ? "danger" : normalizedType;
-const destructive = calloutType === "danger";
+const { type, title = "Note", icon: iconName, class: className = "" } = Astro.props;
+const normalizedType = String(type || "").toLowerCase();
+const calloutType = normalizedType === "warning" || normalizedType === "danger" ? normalizedType : "";
+const danger = calloutType === "danger";
 
 function resolveNamedIcon(name) {
   if (!name || typeof name !== "string") return "";
@@ -26,7 +26,7 @@ const icon = addSvgClass(iconSource, "size-4");
 const heading = title;
 ---
 
-<div class:list={[destructive ? "alert-destructive" : "alert", className]} data-variant={calloutType || undefined}>
+<div class:list={[danger ? "alert-destructive" : "alert", className]} data-variant={calloutType || undefined}>
   {icon && <Fragment set:html={icon} />}
   <h3>{heading}</h3>
   <section>

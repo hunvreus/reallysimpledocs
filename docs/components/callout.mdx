@@ -1,6 +1,6 @@
 # Callout
 
-Use `Callout` for notes, warnings, and destructive or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Warning and danger callouts use variant colors.
+Use `Callout` for notes, warnings, and dangerous or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Warning and danger callouts use variant colors.
 
 ## Usage
 
@@ -24,30 +24,33 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `type` | `"warning"` \| `"danger"` \| `"destructive"` | `undefined` | Optional severity variant. |
-| `variant` | `"warning"` \| `"danger"` \| `"destructive"` | `undefined` | Alias for `type`; wins when both are set. |
+| `type` | `"warning"` \| `"danger"` | `undefined` | Optional severity variant. |
 | `title` | `string` | `"Note"` | Heading displayed in the alert. |
 | `icon` | `string` | `undefined` | Optional Lucide icon name or custom SVG. |
 | `class` | `string` | `""` | Extra classes applied to the alert root. |
 
 ## Examples
 
+### Neutral
+
 <Callout title="Neutral">
   Use a callout when the surrounding paragraph is not enough.
 </Callout>
+
+### Custom icon
 
 <Callout icon="lightbulb" title="Custom icon">
   Add a Lucide icon when it helps explain the message.
 </Callout>
 
+### Warning
+
 <Callout type="warning" title="Warning">
   Avoid putting app-only imports in reusable documentation examples.
 </Callout>
 
-<Callout type="danger" title="Destructive">
-  This variant is for irreversible actions, security risks, or migration warnings.
-</Callout>
+### Danger
 
-<Callout icon="sparkles" title="Custom icon">
-  Use any Lucide icon name in camelCase or kebab-case.
+<Callout type="danger" title="Danger">
+  This variant is for irreversible actions, security risks, or migration warnings.
 </Callout>
