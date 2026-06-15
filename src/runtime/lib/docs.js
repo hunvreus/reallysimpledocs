@@ -4,6 +4,7 @@ import { marked } from "marked";
 import GithubSlugger from "github-slugger";
 import { codeToHtml } from "shiki";
 import * as lucideIcons from "lucide-static";
+import { escapeHtml } from "./html.js";
 import { markdownPath, routePath } from "./paths.js";
 
 export function getManifest(config) {
@@ -88,7 +89,7 @@ export function getMarkdownExport(config, page) {
 
 export async function renderDoc(config, page) {
   const parsed = parseDocMarkdown(getDocMarkdown(config, page), page.title);
-  const content = renderNunjucksCompat(parsed.body);
+  const { markdown: content, htmlBlocks } = await renderRsdBlocks(renderNunjucksCompat(parsed.body));
   const headings = [];
   const slugger = new GithubSlugger();
   const renderer = new marked.Renderer();
@@ -118,8 +119,241 @@ export async function renderDoc(config, page) {
 
   const tokens = marked.lexer(content);
   await highlightCode(tokens);
-  const html = marked.parser(tokens, { renderer });
+  let html = marked.parser(tokens, { renderer });
+  htmlBlocks.forEach((block, index) => {
+    html = html.replace(`<div data-rsd-block="${index}"></div>`, block);
+  });
   return { page, html, headings };
+}
+
+async function renderRsdBlocks(markdown) {
+  const lines = String(markdown || "").split(/\r?\n/);
+  const out = [];
+  const htmlBlocks = [];
+  let blockId = 0;
+  let fence = "";
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const fenceMatch = lines[index].match(/^(```+|~~~+)/);
+    if (fence) {
+      out.push(lines[index]);
+      if (lines[index].startsWith(fence)) fence = "";
+      continue;
+    }
+    if (fenceMatch) {
+      fence = fenceMatch[1];
+      out.push(lines[index]);
+      continue;
+    }
+
+    const opener = lines[index].match(/^:::\s*([A-Za-z][\w-]*)(?:\s+(.*))?\s*$/);
+    if (!opener) {
+      out.push(lines[index]);
+      continue;
+    }
+
+    const name = opener[1];
+    const body = [];
+    let closed = false;
+    index += 1;
+    for (; index < lines.length; index += 1) {
+      if (/^:::\s*$/.test(lines[index])) {
+        closed = true;
+        break;
+      }
+      body.push(lines[index]);
+    }
+
+    if (!closed) {
+      out.push(lines[index - body.length - 1], ...body);
+      break;
+    }
+
+    const rendered = await renderRsdBlock(name, opener[2] || "", body.join("\n"), blockId);
+    blockId += 1;
+    if (rendered) {
+      const placeholder = htmlBlocks.length;
+      htmlBlocks.push(rendered);
+      out.push(`<div data-rsd-block="${placeholder}"></div>`);
+    } else {
+      out.push([lines[index - body.length - 1], ...body, ":::"].join("\n"));
+    }
+  }
+
+  return { markdown: out.join("\n"), htmlBlocks };
+}
+
+async function renderRsdBlock(name, meta, body, id) {
+  const normalized = name.toLowerCase();
+  if (["note", "info", "tip", "warning", "danger"].includes(normalized)) {
+    return renderCalloutBlock(normalized, meta, body);
+  }
+  if (normalized === "code-group") return renderCodeGroupBlock(body, id);
+  if (normalized === "preview") return renderPreviewBlock(body, id);
+  return "";
+}
+
+async function renderCalloutBlock(type, meta, body) {
+  const options = parseDirectiveMeta(meta);
+  const title = options.title || calloutTitle(type);
+  const variant = type === "note" ? "info" : type;
+  const destructive = variant === "danger";
+  const icon = options.icon === "false" ? "" : addIconClass(resolveIcon(options.icon) || defaultCalloutIcon(type), "size-4");
+  const content = await renderNestedMarkdown(body);
+  return `<div class="${destructive ? "alert-destructive" : "alert"}" data-variant="${escapeHtml(variant)}">
+${icon}
+<h3>${escapeHtml(title)}</h3>
+<section>
+${content}
+</section>
+</div>`;
+}
+
+async function renderCodeGroupBlock(body, id) {
+  const entries = parseFencedEntries(body);
+  if (!entries.length) return "";
+  const defaultValue = entries[0].value;
+  const tabs = await Promise.all(
+    entries.map(async (entry, index) => {
+      const selected = entry.value === defaultValue;
+      return {
+        entry,
+        tabId: `rsd-code-group-${id}-tab-${index + 1}`,
+        panelId: `rsd-code-group-${id}-panel-${index + 1}`,
+        selected,
+        html: await renderCodeBlock(entry.code, entry.lang),
+      };
+    }),
+  );
+  return `<div class="code-group w-full">
+<header>
+<div class="tabs">
+<nav role="tablist" aria-orientation="horizontal" data-variant="line">
+${tabs
+  .map(
+    (tab) => `<button type="button" role="tab" id="${tab.tabId}" aria-controls="${tab.panelId}" aria-selected="${
+      tab.selected ? "true" : "false"
+    }" tabindex="${tab.selected ? "0" : "-1"}">${escapeHtml(tab.entry.label)}</button>`,
+  )
+  .join("\n")}
+</nav>
+</div>
+</header>
+${tabs
+  .map(
+    (tab) => `<div role="tabpanel" id="${tab.panelId}" aria-labelledby="${tab.tabId}" tabindex="-1" aria-selected="${
+      tab.selected ? "true" : "false"
+    }"${tab.selected ? "" : " hidden"}>
+${tab.html}
+</div>`,
+  )
+  .join("\n")}
+</div>`;
+}
+
+async function renderPreviewBlock(body, id) {
+  const entries = parseFencedEntries(body);
+  if (!entries.length) return "";
+  const entry = entries[0];
+  const previewId = `rsd-preview-${id}`;
+  const rendered = entry.lang === "html" ? entry.code : await renderCodeBlock(entry.code, entry.lang);
+  const code = await renderCodeBlock(entry.code, entry.lang);
+  return `<section class="preview">
+<header>
+<div class="tabs">
+<nav role="tablist" aria-orientation="horizontal" data-variant="line">
+<button type="button" role="tab" id="${previewId}-preview-tab" aria-controls="${previewId}-preview-panel" aria-selected="true" tabindex="0">Preview</button>
+<button type="button" role="tab" id="${previewId}-code-tab" aria-controls="${previewId}-code-panel" aria-selected="false" tabindex="-1">Code</button>
+</nav>
+</div>
+</header>
+<section role="tabpanel" data-preview-panel id="${previewId}-preview-panel" aria-labelledby="${previewId}-preview-tab" tabindex="-1" aria-selected="true">
+<div class="block w-full">
+${rendered}
+</div>
+</section>
+<section role="tabpanel" data-code-panel id="${previewId}-code-panel" aria-labelledby="${previewId}-code-tab" tabindex="-1" aria-selected="false" hidden>
+${code}
+</section>
+</section>`;
+}
+
+async function renderNestedMarkdown(markdown) {
+  const tokens = marked.lexer(markdown);
+  await highlightCode(tokens);
+  return marked.parser(tokens);
+}
+
+async function renderCodeBlock(code, lang) {
+  const html = await highlightToken({ text: code, lang });
+  return `<div class="code-block">${html}</div>`;
+}
+
+function parseFencedEntries(body) {
+  const entries = [];
+  const lines = String(body || "").split(/\r?\n/);
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const opener = lines[index].match(/^```([^\n`]*)\s*$/);
+    if (!opener) continue;
+    const code = [];
+    index += 1;
+    for (; index < lines.length; index += 1) {
+      if (/^```\s*$/.test(lines[index])) break;
+      code.push(lines[index]);
+    }
+    const [lang = "text", ...labelParts] = opener[1].trim().split(/\s+/).filter(Boolean);
+    const label = labelParts.join(" ") || lang || `Tab ${entries.length + 1}`;
+    entries.push({
+      lang: lang || "text",
+      label,
+      value: label.toLowerCase().replace(/\s+/g, "-"),
+      code: code.join("\n"),
+    });
+  }
+
+  return entries;
+}
+
+function parseDirectiveMeta(meta) {
+  const value = String(meta || "").trim();
+  const options = {};
+  const attrsMatch = value.match(/\{([^}]*)\}\s*$/);
+  const title = (attrsMatch ? value.slice(0, attrsMatch.index) : value).trim();
+  if (title) options.title = title.replace(/^["']|["']$/g, "");
+  if (!attrsMatch) return options;
+  attrsMatch[1].replace(/([\w-]+)=("[^"]*"|'[^']*'|[^\s]+)/g, (_, key, rawValue) => {
+    options[key] = String(rawValue).replace(/^["']|["']$/g, "");
+    return "";
+  });
+  return options;
+}
+
+function calloutTitle(type) {
+  return {
+    note: "Note",
+    info: "Info",
+    tip: "Tip",
+    warning: "Warning",
+    danger: "Danger",
+  }[type];
+}
+
+function defaultCalloutIcon(type) {
+  return {
+    note: resolveIcon("info"),
+    info: resolveIcon("info"),
+    tip: resolveIcon("lightbulb"),
+    warning: resolveIcon("triangle-alert"),
+    danger: resolveIcon("circle-alert"),
+  }[type];
+}
+
+function addIconClass(svg, className) {
+  if (!svg) return "";
+  const compact = svg.replace(/\s+/g, " ").trim();
+  if (compact.includes('class="')) return compact.replace('class="', `class="${className} `);
+  return compact.replace("<svg", `<svg class="${escapeHtml(className)}"`);
 }
 
 export function getDocHeadings(config, page) {
@@ -164,7 +398,9 @@ export function resolveIcon(icon) {
         .join("")
     : trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
   const iconClass = trimmed.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-  return lucideIcons[pascalName]?.replace('class="lucide', `class="lucide lucide-${iconClass}`) || "";
+  const svg = lucideIcons[pascalName] || "";
+  if (!svg || svg.includes(`lucide-${iconClass}`)) return svg;
+  return svg.replace('class="lucide', `class="lucide lucide-${iconClass}`);
 }
 
 export function buildMenus(config, currentSlug) {
@@ -282,7 +518,7 @@ function normalizeDocSource(source) {
   const firstHeading = withoutFrontmatter.search(/^#\s+/m);
   if (firstHeading > 0) return withoutFrontmatter.slice(firstHeading).trimStart();
   return withoutFrontmatter
-    .replace(/^(\s*(?:import|export)\s+[^\n]*\n)+/m, "")
+    .replace(/^(?:[ \t]*(?:import|export)\s+[^\n]*\n)+/, "")
     .trimStart();
 }
 

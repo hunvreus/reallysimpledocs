@@ -116,14 +116,35 @@ writeJson(path.join(appDir, "docs", "docs.json"), {
 });
 fs.writeFileSync(
   path.join(appDir, "docs", "index.md"),
-  `# Welcome
-
-This page proves the packaged integration can render a consumer docs site.
-
-## First section
-
-Search should find this consumer-only keyword: orbit-smoke.
-`,
+  [
+    "# Welcome",
+    "",
+    "This page proves the packaged integration can render a consumer docs site.",
+    "",
+    ":::warning Directive warning {icon=\"sparkles\"}",
+    "Consumer-only keyword: directive-orbit-smoke.",
+    ":::",
+    "",
+    ":::code-group",
+    "```js Astro",
+    "import { defineConfig } from \"astro/config\";",
+    "import reallySimpleDocs from \"reallysimpledocs\";",
+    "",
+    "export default defineConfig({",
+    "  integrations: [reallySimpleDocs()],",
+    "});",
+    "```",
+    "",
+    "```bash npm",
+    "npm run directive-smoke",
+    "```",
+    ":::",
+    "",
+    "## First section",
+    "",
+    "Search should find this consumer-only keyword: orbit-smoke.",
+    "",
+  ].join("\n"),
 );
 fs.writeFileSync(
   path.join(appDir, "docs", "guide.md"),
@@ -181,6 +202,12 @@ assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "Welcome");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "_astro/");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'data-md-url="/docs/index.md"');
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs/index.md"');
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'data-variant="warning"');
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "lucide-sparkles");
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "code-group");
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "defineConfig");
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "astro/config");
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "directive-smoke");
 assertNotIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs.md"');
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "orbit");
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "smoke");
