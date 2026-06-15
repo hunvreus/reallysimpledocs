@@ -1,8 +1,9 @@
 ---
-import Code from "./Code.astro";
+import { highlightCode } from "../../lib/highlight.js";
 
 const { code = "", lang = "html", title = "Preview", class: className = "" } = Astro.props;
 const id = `preview-${Math.random().toString(36).slice(2)}`;
+const html = await highlightCode(code, lang);
 ---
 
 <section class="preview">
@@ -53,6 +54,8 @@ const id = `preview-${Math.random().toString(36).slice(2)}`;
     aria-selected="false"
     hidden
   >
-    <Code code={code} lang={lang} />
+    <div class="code-block">
+      <Fragment set:html={html} />
+    </div>
   </section>
 </section>

@@ -1,19 +1,25 @@
 ---
-import { codeToHtml } from "shiki";
+import { highlightCode } from "../../lib/highlight.js";
 
-const { code = "", lang = "text", title, class: className = "" } = Astro.props;
-const highlightLang = String(lang || "text").toLowerCase() === "mdx" ? "tsx" : String(lang || "text");
-const html = await codeToHtml(String(code || ""), {
-  lang: highlightLang,
-  themes: {
-    light: "github-light",
-    dark: "github-dark",
-  },
-  defaultColor: false,
-});
+const { lang = "text", title, class: className = "" } = Astro.props;
+const slotHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const rawCode = decodeSlotText(slotHtml);
+const html = await highlightCode(rawCode, lang);
+
+function decodeSlotText(value) {
+  return String(value || "")
+    .replace(/^<p>/, "")
+    .replace(/<\/p>$/, "")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
+}
 ---
 
-<div class:list={["code-block", className]}>
+<div class:list={["code-block", className]} data-code-title={title || undefined}>
   {title && <header><span>{title}</span></header>}
   <Fragment set:html={html} />
 </div>

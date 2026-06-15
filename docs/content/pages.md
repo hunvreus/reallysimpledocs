@@ -42,8 +42,6 @@ RSD ships a small component set for MDX pages:
 - `Preview`
 - `Steps`
 - `Card` and `CardGrid`
-- `Badge`
-- `LinkButton`
 
 ## Code
 

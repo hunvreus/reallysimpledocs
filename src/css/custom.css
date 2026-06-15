@@ -161,6 +161,18 @@ html.dark .astro-code span {
   @apply bg-search-highlight/50 text-foreground rounded-sm px-0.5 dark:bg-search-highlight/25;
 }
 
+.docs-card {
+  @apply block w-full rounded-lg border bg-card p-3 text-card-foreground no-underline;
+}
+
+.docs-card > h3 {
+  @apply font-medium;
+}
+
+.docs-card > p {
+  @apply mt-1 text-sm text-muted-foreground;
+}
+
 .docs-card-link {
   @apply transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
 }
@@ -331,7 +343,7 @@ html.dark .astro-code span {
 
 .prose > .alert,
 .prose > .alert-destructive,
-.prose > .card,
+.prose > .docs-card,
 .prose > .grid,
 .prose > .tabs {
   @apply my-6;

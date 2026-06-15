@@ -9,17 +9,20 @@ export default defineConfig({
     }),
   ],
 });`;
-export const installCodeSource = `<Code title="Install" lang="bash" code={installCommand} />`;
-export const configCodeSource = `<Code title="astro.config.mjs" lang="js" code={astroConfig} />`;
+export const installCodeSource = `<Code title="Install" lang="bash">
+  {installCommand}
+</Code>`;
+export const configCodeSource = `<Code title="astro.config.mjs" lang="js">
+  {astroConfig}
+</Code>`;
 export const codeGroupSource = `<CodeGroup
   defaultTab="npm"
-  tabs={[
-    { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-    { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-    { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-    { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-  ]}
-/>`;
+>
+  <Code title="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+  <Code title="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+  <Code title="yarn" lang="bash">yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+  <Code title="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+</CodeGroup>`;
 
 # Code
 
@@ -27,16 +30,16 @@ Use `Code` for a single syntax-highlighted code block. Use [`CodeGroup`](/compon
 
 ## Usage
 
-<Code
-  lang="mdx"
-  code={`<Code title="Install" lang="bash" code={installCommand} />`}
-/>
+<Code lang="mdx">
+  {`<Code title="Install" lang="bash">
+  npm install reallysimpledocs@beta
+</Code>`}
+</Code>
 
 ## Options
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `code` | `string` | `""` | Code to highlight. |
 | `lang` | `string` | `"text"` | Language passed to Shiki. |
 | `title` | `string` | `undefined` | Optional header label. |
 | `class` | `string` | `""` | Extra classes applied to the code wrapper. |
@@ -46,13 +49,17 @@ Use `Code` for a single syntax-highlighted code block. Use [`CodeGroup`](/compon
 ### Command
 
 <Preview code={installCodeSource} lang="mdx" class="block w-full">
-  <Code title="Install" lang="bash" code={installCommand} />
+  <Code title="Install" lang="bash">
+    {installCommand}
+  </Code>
 </Preview>
 
 ### Configuration
 
 <Preview code={configCodeSource} lang="mdx" class="block w-full">
-  <Code title="astro.config.mjs" lang="js" code={astroConfig} />
+  <Code title="astro.config.mjs" lang="js">
+    {astroConfig}
+  </Code>
 </Preview>
 
 ### Tabbed code
@@ -62,11 +69,10 @@ This example uses [`CodeGroup`](/components/code-group/) for tabbed code. Its op
 <Preview code={codeGroupSource} lang="mdx" class="block w-full">
   <CodeGroup
     defaultTab="npm"
-    tabs={[
-      { label: "pnpm", lang: "bash", code: "pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-      { label: "npm", lang: "bash", code: "npm install reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-      { label: "yarn", lang: "bash", code: "yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-      { label: "bun", lang: "bash", code: "bun add reallysimpledocs@beta basecoat-css@beta tailwindcss" },
-    ]}
-  />
+  >
+    <Code title="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+    <Code title="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+    <Code title="yarn" lang="bash">yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+    <Code title="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+  </CodeGroup>
 </Preview>

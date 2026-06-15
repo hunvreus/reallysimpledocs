@@ -22,8 +22,7 @@
             "components/preview",
             "components/tabs",
             "components/steps",
-            "components/cards",
-            "components/actions"
+            { "slug": "components/cards", "label": "Card" }
           ]
         },
         {

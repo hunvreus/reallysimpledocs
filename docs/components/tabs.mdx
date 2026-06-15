@@ -5,9 +5,9 @@ export const packageTabsSource = `<Tabs
     { label: "bun", slot: "bun" },
   ]}
 >
-  <Code slot="npm" lang="bash" code={\`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss\`} />
-  <Code slot="pnpm" lang="bash" code={\`pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss\`} />
-  <Code slot="bun" lang="bash" code={\`bun add reallysimpledocs@beta basecoat-css@beta tailwindcss\`} />
+  <Code slot="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+  <Code slot="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+  <Code slot="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
 </Tabs>`;
 
 export const lineTabsSource = `<Tabs
@@ -34,18 +34,17 @@ The API is data-driven because Astro components cannot reliably inspect child co
 
 ## Usage
 
-<Code
-  lang="mdx"
-  code={`<Tabs
+<Code lang="mdx">
+  {`<Tabs
   tabs={[
     { label: "npm", slot: "npm" },
     { label: "pnpm", slot: "pnpm" },
   ]}
 >
-  <Code slot="npm" lang="bash" code="npm install reallysimpledocs@beta" />
-  <Code slot="pnpm" lang="bash" code="pnpm add reallysimpledocs@beta" />
+  <Code slot="npm" lang="bash">npm install reallysimpledocs@beta</Code>
+  <Code slot="pnpm" lang="bash">pnpm add reallysimpledocs@beta</Code>
 </Tabs>`}
-/>
+</Code>
 
 ## Options
 
@@ -69,9 +68,9 @@ The API is data-driven because Astro components cannot reliably inspect child co
       { label: "bun", slot: "bun" },
     ]}
   >
-    <Code slot="npm" lang="bash" code={`npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
-    <Code slot="pnpm" lang="bash" code={`pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
-    <Code slot="bun" lang="bash" code={`bun add reallysimpledocs@beta basecoat-css@beta tailwindcss`} />
+    <Code slot="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+    <Code slot="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+    <Code slot="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
   </Tabs>
 </Preview>
 
