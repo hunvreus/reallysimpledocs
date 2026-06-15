@@ -119,20 +119,24 @@
   }
 }
 
-.shiki {
+.shiki,
+.astro-code {
   @apply bg-muted dark:bg-muted/50;
   color: var(--shiki-light);
 }
 
-.shiki span {
+.shiki span,
+.astro-code span {
   color: var(--shiki-light);
 }
 
-html.dark .shiki {
+html.dark .shiki,
+html.dark .astro-code {
   color: var(--shiki-dark);
 }
 
-html.dark .shiki span {
+html.dark .shiki span,
+html.dark .astro-code span {
   color: var(--shiki-dark);
 }
 

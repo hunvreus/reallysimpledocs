@@ -124,6 +124,15 @@ export default function reallySimpleDocs(options = {}) {
 
         updateConfig({
           integrations: [mdx()],
+          markdown: {
+            shikiConfig: {
+              themes: {
+                light: "github-light",
+                dark: "github-dark",
+              },
+              defaultColor: false,
+            },
+          },
           vite: {
             build: {
               cssMinify: false,
