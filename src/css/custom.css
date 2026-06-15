@@ -121,7 +121,7 @@
 
 .shiki,
 .astro-code {
-  @apply bg-muted dark:bg-muted/50;
+  @apply bg-muted;
   color: var(--shiki-light);
 }
 
@@ -177,13 +177,13 @@ html.dark .astro-code span {
 }
 
 .code-block {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted;
 }
 
 .code-block > header,
 .code-group > header,
 .preview > header {
-  @apply flex h-10 items-center gap-2 border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
+  @apply flex h-10 items-center gap-2 border-b border-border/50 bg-muted px-3 text-sm font-medium;
 }
 
 .code-block > header > :first-child,
@@ -245,7 +245,7 @@ html.dark .astro-code span {
 }
 
 .preview {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg border border-border/50 bg-muted dark:bg-muted/50;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg border border-border/50;
 }
 
 .preview > header > .tabs {
@@ -273,7 +273,7 @@ html.dark .astro-code span {
 }
 
 .preview > [data-preview-panel] > div {
-  @apply flex min-h-64 w-full items-center justify-center bg-muted p-6 dark:bg-muted/50;
+  @apply flex min-h-64 w-full items-center justify-center bg-transparent p-6;
 }
 
 .steps {
