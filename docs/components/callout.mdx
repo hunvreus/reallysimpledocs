@@ -1,18 +1,18 @@
 # Callout
 
-Use `Callout` for notes, tips, warnings, and destructive or irreversible actions. Normal note, info, and tip callouts use the regular Basecoat alert color. Warning and danger callouts use variant colors.
+Use `Callout` for notes, warnings, and destructive or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Warning and danger callouts use variant colors.
 
 ## Usage
 
 Use the component directly in MDX. RSD components are available by default, so no import is required.
 
 ```mdx
-<Callout type="warning" title="Good to know">
+<Callout title="Good to know">
   Keep normal docs pages as Markdown. Use MDX when you need components.
 </Callout>
 ```
 
-Set a custom Lucide icon with `icon`:
+Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ```mdx
 <Callout icon="sparkles" title="Custom icon">
@@ -20,32 +20,24 @@ Set a custom Lucide icon with `icon`:
 </Callout>
 ```
 
-Hide the icon with `icon={false}`:
-
-```mdx
-<Callout icon={false} title="No icon">
-  This reads more like regular copy.
-</Callout>
-```
-
 ## Options
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `type` | `"note"` \| `"tip"` \| `"warning"` \| `"danger"` | `"note"` | Main variant. |
-| `variant` | `"note"` \| `"tip"` \| `"warning"` \| `"danger"` | `undefined` | Alias for `type`; wins when both are set. |
-| `title` | `string` | Variant label | Heading displayed in the alert. |
-| `icon` | `string` \| `false` | Variant icon | Lucide icon name, custom SVG, or `false` to hide. |
+| `type` | `"warning"` \| `"danger"` \| `"destructive"` | `undefined` | Optional severity variant. |
+| `variant` | `"warning"` \| `"danger"` \| `"destructive"` | `undefined` | Alias for `type`; wins when both are set. |
+| `title` | `string` | `"Note"` | Heading displayed in the alert. |
+| `icon` | `string` | `undefined` | Optional Lucide icon name or custom SVG. |
 | `class` | `string` | `""` | Extra classes applied to the alert root. |
 
 ## Examples
 
-<Callout title="Note">
+<Callout title="Neutral">
   Use a callout when the surrounding paragraph is not enough.
 </Callout>
 
-<Callout type="tip" title="Tip">
-  Use MDX only for pages that need components or custom layout.
+<Callout icon="lightbulb" title="Custom icon">
+  Add a Lucide icon when it helps explain the message.
 </Callout>
 
 <Callout type="warning" title="Warning">
@@ -54,10 +46,6 @@ Hide the icon with `icon={false}`:
 
 <Callout type="danger" title="Destructive">
   This variant is for irreversible actions, security risks, or migration warnings.
-</Callout>
-
-<Callout icon={false} title="No icon">
-  Set `icon={false}` when the message should read like normal copy.
 </Callout>
 
 <Callout icon="sparkles" title="Custom icon">

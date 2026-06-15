@@ -1,29 +1,11 @@
 ---
-import CircleAlert from "lucide-static/icons/circle-alert.svg?raw";
-import Info from "lucide-static/icons/info.svg?raw";
-import Lightbulb from "lucide-static/icons/lightbulb.svg?raw";
-import TriangleAlert from "lucide-static/icons/triangle-alert.svg?raw";
 import * as lucideIcons from "lucide-static";
 import { addSvgClass } from "../../lib/html.js";
 
-const { type, variant, title, icon: showIcon = true, class: className = "" } = Astro.props;
-const normalizedType = String(variant || type || "note").toLowerCase();
-const calloutType = normalizedType === "note" ? "info" : normalizedType;
+const { type, variant, title = "Note", icon: iconName, class: className = "" } = Astro.props;
+const normalizedType = String(variant || type || "").toLowerCase();
+const calloutType = normalizedType === "danger" || normalizedType === "destructive" ? "danger" : normalizedType;
 const destructive = calloutType === "danger";
-const labels = {
-  note: "Note",
-  info: "Info",
-  tip: "Tip",
-  warning: "Warning",
-  danger: "Danger",
-};
-const icons = {
-  note: Info,
-  info: Info,
-  tip: Lightbulb,
-  warning: TriangleAlert,
-  danger: CircleAlert,
-};
 
 function resolveNamedIcon(name) {
   if (!name || typeof name !== "string") return "";
@@ -39,13 +21,12 @@ function resolveNamedIcon(name) {
   return lucideIcons[pascalName] || "";
 }
 
-const iconSource =
-  showIcon === false ? "" : typeof showIcon === "string" ? resolveNamedIcon(showIcon) : icons[normalizedType] || Info;
+const iconSource = typeof iconName === "string" ? resolveNamedIcon(iconName) : "";
 const icon = addSvgClass(iconSource, "size-4");
-const heading = title || labels[normalizedType] || labels.note;
+const heading = title;
 ---
 
-<div class:list={[destructive ? "alert-destructive" : "alert", className]} data-variant={calloutType}>
+<div class:list={[destructive ? "alert-destructive" : "alert", className]} data-variant={calloutType || undefined}>
   {icon && <Fragment set:html={icon} />}
   <h3>{heading}</h3>
   <section>

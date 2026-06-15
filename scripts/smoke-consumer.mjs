@@ -140,7 +140,7 @@ fs.writeFileSync(
 
 This page proves packaged MDX docs can render default RSD components without imports.
 
-<Callout type="tip" title="MDX works" icon="sparkles">
+<Callout title="MDX works" icon="sparkles">
   Consumer-only keyword: mdx-orbit-smoke.
 </Callout>
 

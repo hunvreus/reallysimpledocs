@@ -28,7 +28,7 @@ Use `.mdx` only when a page needs RSD or Astro components. Markdown remains the 
 ```mdx
 # Page title
 
-<Callout type="tip">
+<Callout title="MDX works">
   This page uses MDX.
 </Callout>
 ```

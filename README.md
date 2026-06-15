@@ -66,7 +66,7 @@ Use `.mdx` when a page needs RSD components. Common RSD components are available
 ```mdx
 # Button
 
-<Callout type="tip">MDX is optional. Plain Markdown stays the default.</Callout>
+<Callout title="MDX works">MDX is optional. Plain Markdown stays the default.</Callout>
 ```
 
 ## Use Basecoat on the rest of the site
