@@ -178,7 +178,7 @@ html.dark .astro-code span {
 }
 
 .code-block {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted/50;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg;
 }
 
 .code-block > header,
@@ -274,7 +274,7 @@ html.dark .astro-code span {
 }
 
 .preview > [data-preview-panel] > div {
-  @apply flex min-h-64 w-full items-center justify-center bg-muted/50 p-6;
+  @apply flex min-h-64 w-full items-center justify-center p-6;
 }
 
 .steps {
