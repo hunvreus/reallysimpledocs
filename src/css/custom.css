@@ -121,8 +121,8 @@
 
 .shiki,
 .astro-code {
-  @apply bg-muted;
-  background-color: var(--color-muted) !important;
+  @apply bg-muted/50;
+  background-color: color-mix(in oklab, var(--color-muted) 50%, transparent) !important;
   color: var(--shiki-light);
 }
 
@@ -178,13 +178,13 @@ html.dark .astro-code span {
 }
 
 .code-block {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted;
+  @apply relative my-6 max-w-full overflow-hidden rounded-lg bg-muted/50;
 }
 
 .code-block > header,
 .code-group > header,
 .preview > header {
-  @apply flex h-10 items-center gap-2 border-b border-border/50 bg-muted px-3 text-sm font-medium;
+  @apply flex h-10 items-center gap-2 border-b border-border/50 bg-muted/50 px-3 text-sm font-medium;
 }
 
 .code-block > header > :first-child,
@@ -274,7 +274,7 @@ html.dark .astro-code span {
 }
 
 .preview > [data-preview-panel] > div {
-  @apply flex min-h-64 w-full items-center justify-center bg-transparent p-6;
+  @apply flex min-h-64 w-full items-center justify-center bg-muted/50 p-6;
 }
 
 .steps {
