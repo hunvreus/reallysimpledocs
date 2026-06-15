@@ -26,6 +26,14 @@ const normalizeArray = (value) => (Array.isArray(value) ? value : value ? [value
 
 const normalizeImportPath = (filePath) => filePath.replaceAll(path.sep, "/");
 
+const shikiConfig = {
+  themes: {
+    light: "github-light",
+    dark: "github-dark",
+  },
+  defaultColor: false,
+};
+
 function collectMdxModules(docsDir) {
   if (!fs.existsSync(docsDir)) return {};
   const modules = {};
@@ -123,15 +131,14 @@ export default function reallySimpleDocs(options = {}) {
         });
 
         updateConfig({
-          integrations: [mdx()],
+          integrations: [
+            mdx({
+              syntaxHighlight: "shiki",
+              shikiConfig,
+            }),
+          ],
           markdown: {
-            shikiConfig: {
-              themes: {
-                light: "github-light",
-                dark: "github-dark",
-              },
-              defaultColor: false,
-            },
+            shikiConfig,
           },
           vite: {
             build: {
