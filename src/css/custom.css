@@ -122,6 +122,7 @@
 .shiki,
 .astro-code {
   @apply bg-muted;
+  background-color: var(--color-muted) !important;
   color: var(--shiki-light);
 }
 
