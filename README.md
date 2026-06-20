@@ -24,7 +24,6 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       routeBase: "/docs",
-      style: "vega",
       customCss: ["./src/docs.css"],
       site: {
         title: "ReallySimpleDocs",

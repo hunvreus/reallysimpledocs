@@ -70,7 +70,7 @@ writeJson(path.join(appDir, "package.json"), {
   },
   dependencies: {
     astro: "^6.4.6",
-    "basecoat-css": "1.0.0-beta.3",
+    "basecoat-css": "^0.3.11",
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
     tailwindcss: "4.1.17",
   },

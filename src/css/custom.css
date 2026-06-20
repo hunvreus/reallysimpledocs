@@ -42,6 +42,20 @@
   }
   pre:has(> code) {
     @apply max-w-full overflow-x-auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+
+    &::-webkit-scrollbar {
+      width: var(--scrollbar-width);
+      height: var(--scrollbar-width);
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: var(--scrollbar-radius);
+    }
   }
   blockquote {
     @apply border-l-4 border-border pl-4;
@@ -201,6 +215,20 @@ html.dark .astro-code span {
 
 .code-block > pre {
   @apply my-0 max-w-full overflow-x-auto rounded-none border-0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+
+  &::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: var(--scrollbar-radius);
+  }
 }
 
 .code-block > pre > code {

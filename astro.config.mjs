@@ -10,7 +10,6 @@ export default defineConfig({
   integrations: [
     reallySimpleDocs({
       docsDir: "./docs",
-      style: "vega",
       site: {
         title: "ReallySimpleDocs",
         subtitle: "v1.0.0-beta.2",

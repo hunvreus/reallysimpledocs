@@ -392,28 +392,24 @@ async function highlightCode(tokens) {
 
 async function highlightToken(token) {
   try {
-    return withCodeScrollbar(await codeToHtml(token.text, {
+    return await codeToHtml(token.text, {
       lang: normalizeLanguage(token.lang),
       themes: {
         light: "github-light",
         dark: "github-dark",
       },
       defaultColor: false,
-    }));
+    });
   } catch {
-    return withCodeScrollbar(await codeToHtml(token.text, {
+    return codeToHtml(token.text, {
       lang: "text",
       themes: {
         light: "github-light",
         dark: "github-dark",
       },
       defaultColor: false,
-    }));
+    });
   }
-}
-
-function withCodeScrollbar(html) {
-  return String(html || "").replace(/<pre class="/, '<pre class="scrollbar ');
 }
 
 function normalizeLanguage(lang) {

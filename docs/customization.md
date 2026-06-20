@@ -13,7 +13,6 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       routeBase: "/docs",
-      style: "vega",
       customCss: ["./src/docs.css"],
       site: {
         title: "Acme Docs",
@@ -30,7 +29,6 @@ export default defineConfig({
 |--------|---------|-------|
 | `docsDir` | `"./docs"` | Folder containing Markdown or MDX pages and `docs.json`. |
 | `routeBase` | `"/docs"` | URL path where the docs are mounted. Use `"/"` for root docs. |
-| `style` | `"vega"` | Basecoat style: `vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, or `rhea`. |
 | `customCss` | `[]` | CSS files imported after Basecoat and ReallySimpleDocs styles. |
 | `css` | `true` | Set to `false` when you provide the full CSS pipeline yourself. |
 | `js` | `true` | Set to `false` when you provide Basecoat and ReallySimpleDocs scripts yourself. |
@@ -139,11 +137,10 @@ Custom landing pages, marketing pages, blogs, and app pages should stay as norma
 
 ## CSS and Basecoat
 
-ReallySimpleDocs is built on [Basecoat](https://basecoatui.com). Pick a Basecoat style with `style`, then add project-specific CSS with `customCss`:
+ReallySimpleDocs is built on [Basecoat](https://basecoatui.com). Add project-specific CSS with `customCss`:
 
 ```js
 reallySimpleDocs({
-  style: "nova",
   customCss: ["./src/docs.css"],
 });
 ```
