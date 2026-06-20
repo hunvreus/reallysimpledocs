@@ -2,19 +2,19 @@
 
 ## Why ReallySimpleDocs?
 
-There are plenty of existing solutions to create documentation websites: Mintlify, Fumadocs, Docusaurus, MkDocs... So why create another one?
+There are plenty of existing solutions for creating documentation websites: Mintlify, Fumadocs, Docusaurus, MkDocs... So why create another one?
 
-I wanted something fast, modern, simple, and good-looking. I also wanted docs content to stay portable.
+I wanted something that wasn't bloated. That meant no React. I also wanted it to use the [shadcn/ui design system](https://ui.shadcn.com/) since that's what I use for most of my apps. Finally, I wanted it to be dead simple to use.
 
-So I built ReallySimpleDocs as an [Astro](https://astro.build) integration with [Basecoat](https://basecoatui.com). You keep your content in `docs/`, define navigation in `docs/docs.json`, and let RSD render the docs section.
+So I built ReallySimpleDocs as an [Astro](https://astro.build) integration with [Basecoat](https://basecoatui.com) for the design. You keep your content in `docs/`, define navigation in `docs/docs.json`, and let ReallySimpleDocs do the rest.
 
 ## Key features
 
 - **Fast**: Astro builds static docs with minimal client JavaScript.
-- **Standard and Reliable**: It's HTML, CSS, and a small amount of vanilla JavaScript.
-- **Git-based with a user-friendly CMS**: All of your content lives in a GitHub repo. And if you need a user-friendly interface for your teammates to edit the content, just use [Pages CMS](https://pagescms.org).
+- **Simple**: It's HTML, CSS, and a small amount of vanilla JavaScript.
+- **shadcn/ui-compatible**: It uses [Basecoat](https://basecoatui.com), meaning you can use any shadcn/ui theme.
 - **Portable docs**: Keep Markdown pages and navigation in `docs/`, outside Astro's `src/content` conventions.
-- **LLM-friendly**: Auto-generated `llms.txt`, `llms-full.txt`, and per-page `/*.md` exports for LLMs.
+- **AI-friendly**: Auto-generated `llms.txt`, `llms-full.txt`, and per-page `/*.md` exports for LLMs.
 - **100% free and open source**: I have nothing to sell. No hosting plan, no advanced features. You can host it for free on Cloudflare Pages.
 
 ## How can I help?

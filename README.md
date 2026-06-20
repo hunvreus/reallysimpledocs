@@ -2,12 +2,14 @@
 
 A simple documentation system for Astro, built with **Basecoat** and **Tailwind CSS**.
 
-RSD keeps docs portable: content lives in `docs/`, navigation lives in `docs/docs.json`, and the Astro integration owns the docs UI.
+ReallySimpleDocs keeps docs portable: content lives in `docs/`, navigation lives in `docs/docs.json`, and the Astro integration owns the docs UI.
 
 ## Add to an Astro site
 
+ReallySimpleDocs is an Astro integration. Add it to an existing Astro site, or create one first with `npm create astro@latest`.
+
 ```bash
-npm install reallysimpledocs@beta basecoat-css@beta tailwindcss
+npm install reallysimpledocs basecoat-css tailwindcss
 ```
 
 Add the integration:
@@ -59,9 +61,9 @@ docs/
 Welcome to the docs.
 ```
 
-RSD injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
+ReallySimpleDocs injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
 
-Use `.mdx` when a page needs RSD components. Common RSD components are available by default, so you do not need to import them in each page:
+Use `.mdx` when a page needs ReallySimpleDocs components. Common components are available by default, so you do not need to import them in each page:
 
 ```mdx
 # Button
@@ -69,39 +71,20 @@ Use `.mdx` when a page needs RSD components. Common RSD components are available
 <Callout title="MDX works">MDX is optional. Plain Markdown stays the default.</Callout>
 ```
 
-## Use Basecoat on the rest of the site
+## Use Basecoat outside the docs
 
-RSD styles and scripts its generated docs pages. For custom Astro pages outside the docs route, use Basecoat directly in your own layout.
+By default, ReallySimpleDocs manages one Tailwind/Basecoat stylesheet for the app. It scans `src/`, `docs/`, and the ReallySimpleDocs runtime, so Basecoat and Tailwind classes used by custom Astro pages outside the docs route are included in the same CSS build.
 
-Install stays the same:
+Disable the managed assets only when you want to provide the full CSS or JavaScript pipeline yourself:
 
-```bash
-npm install reallysimpledocs@beta basecoat-css@beta tailwindcss
+```js
+reallySimpleDocs({
+  css: false,
+  js: false,
+});
 ```
 
-Create a site stylesheet:
-
-```css
-/* src/styles/site.css */
-@import "tailwindcss";
-@import "basecoat-css/base";
-@import "basecoat-css/styles/vega";
-
-@source "../src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}";
-```
-
-Load that stylesheet and Basecoat's JavaScript in your custom layout:
-
-```astro
----
-import "../styles/site.css";
-import "basecoat-css/all.min";
----
-
-<slot />
-```
-
-Use the same Basecoat `style` in your RSD config and your site stylesheet if you want the docs and custom pages to match.
+Use `css: false` when you bring your own Tailwind/Basecoat stylesheet. Use `js: false` when you bring your own Basecoat and ReallySimpleDocs behavior scripts.
 
 ## Local development (this repo)
 

@@ -1,15 +1,14 @@
 # Components
 
-RSD ships MDX components for documentation pages that need richer examples than plain Markdown. They are thin Astro components built on Basecoat primitives where possible.
+ReallySimpleDocs includes a small set of MDX components for docs pages that need more than plain Markdown.
 
-Use `.md` for normal pages. Use `.mdx` when a page needs components. Common RSD components are available by default, so page-level imports are not required.
+Use `.mdx` when a page needs callouts, previews, tabs, setup steps, or card grids.
 
 <CardGrid>
-  <Card title="Callout" description="Neutral notes, warnings, and danger messages." href="/components/callout/" />
-  <Card title="Code" description="Single code blocks with syntax highlighting and optional titles." href="/components/code/" />
-  <Card title="CodeGroup" description="Tabbed code examples for package managers or platform variants." href="/components/code-group/" />
+  <Card title="Callout" description="Notes and warning messages." href="/components/callout/" />
+  <Card title="Card" description="Grouped links and compact concept cards." href="/components/card/" />
+  <Card title="Code" description="Single and tabbed code examples." href="/components/code/" />
   <Card title="Preview" description="Rendered examples paired with source code." href="/components/preview/" />
-  <Card title="Tabs" description="Basecoat tabs for arbitrary content variants." href="/components/tabs/" />
   <Card title="Steps" description="Numbered setup and installation flows." href="/components/steps/" />
-  <Card title="Card" description="Grouped links and compact concept cards." href="/components/cards/" />
+  <Card title="Tabs" description="Basecoat tabs for arbitrary content variants." href="/components/tabs/" />
 </CardGrid>

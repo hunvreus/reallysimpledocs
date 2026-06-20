@@ -44,6 +44,15 @@ const assertNotIncludes = (filePath, expected) => {
   }
 };
 
+const assertSearchBodyHasNoHtml = (filePath) => {
+  const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+  const items = Array.isArray(data) ? data : data.documents || [];
+  const offender = items.find((item) => /<\/?[a-z][\s\S]*>/i.test(item.body || ""));
+  if (offender) {
+    throw new Error(`Expected search body for ${offender.slug} not to include raw HTML.`);
+  }
+};
+
 fs.rmSync(tempRoot, { recursive: true, force: true });
 fs.mkdirSync(packDir, { recursive: true });
 fs.mkdirSync(appDir, { recursive: true });
@@ -60,7 +69,8 @@ writeJson(path.join(appDir, "package.json"), {
     build: "astro build",
   },
   dependencies: {
-    "basecoat-css": "^1.0.0-beta.0",
+    astro: "^6.4.6",
+    "basecoat-css": "1.0.0-beta.3",
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
     tailwindcss: "4.1.17",
   },
@@ -90,6 +100,18 @@ export default defineConfig({
 );
 
 fs.mkdirSync(path.join(appDir, "docs"), { recursive: true });
+fs.mkdirSync(path.join(appDir, "src", "pages"), { recursive: true });
+fs.writeFileSync(
+  path.join(appDir, "src", "pages", "index.astro"),
+  `---
+---
+
+<main class="p-6">
+  <a href="/docs/" class="btn">Open docs</a>
+  <p class="text-balance decoration-wavy">custom-page-tailwind-smoke</p>
+</main>
+`,
+);
 writeJson(path.join(appDir, "docs", "docs.json"), {
   menu: [
     {
@@ -101,8 +123,14 @@ writeJson(path.join(appDir, "docs", "docs.json"), {
           type: "submenu",
           label: "Learn",
           items: [
-            { slug: "guide", icon: "book-open" },
+            { slug: "guide", icon: "book-open", badge: "Beta" },
             { slug: "interactive", icon: "blocks" },
+            {
+              label: "External",
+              url: "https://example.com/external",
+              icon: "arrow-up-right",
+              attrs: { target: "_blank", rel: "noopener" },
+            },
             {
               type: "submenu",
               label: "Deep",
@@ -138,7 +166,7 @@ fs.writeFileSync(
 
 # Interactive
 
-This page proves packaged MDX docs can render default RSD components without imports.
+This page proves packaged MDX docs can render default ReallySimpleDocs components without imports.
 
 <Callout title="MDX works" icon="sparkles">
   Consumer-only keyword: mdx-orbit-smoke.
@@ -175,6 +203,12 @@ assertFile(path.join(appDir, "dist", "docs", "deep", "nested.md"));
 assertFile(path.join(appDir, "dist", "llms.txt"));
 assertFile(path.join(appDir, "dist", "llms-full.txt"));
 
+const cssFiles = fs.readdirSync(path.join(appDir, "dist", "_astro")).filter((file) => file.endsWith(".css"));
+const cssOutput = cssFiles.map((file) => fs.readFileSync(path.join(appDir, "dist", "_astro", file), "utf8")).join("\n");
+if (!cssOutput.includes(".text-balance") || !cssOutput.includes(".decoration-wavy")) {
+  throw new Error("Expected managed ReallySimpleDocs CSS to include classes used by custom src/pages content.");
+}
+
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "Welcome");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "_astro/");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'data-md-url="/docs/index.md"');
@@ -187,6 +221,12 @@ assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "
 assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "Smoke action");
 assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "lucide-sparkles");
 assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), 'from "reallysimpledocs/components"');
+assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Callout");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "> **MDX works**");
+assertNotIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "<Callout");
+assertSearchBodyHasNoHtml(path.join(appDir, "dist", "docs", "search-index.json"));
+assertIncludes(path.join(appDir, "dist", "docs", "guide", "index.html"), "Beta");
+assertIncludes(path.join(appDir, "dist", "docs", "guide", "index.html"), "https://example.com/external");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "Consumer docs");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Welcome](https://example.com/docs/)");
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "- [Guide](https://example.com/docs/guide/)");

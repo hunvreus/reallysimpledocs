@@ -1,5 +1,6 @@
 import Search from "lucide-static/icons/search.svg?raw";
-import { attrs, escapeHtml } from "./html.js";
+import ArrowUpRight from "lucide-static/icons/arrow-up-right.svg?raw";
+import { addSvgClass, attrs, escapeHtml } from "./html.js";
 
 export function renderSidebar({
   id = "sidebar",
@@ -58,16 +59,24 @@ export function renderSidebarContent(items = [], parentIdPrefix = "content") {
   <a${attrs({ href: item.url, "aria-current": item.current ? "page" : undefined, ...without(item.attrs, ["href", "aria-current"]) })}>
     ${item.icon || ""}
     <span>${escapeHtml(item.label)}</span>
+    ${renderSidebarMeta(item)}
   </a>
 </li>`;
     })
     .join("");
 }
 
+function renderSidebarMeta(item) {
+  const badge = item.badge ? `<span class="badge">${escapeHtml(item.badge)}</span>` : "";
+  const external = item.external ? addSvgClass(ArrowUpRight, "size-3 opacity-50") : "";
+  if (!badge && !external) return "";
+  return `<span class="ml-auto inline-flex items-center gap-1">${badge}${external}</span>`;
+}
+
 export function renderCommandDialog({
   id = "command-search",
   items = [],
-  placeholder = "Search the docs...",
+  placeholder = "Search...",
   emptyText = "No results found.",
   open = false,
   commandAttrs = {},

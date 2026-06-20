@@ -1,6 +1,7 @@
 ---
 import config from "virtual:reallysimpledocs/config";
 import SidebarHeader from "virtual:reallysimpledocs/components/SidebarHeader";
+import SidebarFooter from "virtual:reallysimpledocs/components/SidebarFooter";
 import { renderSidebarContent } from "../lib/macros.js";
 import { getSite } from "../lib/site.js";
 
@@ -16,5 +17,8 @@ const site = getSite(config);
     <section class="scrollbar">
       <Fragment set:html={renderSidebarContent(menu, "sidebar-content")} />
     </section>
+    <footer>
+      <SidebarFooter site={site} />
+    </footer>
   </nav>
 </aside>

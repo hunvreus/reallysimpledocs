@@ -5,17 +5,15 @@ import ArrowRight from "lucide-static/icons/arrow-right.svg?raw";
 import Check from "lucide-static/icons/check.svg?raw";
 import Copy from "lucide-static/icons/copy.svg?raw";
 import Menu from "lucide-static/icons/menu.svg?raw";
-import Moon from "lucide-static/icons/moon.svg?raw";
 import PanelLeft from "lucide-static/icons/panel-left.svg?raw";
 import Search from "lucide-static/icons/search.svg?raw";
-import Sun from "lucide-static/icons/sun.svg?raw";
-import X from "lucide-static/icons/x.svg?raw";
 import ClaudeLogo from "../../icons/logos/claude.svg?raw";
 import CursorLogo from "../../icons/logos/cursor.svg?raw";
 import MarkdownLogo from "../../icons/logos/markdown.svg?raw";
 import OpenAILogo from "../../icons/logos/openai.svg?raw";
 import BaseLayout from "./BaseLayout.astro";
 import CommandDialog from "./CommandDialog.astro";
+import ContentHeader from "virtual:reallysimpledocs/components/ContentHeader";
 import DropdownMenu from "./DropdownMenu.astro";
 import Sidebar from "./Sidebar.astro";
 import { buildMenus, getNavigation } from "../lib/docs.js";
@@ -25,6 +23,7 @@ import { getSite } from "../lib/site.js";
 
 const { page, headings } = Astro.props;
 const site = getSite(config);
+const enableJs = config.js !== false;
 const navigation = getNavigation(config, page);
 const { sidebar } = buildMenus(config, page.slug);
 const searchIndexUrl = routeFilePath(config.routeBase, "search-index.json");
@@ -66,7 +65,7 @@ const actionItems = [
 ---
 
 <BaseLayout title={page.title} description={site.description} pagePath={page.path}>
-  <CommandDialog indexUrl={searchIndexUrl} />
+  {enableJs && <CommandDialog indexUrl={searchIndexUrl} />}
   <Sidebar menu={sidebar} />
 
   <main id="content">
@@ -79,78 +78,42 @@ const actionItems = [
           data-tooltip="Toggle sidebar"
           data-side="bottom"
           data-align="start"
-          class="btn-sm-icon-ghost"
+          class="btn"
+          data-variant="ghost"
+          data-size="icon-sm"
         >
           <Fragment set:html={panelLeftIcon} />
         </button>
 
-        <button
-          type="button"
-          class="relative flex h-8 w-full min-w-0 max-w-72 cursor-text items-center gap-x-2 rounded-md border border-input bg-background px-3 py-1 text-base text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 sm:ml-auto md:text-sm"
-          onclick="window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal()"
-        >
-          <Fragment set:html={searchIcon} />
-          Search the docs...
-          <kbd class="kbd ml-auto -mr-1.5">⌘K</kbd>
-        </button>
+        {
+          enableJs && (
+            <button
+              type="button"
+              class="relative flex h-8 w-full min-w-0 max-w-72 cursor-text items-center gap-x-2 rounded-md border border-input bg-background px-3 py-1 text-base text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 sm:ml-auto md:text-sm"
+              onclick="window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal()"
+            >
+              <Fragment set:html={searchIcon} />
+              Search...
+              <kbd class="kbd ml-auto -mr-1.5">⌘K</kbd>
+            </button>
+          )
+        }
 
-        <nav class="hidden items-center gap-2 sm:flex">
-          {
-            (site.links || []).map((link) => (
-              <a
-                class={link.attrs?.class || "btn-sm-outline"}
-                href={link.url}
-                aria-label={link.label}
-                data-tooltip={link.label}
-                data-side="bottom"
-                target={link.attrs?.target}
-                rel={link.attrs?.rel}
-              >
-                {link.icon && <Fragment set:html={link.icon} />}
-                {!link.iconOnly && link.label}
-              </a>
-            ))
-          }
-          <button
-            type="button"
-            aria-label="Toggle dark mode"
-            data-tooltip="Toggle dark mode"
-            data-side="bottom"
-            data-align="end"
-            onclick="document.dispatchEvent(new CustomEvent('basecoat:theme'))"
-            class="btn-sm-icon-outline"
-          >
-            <span class="hidden dark:block"><Fragment set:html={Sun} /></span>
-            <span class="block dark:hidden"><Fragment set:html={Moon} /></span>
-          </button>
-        </nav>
+        <ContentHeader site={site} page={page} />
 
         <div class="sm:hidden">
           <button
             type="button"
-            class="btn-sm-icon-ghost peer group"
-            aria-label="Toggle menu"
+            class="btn peer group"
+            data-variant="ghost"
+            data-size="icon-sm"
+            aria-label="Toggle sidebar"
             aria-expanded="false"
-            aria-controls="mobile-menu"
-            onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"
+            aria-controls="sidebar"
+            onclick="document.getElementById('sidebar')?.toggle()"
           >
-            <span class="group-aria-expanded:hidden"><Fragment set:html={Menu} /></span>
-            <span class="hidden group-aria-expanded:block"><Fragment set:html={X} /></span>
+            <Fragment set:html={Menu} />
           </button>
-          <nav
-            id="mobile-menu"
-            class="fixed inset-0 top-14 z-50 flex invisible -translate-y-16 scale-95 flex-col gap-2 bg-background p-4 opacity-0 transition-all pointer-events-none peer-aria-expanded:visible peer-aria-expanded:translate-y-0 peer-aria-expanded:scale-100 peer-aria-expanded:opacity-100 peer-aria-expanded:pointer-events-auto"
-            data-mobile-menu
-          >
-            {
-              (site.links || []).map((link) => (
-                <a class="btn-lg-ghost justify-between" href={link.url} target={link.attrs?.target} rel={link.attrs?.rel}>
-                  <span>{link.label}</span>
-                  {link.icon && <Fragment set:html={link.icon} />}
-                </a>
-              ))
-            }
-          </nav>
         </div>
       </div>
     </header>
@@ -165,13 +128,14 @@ const actionItems = [
                 <div role="group" class="button-group">
                   <button
                     type="button"
-                    class="btn-sm-secondary"
+                    class="btn"
+                    data-variant="secondary"
+                    data-size="sm"
                     data-md-url={page.markdownPath}
-                    onclick="copyPageMarkdown(this)"
+                    onclick={enableJs ? "copyPageMarkdown(this)" : undefined}
                   >
-                    <span data-copy-icon><Fragment set:html={Copy} /></span>
-                    <span data-check-icon class="hidden"><Fragment set:html={Check} /></span>
-                    <span>Copy page</span>
+                    <Fragment set:html={Copy} />
+                    Copy page
                   </button>
                   <hr role="separator" />
                   <DropdownMenu items={actionItems} />
@@ -179,7 +143,7 @@ const actionItems = [
                 <div role="group" class="button-group">
                   {
                     navigation.prev && (
-                      <a href={navigation.prev.path} class="btn-sm-icon-secondary">
+                      <a href={navigation.prev.path} class="btn" data-variant="secondary" data-size="icon-sm">
                         <span class="sr-only">{navigation.prev.title}</span>
                         <Fragment set:html={ArrowLeft} />
                       </a>
@@ -188,7 +152,7 @@ const actionItems = [
                   {navigation.prev && navigation.next && <hr role="separator" />}
                   {
                     navigation.next && (
-                      <a href={navigation.next.path} class="btn-sm-icon-secondary">
+                      <a href={navigation.next.path} class="btn" data-variant="secondary" data-size="icon-sm">
                         <span class="sr-only">{navigation.next.title}</span>
                         <Fragment set:html={ArrowRight} />
                       </a>
@@ -204,7 +168,7 @@ const actionItems = [
           <footer class="mt-12 flex items-center">
             {
               navigation.prev && (
-                <a href={navigation.prev.path} class="btn-sm-secondary mr-auto">
+                <a href={navigation.prev.path} class="btn mr-auto" data-variant="secondary" data-size="sm">
                   <Fragment set:html={ArrowLeft} />
                   {navigation.prev.title}
                 </a>
@@ -212,7 +176,7 @@ const actionItems = [
             }
             {
               navigation.next && (
-                <a href={navigation.next.path} class="btn-sm-secondary ml-auto">
+                <a href={navigation.next.path} class="btn ml-auto" data-variant="secondary" data-size="sm">
                   {navigation.next.title}
                   <Fragment set:html={ArrowRight} />
                 </a>
@@ -222,7 +186,7 @@ const actionItems = [
         </div>
       </article>
       <aside class="hidden w-56 xl:block">
-        <div class="docs-toc sticky top-20 space-y-2 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-foreground [&_a[data-active='true']]:text-foreground [&_ol]:space-y-2 [&_ol_ol]:mt-2 [&_ol_ol]:pl-3" data-docs-toc>
+        <div class="docs-toc sticky top-20 space-y-2 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-foreground [&_a[aria-current='location']]:text-foreground [&_ol]:space-y-2 [&_ol_ol]:mt-2 [&_ol_ol]:pl-3" data-docs-toc>
           <h2 class="flex items-center gap-1 font-medium">
             On this page
           </h2>
@@ -240,30 +204,31 @@ const actionItems = [
     </div>
   </main>
 
-  <script is:inline>
-    async function copyPageMarkdown(button) {
+  {
+    enableJs && (
+      <script is:inline define:vars={{ checkIcon: Check }}>
+    window.copyPageMarkdown = async function copyPageMarkdown(button) {
       const markdownUrl = button?.dataset?.mdUrl;
       if (!markdownUrl) return;
-      const copyIcon = button.querySelector("[data-copy-icon]");
-      const checkIcon = button.querySelector("[data-check-icon]");
+      const icon = button.querySelector("svg");
+      const originalIcon = icon?.outerHTML || "";
 
       try {
         const response = await fetch(markdownUrl, { credentials: "same-origin", cache: "no-store" });
         if (!response.ok) throw new Error("Failed to fetch markdown");
         const markdown = await response.text();
         await writeToClipboard(markdown);
-        if (copyIcon && checkIcon) {
-          copyIcon.classList.add("hidden");
-          checkIcon.classList.remove("hidden");
+        if (icon && checkIcon) {
+          icon.outerHTML = checkIcon;
           window.setTimeout(() => {
-            copyIcon.classList.remove("hidden");
-            checkIcon.classList.add("hidden");
+            const currentIcon = button.querySelector("svg");
+            if (currentIcon && originalIcon) currentIcon.outerHTML = originalIcon;
           }, 1200);
         }
       } catch (_) {
         window.open(new URL(markdownUrl, window.location.href).toString(), "_blank", "noopener");
       }
-    }
+    };
 
     async function writeToClipboard(text) {
       if (navigator.clipboard?.writeText && window.isSecureContext) {
@@ -286,57 +251,64 @@ const actionItems = [
 
     function initDocsToc() {
       const toc = document.querySelector("[data-docs-toc]");
-      if (!toc) return;
+      const links = Array.from(toc?.querySelectorAll("[data-toc-link]") || []);
+      if (!links.length) return;
 
-      const links = Array.from(toc.querySelectorAll("[data-toc-link]"));
-      const linkById = new Map();
-      for (const link of links) {
-        const id = decodeURIComponent(link.hash.slice(1));
-        if (id) linkById.set(id, link);
-      }
-
-      const headings = Array.from(linkById.keys())
-        .map((id) => document.getElementById(id))
+      const entries = links
+        .map((link) => {
+          const id = decodeURIComponent(link.hash.slice(1));
+          const heading = id ? document.getElementById(id) : null;
+          return heading ? { id, heading, link } : null;
+        })
         .filter(Boolean);
-      if (!headings.length) return;
+      if (!entries.length) return;
 
-      const setActive = (id) => {
-        for (const link of links) {
-          const active = decodeURIComponent(link.hash.slice(1)) === id;
-          link.dataset.active = active ? "true" : "false";
-          if (active) link.setAttribute("aria-current", "location");
-          else link.removeAttribute("aria-current");
+      const activate = (id) => {
+        for (const entry of entries) {
+          const active = entry.id === id;
+          entry.link.toggleAttribute("data-active", active);
+          if (active) entry.link.setAttribute("aria-current", "location");
+          else entry.link.removeAttribute("aria-current");
         }
       };
 
-      const currentHeading = () => {
-        const offset = 160;
-        let current = headings[0];
-        for (const heading of headings) {
-          if (heading.getBoundingClientRect().top <= offset) current = heading;
+      const activeFromScroll = () => {
+        const marker = Math.min(window.innerHeight * 0.35, 220);
+        let current = entries[0];
+
+        for (const entry of entries) {
+          if (entry.heading.getBoundingClientRect().top <= marker) current = entry;
           else break;
         }
-        return current;
+
+        activate(current.id);
       };
 
-      const updateActive = () => setActive(currentHeading().id);
-      updateActive();
-
-      let queued = false;
-      const queueUpdate = () => {
-        if (queued) return;
-        queued = true;
-        window.requestAnimationFrame(() => {
-          queued = false;
-          updateActive();
+      let frame = 0;
+      const queueActiveUpdate = () => {
+        if (frame) return;
+        frame = window.requestAnimationFrame(() => {
+          frame = 0;
+          activeFromScroll();
         });
       };
 
-      window.addEventListener("scroll", queueUpdate, { passive: true });
-      window.addEventListener("resize", queueUpdate);
-      window.addEventListener("hashchange", () => window.setTimeout(updateActive, 0));
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(queueActiveUpdate, {
+          rootMargin: "-20% 0px -65% 0px",
+          threshold: [0, 1],
+        });
+        for (const entry of entries) observer.observe(entry.heading);
+      }
+
+      activeFromScroll();
+      window.addEventListener("scroll", queueActiveUpdate, { passive: true });
+      window.addEventListener("resize", queueActiveUpdate);
+      window.addEventListener("hashchange", () => window.setTimeout(activeFromScroll, 0));
     }
 
     initDocsToc();
-  </script>
+      </script>
+    )
+  }
 </BaseLayout>

@@ -1,5 +1,6 @@
 ---
 import { renderCommandDialog } from "../lib/macros.js";
+import lunrUrl from "lunr/lunr.min.js?url";
 
 const { indexUrl } = Astro.props;
 ---
@@ -15,9 +16,8 @@ const { indexUrl } = Astro.props;
   />
 </div>
 
-<script>
-  import lunr from "lunr";
-
+<script src={lunrUrl}></script>
+<script is:inline>
   const root = document.querySelector("[data-search]");
   const indexUrl = root?.getAttribute("data-index-url");
   const dialog = document.getElementById("command-search");
@@ -130,8 +130,8 @@ const { indexUrl } = Astro.props;
     return space > -1 ? space : end;
   }
 
-  function snippetFromBody(body, ranges) {
-    const text = String(body || "");
+  function snippetFromText(value, ranges) {
+    const text = String(value || "");
     if (!text || !ranges.length) return "";
 
     const first = ranges[0];
@@ -148,20 +148,30 @@ const { indexUrl } = Astro.props;
 
   function resultView(result, query) {
     const doc = result.doc || result;
+    const displayTitle = doc.breadcrumb || doc.title;
     if (!query.trim()) {
       return {
         path: doc.path,
-        title: escapeHtml(doc.title),
+        title: escapeHtml(displayTitle),
         snippet: "",
       };
     }
 
-    const titleRanges = refineRanges(doc.title, rangesFromMatch(result.match, "title"), query);
+    let titleRanges = rangesFromMatch(result.match, "breadcrumb");
+    if (!titleRanges.length) {
+      const titleOffset = String(displayTitle).lastIndexOf(doc.title);
+      titleRanges = rangesFromMatch(result.match, "title").map(([start, end]) => [
+        titleOffset > -1 ? titleOffset + start : start,
+        titleOffset > -1 ? titleOffset + end : end,
+      ]);
+    }
+    titleRanges = refineRanges(displayTitle, titleRanges, query);
     const bodyRanges = refineRanges(doc.body, rangesFromMatch(result.match, "body"), query);
+    const codeRanges = refineRanges(doc.code, rangesFromMatch(result.match, "code"), query);
     return {
       path: doc.path,
-      title: highlightRanges(doc.title, titleRanges),
-      snippet: snippetFromBody(doc.body, bodyRanges),
+      title: highlightRanges(displayTitle, titleRanges),
+      snippet: snippetFromText(doc.body, bodyRanges) || snippetFromText(doc.code, codeRanges),
     };
   }
 
@@ -199,7 +209,7 @@ const { indexUrl } = Astro.props;
 
   async function loadIndex() {
     if (state.index) return state;
-    if (!indexUrl) throw new Error("Missing RSD search index URL.");
+    if (!indexUrl) throw new Error("Missing ReallySimpleDocs search index URL.");
     if (!state.loadPromise) {
       renderLoading();
       state.loadPromise = fetch(indexUrl)

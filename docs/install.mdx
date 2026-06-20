@@ -1,0 +1,120 @@
+# Quickstart
+
+## Install
+
+<Callout title="Prerequisite">
+ReallySimpleDocs is an Astro integration. Add it to an existing Astro site, or create one first with `npm create astro@latest`.
+</Callout>
+
+<Steps>
+  <Step title="Install packages">
+
+<CodeGroup>
+  <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
+  <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
+  <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
+  <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
+</CodeGroup>
+
+  </Step>
+  <Step title="Add the Astro integration">
+
+<Code lang="js">
+{`import { defineConfig } from "astro/config";
+import reallySimpleDocs from "reallysimpledocs/astro";
+
+export default defineConfig({
+  integrations: [
+    reallySimpleDocs({
+      site: {
+        title: "Acme Docs",
+      },
+    }),
+  ],
+});
+`}
+</Code>
+
+  </Step>
+  <Step title="Create docs">
+
+<Code lang="text">
+{`docs/
+├── docs.json
+└── index.md
+`}
+</Code>
+
+<Code lang="json">
+{`{
+  "menu": [
+    {
+      "type": "group",
+      "label": "Docs",
+      "items": [{ "slug": "index", "icon": "info" }]
+    }
+  ]
+}
+`}
+</Code>
+
+<Code lang="md">
+{`# Introduction
+
+Welcome to the docs.
+`}
+</Code>
+
+  </Step>
+  <Step title="Run Astro">
+
+<Code lang="bash">
+{`npm run dev`}
+</Code>
+
+  </Step>
+</Steps>
+
+## Usage
+
+Start adding Markdown and MDX files to the `docs/` folder:
+
+```text
+docs/
+├── docs.json    # Sidebar navigation
+├── index.md     # First page
+└── guide.mdx    # Optional component-rich page
+```
+
+Use `docs/docs.json` to manage [navigation](/navigation/). Add Markdown and MDX files as [pages](/pages/).
+
+Use `.mdx` only when a page needs richer [components](/components): `Callout`, `Code`, `Preview`, `Tabs`, `Steps`, or `Card`.
+
+ReallySimpleDocs also wires up
+
+- [Basecoat](https://basecoatui.com) and Tailwind CSS for styling,
+- syntax highlighting for fenced code blocks with copy buttons,
+- full text search using [Lunr](https://lunrjs.com/),
+- `llms.txt` and `llms-full.txt` files for agents,
+- Markdown export and AI links for each page.
+
+For themes, custom CSS, assets, and component overrides, see [Customization](/customization/).
+
+## Update
+
+Update ReallySimpleDocs and its peer packages together:
+
+<CodeGroup>
+  <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
+  <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
+  <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
+  <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
+</CodeGroup>
+
+Then rebuild:
+
+```bash
+npm run build
+```
+
+Your content stays in `docs/`; updates should mostly affect the package and your Astro config.

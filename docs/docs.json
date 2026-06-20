@@ -7,8 +7,15 @@
       "label": "Getting started",
       "items": [
         { "slug": "index", "icon": "info" },
-        { "slug": "install", "icon": "package" },
-        { "slug": "customize", "icon": "slidersVertical" },
+        { "slug": "install", "label": "Quickstart", "icon": "download" }
+      ]
+    },
+    {
+      "type": "group",
+      "label": "Manage",
+      "items": [
+        { "slug": "navigation", "icon": "navigation" },
+        { "slug": "pages", "icon": "file-text" },
         {
           "type": "submenu",
           "label": "Components",
@@ -17,25 +24,14 @@
           "items": [
             { "slug": "components/index", "label": "Overview" },
             "components/callout",
+            "components/card",
             "components/code",
-            "components/code-group",
             "components/preview",
-            "components/tabs",
             "components/steps",
-            { "slug": "components/cards", "label": "Card" }
+            "components/tabs"
           ]
         },
-        {
-          "type": "submenu",
-          "label": "Manage content",
-          "icon": "file-text",
-          "open": true,
-          "items": [
-            "content/navigation",
-            "content/pages",
-            "content/content-management-system"
-          ]
-        }
+        { "slug": "customization", "icon": "slidersVertical" }
       ]
     }
   ]

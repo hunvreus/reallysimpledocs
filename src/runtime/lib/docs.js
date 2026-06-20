@@ -4,6 +4,7 @@ import { marked } from "marked";
 import GithubSlugger from "github-slugger";
 import { codeToHtml } from "shiki";
 import * as lucideIcons from "lucide-static";
+import { normalizeDocMarkdown } from "./markdown-export.js";
 import { markdownPath, routePath } from "./paths.js";
 
 export function getManifest(config) {
@@ -83,7 +84,7 @@ export function getDocMarkdown(config, page) {
 }
 
 export function getMarkdownExport(config, page) {
-  return `${getDocMarkdown(config, page).trim()}\n`;
+  return `${getNormalizedDocMarkdown(config, page).trim()}\n`;
 }
 
 export async function renderDoc(config, page) {
@@ -182,13 +183,26 @@ export function buildMenus(config, currentSlug) {
       icon,
       url: page.path,
       label: item.label || page.title,
+      badge: item.badge,
       current: page.slug === currentSlug,
       keywords: page.title,
+      attrs: item.attrs,
     };
   };
 
   const processItem = (item) => {
     if (typeof item === "string") return processSlug(item);
+    if (item?.url && item?.label) {
+      return {
+        type: "item",
+        icon: resolveIcon(item.icon),
+        url: item.url,
+        label: item.label,
+        badge: item.badge,
+        external: /^https?:\/\//.test(item.url),
+        attrs: item.attrs,
+      };
+    }
     const slug = getPageItemSlug(item);
     if (slug) return processSlug(slug, item);
     if (item?.type === "submenu") {
@@ -221,6 +235,7 @@ export function buildMenus(config, currentSlug) {
       url: item.url,
       label: item.label,
       keywords: item.keywords,
+      attrs: item.attrs,
     })),
   }));
 
@@ -230,20 +245,79 @@ export function buildMenus(config, currentSlug) {
 export function getLlmDocs(config) {
   return getPages(config).map((page) => ({
     ...page,
-    content: parseDocMarkdown(getDocMarkdown(config, page), page.title).body.trim(),
+    content: getNormalizedDocMarkdown(config, page, { includeTitle: false }).trim(),
   }));
 }
 
 export function getSearchDocs(config) {
-  return getPages(config).map((page) => {
-    const parsed = parseDocMarkdown(getDocMarkdown(config, page), page.title);
+  const pages = getPages(config);
+  const trails = getPageTrails(config, pages);
+
+  return pages.map((page) => {
+    const markdown = getNormalizedDocMarkdown(config, page, { includeTitle: false });
+    const { prose, code } = splitFencedMarkdown(markdown);
+    const trail = trails.get(page.slug) || [page.title];
+
     return {
       slug: page.slug,
       title: page.title,
+      breadcrumb: trail.length > 1 ? trail.join(" › ") : "",
       path: page.path,
-      body: markdownPlainText(parsed.body),
+      body: markdownPlainText(prose),
+      code: markdownPlainText(code),
     };
   });
+}
+
+function getPageTrails(config, pages) {
+  const manifest = getManifest(config);
+  const pagesBySlug = new Map(pages.map((page) => [page.slug, page]));
+  const trails = new Map();
+
+  const pageLabel = (item, slug) => {
+    if (typeof item === "object" && item?.label) return item.label;
+    return pagesBySlug.get(slug)?.title || fallbackLabelFromSlug(slug);
+  };
+
+  const walk = (items = [], parents = []) => {
+    items.forEach((item) => {
+      if (typeof item === "string") {
+        trails.set(item, [...parents, pageLabel(item, item)]);
+        return;
+      }
+
+      if (item?.type === "submenu") {
+        walk(item.items || [], [...parents, item.label].filter(Boolean));
+        return;
+      }
+
+      const slug = getPageItemSlug(item);
+      if (slug) trails.set(slug, [...parents, pageLabel(item, slug)]);
+    });
+  };
+
+  (manifest.menu || []).forEach((group) => {
+    if (group?.type === "group") walk(group.items || []);
+  });
+
+  return trails;
+}
+
+function splitFencedMarkdown(markdown) {
+  const code = [];
+  const prose = String(markdown || "").replace(/```[^\n]*\n([\s\S]*?)```/g, (_, block) => {
+    code.push(block);
+    return "\n";
+  });
+
+  return { prose, code: code.join("\n\n") };
+}
+
+function getNormalizedDocMarkdown(config, page, { includeTitle = true } = {}) {
+  const source = getDocMarkdown(config, page);
+  const parsed = parseDocMarkdown(source, page.title);
+  const body = normalizeDocMarkdown(renderNunjucksCompat(parsed.body), collectMdxExports(source));
+  return includeTitle ? `# ${parsed.title}\n\n${body}` : body;
 }
 
 function flattenSidebarItems(items = []) {
@@ -275,6 +349,15 @@ function parseDocMarkdown(source, fallbackTitle) {
 
 function markdownPlainText(markdown) {
   return tokensText(marked.lexer(renderNunjucksCompat(normalizeDocSource(markdown))));
+}
+
+function collectMdxExports(source) {
+  const values = new Map();
+  const pattern = /export\s+const\s+([A-Za-z_$][\w$]*)\s*=\s*`([\s\S]*?)`;/g;
+  for (const match of String(source || "").matchAll(pattern)) {
+    values.set(match[1], match[2].replace(/\\n/g, "\n").replace(/\\`/g, "`"));
+  }
+  return values;
 }
 
 function normalizeDocSource(source) {
@@ -309,24 +392,28 @@ async function highlightCode(tokens) {
 
 async function highlightToken(token) {
   try {
-    return await codeToHtml(token.text, {
+    return withCodeScrollbar(await codeToHtml(token.text, {
       lang: normalizeLanguage(token.lang),
       themes: {
         light: "github-light",
         dark: "github-dark",
       },
       defaultColor: false,
-    });
+    }));
   } catch {
-    return codeToHtml(token.text, {
+    return withCodeScrollbar(await codeToHtml(token.text, {
       lang: "text",
       themes: {
         light: "github-light",
         dark: "github-dark",
       },
       defaultColor: false,
-    });
+    }));
   }
+}
+
+function withCodeScrollbar(html) {
+  return String(html || "").replace(/<pre class="/, '<pre class="scrollbar ');
 }
 
 function normalizeLanguage(lang) {
@@ -358,6 +445,7 @@ function plainText(tokens) {
 function tokensText(tokens) {
   return tokens
     .map((token) => {
+      if (token.type === "html") return htmlText(token.raw || token.text || "");
       const childTokens = [];
       if (token.tokens) childTokens.push(token.tokens);
       if (token.items) childTokens.push(...token.items.flatMap((item) => (item.tokens ? [item.tokens] : [])));
@@ -368,4 +456,17 @@ function tokensText(tokens) {
     .join(" ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function htmlText(html) {
+  return String(html || "")
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
 }

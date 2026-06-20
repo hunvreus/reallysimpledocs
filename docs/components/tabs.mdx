@@ -1,95 +1,75 @@
-export const packageTabsSource = `<Tabs
-  tabs={[
-    { label: "npm", slot: "npm" },
-    { label: "pnpm", slot: "pnpm" },
-    { label: "bun", slot: "bun" },
-  ]}
->
-  <Code slot="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-  <Code slot="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-  <Code slot="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-</Tabs>`;
-
-export const lineTabsSource = `<Tabs
-  variant="line"
-  defaultTab="manual"
-  tabs={[
-    { label: "Integration", slot: "integration" },
-    { label: "Manual", slot: "manual" },
-  ]}
->
-  <Callout slot="integration" title="Recommended">
-    Let the integration wire routes and assets for the docs section.
-  </Callout>
-  <Callout slot="manual" type="warning" title="Manual setup">
-    Manual wiring is useful for debugging, but it is not the normal install path.
-  </Callout>
-</Tabs>`;
-
 # Tabs
 
 Use `Tabs` for mutually exclusive examples, such as package managers, frameworks, or operating systems. Use `CodeGroup` instead when the only content in each tab is code.
 
-The API is data-driven because Astro components cannot reliably inspect child component props at runtime.
-
 ## Usage
 
-<Code lang="mdx">
-  {`<Tabs
-  tabs={[
-    { label: "npm", slot: "npm" },
-    { label: "pnpm", slot: "pnpm" },
-  ]}
->
-  <Code slot="npm" lang="bash">npm install reallysimpledocs@beta</Code>
-  <Code slot="pnpm" lang="bash">pnpm add reallysimpledocs@beta</Code>
-</Tabs>`}
-</Code>
+```mdx
+<Tabs>
+  <Tab title="npm">
+    <Code lang="bash">npm install reallysimpledocs</Code>
+  </Tab>
+  <Tab title="pnpm">
+    <Code lang="bash">pnpm add reallysimpledocs</Code>
+  </Tab>
+  <Tab title="yarn">
+    <Code lang="bash">yarn add reallysimpledocs</Code>
+  </Tab>
+  <Tab title="bun">
+    <Code lang="bash">bun add reallysimpledocs</Code>
+  </Tab>
+</Tabs>
+```
 
 ## Options
 
+### Tabs
+
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `tabs` | `{ label, slot, value?, disabled? }[]` | `[]` | Tab metadata. `slot` must match a slotted child. |
-| `defaultTab` | `string` | First enabled tab | Initial active tab value. |
-| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Passed to the tablist. |
 | `variant` | `string` | `undefined` | Basecoat tab variant, such as `"line"`. |
 | `class` | `string` | `""` | Extra classes applied to the tabs root. |
 
+### Tab
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `title` | `string` | Required | Label shown in the tab trigger. |
+
 ## Examples
 
-### Package managers
+### Default
 
-<Preview code={packageTabsSource} lang="mdx" class="block w-full">
-  <Tabs
-    tabs={[
-      { label: "npm", slot: "npm" },
-      { label: "pnpm", slot: "pnpm" },
-      { label: "bun", slot: "bun" },
-    ]}
-  >
-    <Code slot="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-    <Code slot="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-    <Code slot="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+<Preview lang="mdx">
+  <Tabs class="w-full">
+    <Tab title="npm">
+      <Code lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
+    </Tab>
+    <Tab title="pnpm">
+      <Code lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
+    </Tab>
+    <Tab title="yarn">
+      <Code lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
+    </Tab>
+    <Tab title="bun">
+      <Code lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
+    </Tab>
   </Tabs>
 </Preview>
 
 ### Line variant
 
-<Preview code={lineTabsSource} lang="mdx" class="block w-full">
-  <Tabs
-    variant="line"
-    defaultTab="manual"
-    tabs={[
-      { label: "Integration", slot: "integration" },
-      { label: "Manual", slot: "manual" },
-    ]}
-  >
-    <Callout slot="integration" title="Recommended">
-      Let the integration wire routes and assets for the docs section.
-    </Callout>
-    <Callout slot="manual" type="warning" title="Manual setup">
-      Manual wiring is useful for debugging, but it is not the normal install path.
-    </Callout>
+<Preview lang="mdx">
+  <Tabs variant="line" class="w-full">
+    <Tab title="Integration">
+      <Callout title="Recommended">
+        Let the integration wire routes and assets for the docs section.
+      </Callout>
+    </Tab>
+    <Tab title="Manual">
+      <Callout type="warning" title="Manual setup">
+        Manual wiring is useful for debugging, but it is not the normal install path.
+      </Callout>
+    </Tab>
   </Tabs>
 </Preview>

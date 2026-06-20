@@ -1,10 +1,12 @@
 ---
 import "virtual:reallysimpledocs/styles.css";
 import config from "virtual:reallysimpledocs/config";
+import Head from "virtual:reallysimpledocs/components/Head";
 import { getSite } from "../lib/site.js";
 
 const { title, description, pagePath = "/" } = Astro.props;
 const site = getSite(config);
+const enableJs = config.js !== false;
 const metaDescription = description || site.description || "";
 const metaTitle = pagePath === "/" ? `${site.title} | ${metaDescription}` : `${title || metaDescription} | ${site.title}`;
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") || site.url || "";
@@ -27,28 +29,16 @@ const absoluteAssetUrl = (value) => {
 <!doctype html>
 <html lang="en">
   <head>
-    <script is:inline>
-      (() => {
-        try {
-          const stored = localStorage.getItem("themeMode");
-          if (stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches) {
-            document.documentElement.classList.add("dark");
-          }
-        } catch (_) {}
-
-        const apply = (dark) => {
-          document.documentElement.classList.toggle("dark", dark);
-          try {
-            localStorage.setItem("themeMode", dark ? "dark" : "light");
-          } catch (_) {}
-        };
-
-        document.addEventListener("basecoat:theme", (event) => {
-          const mode = event.detail?.mode;
-          apply(mode === "dark" ? true : mode === "light" ? false : !document.documentElement.classList.contains("dark"));
-        });
-      })();
-    </script>
+    <Head
+      config={config}
+      site={site}
+      title={title}
+      description={metaDescription}
+      pagePath={pagePath}
+      metaTitle={metaTitle}
+      absoluteUrl={absoluteUrl}
+      enableJs={enableJs}
+    />
     <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -72,10 +62,6 @@ const absoluteAssetUrl = (value) => {
     <meta name="twitter:description" content={metaDescription} />
     {socialImage && <meta name="twitter:image" content={absoluteAssetUrl(socialImage)} />}
     {site.author?.x && <meta name="twitter:creator" content={site.author.x} />}
-    <script>
-      import "basecoat-css/all.min";
-      import "../scripts/copy-code.js";
-    </script>
   </head>
   <body>
     <slot />

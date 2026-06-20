@@ -57,6 +57,9 @@ const initCopyCode = (codeBlock) => {
 
   const button = document.createElement("button");
   button.type = "button";
+  button.className = "btn";
+  button.dataset.variant = "ghost";
+  button.dataset.size = "icon-xs";
   button.setAttribute("aria-label", "Copy code");
   button.innerHTML = Copy;
 
@@ -64,7 +67,6 @@ const initCopyCode = (codeBlock) => {
     const text = (getCode()?.textContent || "").replace(/\n$/, "");
     if (!text) return;
 
-    button.disabled = true;
     try {
       await copyText(text);
       button.innerHTML = Check;
@@ -73,7 +75,6 @@ const initCopyCode = (codeBlock) => {
       button.textContent = "Failed";
     }
     window.setTimeout(() => {
-      button.disabled = false;
       button.innerHTML = Copy;
     }, 1200);
   });
@@ -82,4 +83,4 @@ const initCopyCode = (codeBlock) => {
   codeBlock.dataset.copyCodeInitialized = true;
 };
 
-window.basecoat?.register("copy-code", "pre:has(> code):not([data-copy-code-initialized])", initCopyCode);
+window.basecoat?.register("rsd-code-copy", "pre:has(> code):not([data-copy-code-initialized])", initCopyCode);

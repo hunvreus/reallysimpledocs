@@ -1,10 +1,10 @@
 # Callout
 
-Use `Callout` for notes, warnings, and dangerous or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Warning and danger callouts use variant colors.
+Use `Callout` for notes, warnings, and destructive or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Warning and destructive callouts use variant colors.
 
 ## Usage
 
-Use the component directly in MDX. RSD components are available by default, so no import is required.
+Use the component directly in MDX. ReallySimpleDocs components are available by default, so no import is required.
 
 ```tsx
 <Callout title="Good to know">
@@ -24,7 +24,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `type` | `"warning"` \| `"danger"` | `undefined` | Optional severity variant. |
+| `type` | `"warning"` \| `"destructive"` | `undefined` | Optional severity variant. |
 | `title` | `string` | `"Note"` | Heading displayed in the alert. |
 | `icon` | `string` | `undefined` | Optional Lucide icon name or custom SVG. |
 | `class` | `string` | `""` | Extra classes applied to the alert root. |
@@ -33,24 +33,32 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ### Neutral
 
-<Callout title="Neutral">
-  Use a callout when the surrounding paragraph is not enough.
-</Callout>
+<Preview lang="mdx" class="block w-full">
+  <Callout title="Neutral">
+    Use a callout when the surrounding paragraph is not enough.
+  </Callout>
+</Preview>
 
 ### Custom icon
 
-<Callout icon="lightbulb" title="Custom icon">
-  Add a Lucide icon when it helps explain the message.
-</Callout>
+<Preview lang="mdx" class="block w-full">
+  <Callout icon="lightbulb" title="Custom icon">
+    Add a Lucide icon when it helps explain the message.
+  </Callout>
+</Preview>
 
 ### Warning
 
-<Callout type="warning" title="Warning">
-  Avoid putting app-only imports in reusable documentation examples.
-</Callout>
+<Preview lang="mdx" class="block w-full">
+  <Callout type="warning" title="Warning">
+    Avoid putting app-only imports in reusable documentation examples.
+  </Callout>
+</Preview>
 
-### Danger
+### Destructive
 
-<Callout type="danger" title="Danger">
-  This variant is for irreversible actions, security risks, or migration warnings.
-</Callout>
+<Preview lang="mdx" class="block w-full">
+  <Callout type="destructive" title="Destructive">
+    This variant is for irreversible actions, security risks, or migration warnings.
+  </Callout>
+</Preview>

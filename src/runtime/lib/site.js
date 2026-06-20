@@ -4,7 +4,6 @@ export const defaultSite = {
   title: "ReallySimpleDocs",
   description: "A really simple documentation site.",
   url: "",
-  links: [],
 };
 
 export function getSite(config) {

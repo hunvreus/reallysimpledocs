@@ -2,7 +2,9 @@ import { fileURLToPath } from "node:url";
 import fs from "node:fs";
 import path from "node:path";
 import mdx from "@astrojs/mdx";
+import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
+import { remarkPreviewSource } from "./preview-source.js";
 
 const basecoatStyles = new Set(["vega", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea"]);
 
@@ -25,6 +27,8 @@ const cssPath = (relativePath) => fileURLToPath(new URL(`../css/${relativePath}`
 const normalizeArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 
 const normalizeImportPath = (filePath) => filePath.replaceAll(path.sep, "/");
+
+const normalizeBoolean = (value, fallback = true) => (value === undefined ? fallback : Boolean(value));
 
 const shikiConfig = {
   themes: {
@@ -66,6 +70,8 @@ export default function reallySimpleDocs(options = {}) {
     siteFile: options.siteFile || null,
     style,
     customCss: normalizeArray(options.customCss),
+    css: normalizeBoolean(options.css),
+    js: normalizeBoolean(options.js),
     components: options.components || {},
     routeBase: options.routeBase ?? "/docs",
     assetsBase: options.assetsBase || "/assets",
@@ -88,26 +94,35 @@ export default function reallySimpleDocs(options = {}) {
         };
         const mdxModules = collectMdxModules(docsDir);
         const resolveUserId = (id) => (id?.startsWith(".") ? path.resolve(root, id) : id);
-        const components = {
-          SidebarHeader:
-            normalizedOptions.components.SidebarHeader || runtimePath("components/DefaultSidebarHeader.astro"),
+        const componentDefaults = {
+          Head: runtimePath("components/DefaultHead.astro"),
+          SidebarHeader: runtimePath("components/DefaultSidebarHeader.astro"),
+          SidebarFooter: runtimePath("components/DefaultSidebarFooter.astro"),
+          ContentHeader: runtimePath("components/DefaultContentHeader.astro"),
         };
-        fs.mkdirSync(generatedDir, { recursive: true });
-        fs.writeFileSync(
-          generatedStyles,
-          [
-            '@import "tailwindcss";',
-            '@import "basecoat-css/base";',
-            `@import "basecoat-css/styles/${style}";`,
-            `@import ${JSON.stringify(cssPath("sources.css"))};`,
-            `@import ${JSON.stringify(cssPath("custom.css"))};`,
-            `@import ${JSON.stringify(cssPath("overrides.css"))};`,
-            ...normalizedOptions.customCss.map((css) => `@import ${JSON.stringify(resolveUserId(css))};`),
-            `@source ${JSON.stringify(runtimePath("**/*.{astro,js,ts}"))};`,
-            `@source ${JSON.stringify(path.join(virtualConfig.docsDir, "**/*.{md,mdx}"))};`,
-            "",
-          ].join("\n"),
+        const components = Object.fromEntries(
+          Object.entries(componentDefaults).map(([name, defaultPath]) => [
+            name,
+            normalizedOptions.components[name] || defaultPath,
+          ]),
         );
+        fs.mkdirSync(generatedDir, { recursive: true });
+        const styleSource = normalizedOptions.css
+          ? [
+              '@import "tailwindcss";',
+              '@import "basecoat-css/base";',
+              `@import "basecoat-css/styles/${style}";`,
+              `@import ${JSON.stringify(cssPath("sources.css"))};`,
+              `@import ${JSON.stringify(cssPath("custom.css"))};`,
+              `@import ${JSON.stringify(cssPath("overrides.css"))};`,
+              ...normalizedOptions.customCss.map((css) => `@import ${JSON.stringify(resolveUserId(css))};`),
+              `@source ${JSON.stringify(path.join(root, "src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"))};`,
+              `@source ${JSON.stringify(runtimePath("**/*.{astro,js,ts}"))};`,
+              `@source ${JSON.stringify(path.join(virtualConfig.docsDir, "**/*.{md,mdx}"))};`,
+              "",
+            ].join("\n")
+          : "/* ReallySimpleDocs CSS disabled by config. */\n";
+        fs.writeFileSync(generatedStyles, styleSource);
 
         injectRoute({
           pattern: routePattern(normalizedOptions.routeBase),
@@ -138,6 +153,9 @@ export default function reallySimpleDocs(options = {}) {
             }),
           ],
           markdown: {
+            processor: unified({
+              remarkPlugins: [remarkPreviewSource],
+            }),
             shikiConfig,
           },
           vite: {
@@ -152,8 +170,10 @@ export default function reallySimpleDocs(options = {}) {
                   if (id === "virtual:reallysimpledocs/config") return "\0virtual:reallysimpledocs/config";
                   if (id === "virtual:reallysimpledocs/mdx-pages") return "\0virtual:reallysimpledocs/mdx-pages";
                   if (id === "virtual:reallysimpledocs/styles.css") return generatedStyles;
-                  if (id === "virtual:reallysimpledocs/components/SidebarHeader") {
-                    return "\0virtual:reallysimpledocs/components/SidebarHeader";
+                  for (const name of Object.keys(components)) {
+                    if (id === `virtual:reallysimpledocs/components/${name}`) {
+                      return `\0virtual:reallysimpledocs/components/${name}`;
+                    }
                   }
                   return null;
                 },
@@ -175,8 +195,10 @@ export async function getMdxPage(slug) {
 }
 `;
                   }
-                  if (id === "\0virtual:reallysimpledocs/components/SidebarHeader") {
-                    return `export { default } from ${JSON.stringify(resolveUserId(components.SidebarHeader))};`;
+                  for (const [name, componentPath] of Object.entries(components)) {
+                    if (id === `\0virtual:reallysimpledocs/components/${name}`) {
+                      return `export { default } from ${JSON.stringify(resolveUserId(componentPath))};`;
+                    }
                   }
                   return null;
                 },

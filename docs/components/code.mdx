@@ -1,78 +1,69 @@
-export const installCommand = `npm install reallysimpledocs@beta basecoat-css@beta tailwindcss`;
-export const astroConfig = `import { defineConfig } from "astro/config";
-import reallySimpleDocs from "reallysimpledocs";
-
-export default defineConfig({
-  integrations: [
-    reallySimpleDocs({
-      title: "Acme Docs",
-    }),
-  ],
-});`;
-export const installCodeSource = `<Code title="Install" lang="bash">
-  {installCommand}
-</Code>`;
-export const configCodeSource = `<Code title="astro.config.mjs" lang="js">
-  {astroConfig}
-</Code>`;
-export const codeGroupSource = `<CodeGroup
-  defaultTab="npm"
->
-  <Code title="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-  <Code title="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-  <Code title="yarn" lang="bash">yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-  <Code title="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-</CodeGroup>`;
-
 # Code
 
-Use `Code` for a single syntax-highlighted code block. Use [`CodeGroup`](/components/code-group/) when the same example has package-manager, framework, or platform variants.
+Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the same example has package-manager, framework, or platform variants.
 
 ## Usage
 
-<Code lang="mdx">
-  {`<Code title="Install" lang="bash">
-  npm install reallysimpledocs@beta
-</Code>`}
+```mdx
+<Code title="Install" lang="bash">
+  npm install reallysimpledocs
 </Code>
+```
 
 ## Options
+
+### Code
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `lang` | `string` | `"text"` | Language passed to Shiki. |
-| `title` | `string` | `undefined` | Optional header label. |
-| `class` | `string` | `""` | Extra classes applied to the code wrapper. |
+| `title` | `string` | `undefined` | Optional header label. In a `CodeGroup`, this becomes the tab label. |
+| `class` | `string` | `""` | Extra classes applied to the wrapper. |
+
+### CodeGroup
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `class` | `string` | `""` | Extra classes applied to the wrapper. |
+
+`CodeGroup` expects child `Code` blocks with a `title`; untitled `Code` blocks are ignored because there is no tab label.
 
 ## Examples
 
-### Command
+### Default
 
-<Preview code={installCodeSource} lang="mdx" class="block w-full">
-  <Code title="Install" lang="bash">
-    {installCommand}
+<Preview lang="mdx" class="block w-full">
+  <Code lang="bash">
+    npm install reallysimpledocs
   </Code>
 </Preview>
 
-### Configuration
+### With title
 
-<Preview code={configCodeSource} lang="mdx" class="block w-full">
+<Preview lang="mdx" class="block w-full">
   <Code title="astro.config.mjs" lang="js">
-    {astroConfig}
+{`import { defineConfig } from "astro/config";
+import reallySimpleDocs from "reallysimpledocs/astro";
+
+export default defineConfig({
+  integrations: [
+    reallySimpleDocs({
+      site: {
+        title: "Acme Docs",
+      },
+    }),
+  ],
+});`}
   </Code>
 </Preview>
 
-### Tabbed code
+### Tabbed group
 
-This example uses [`CodeGroup`](/components/code-group/) for tabbed code. Its options are documented on the CodeGroup page.
-
-<Preview code={codeGroupSource} lang="mdx" class="block w-full">
-  <CodeGroup
-    defaultTab="npm"
-  >
-    <Code title="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-    <Code title="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-    <Code title="yarn" lang="bash">yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-    <Code title="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+<Preview lang="mdx" class="block w-full">
+  <CodeGroup>
+    <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
+    <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
+    <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
+    <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
   </CodeGroup>
 </Preview>

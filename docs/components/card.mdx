@@ -1,0 +1,46 @@
+# Card
+
+Use `Card` and `CardGrid` for small groups of related links, concepts, or next actions. Cards are intentionally simple: title, description, and an optional link.
+
+## Usage
+
+```mdx
+<CardGrid>
+  <Card title="Markdown" description="Write regular docs pages." href="/pages/" />
+  <Card title="MDX" description="Use components for richer examples." href="/components/" />
+</CardGrid>
+```
+
+## Options
+
+### CardGrid
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `class` | `string` | `""` | Extra classes applied to the grid root. |
+
+### Card
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `title` | `string` | `undefined` | Main card heading. |
+| `description` | `string` | `undefined` | Muted text below the title. |
+| `href` | `string` | `undefined` | Renders the card as a link. |
+| `class` | `string` | `""` | Extra classes applied to the card root. |
+
+## Examples
+
+### Card grid
+
+<Preview lang="mdx">
+  <CardGrid>
+    <Card title="Markdown" description="Write regular docs pages." href="/pages/" />
+    <Card title="MDX" description="Use components for richer examples." href="/components/" />
+  </CardGrid>
+</Preview>
+
+### Custom width
+
+<Preview lang="mdx">
+  <Card title="Custom width" description="Use class overrides when the layout needs it." class="w-full" />
+</Preview>

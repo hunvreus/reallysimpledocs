@@ -32,7 +32,7 @@
     @apply underline underline-offset-2 decoration-muted-foreground/50 hover:decoration-foreground/50 transition-all;
   }
   code:not(pre > code) {
-    @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[13px];
+    @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono;
   }
   pre {
     @apply rounded-lg;
@@ -146,19 +146,19 @@ html.dark .astro-code span {
 }
 
 [data-search] .command a[role='menuitem'] {
-  @apply flex-col items-start gap-1;
+  @apply h-auto min-h-0 flex-col items-start gap-1 overflow-visible whitespace-normal py-2;
 }
 
 [data-search] .command a[role='menuitem'] > strong {
-  @apply font-medium;
+  @apply w-full font-medium leading-5;
 }
 
 [data-search] .command a[role='menuitem'] > span {
-  @apply text-muted-foreground line-clamp-2 text-xs font-normal leading-snug;
+  @apply text-muted-foreground line-clamp-2 w-full text-sm font-normal leading-5;
 }
 
 .command mark {
-  @apply bg-search-highlight/50 text-foreground rounded-sm px-0.5 dark:bg-search-highlight/25;
+  @apply bg-search-highlight/50 text-foreground rounded-sm dark:bg-search-highlight/25;
 }
 
 .docs-card {
@@ -183,14 +183,8 @@ html.dark .astro-code span {
   @apply text-amber-700 dark:text-amber-300;
 }
 
-.alert-destructive[data-variant='danger'] > svg,
-.alert-destructive[data-variant='danger'] > h3,
-.alert-destructive[data-variant='danger'] > section {
-  @apply text-destructive;
-}
-
 .code-block {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg;
+  @apply relative my-6 w-full max-w-full overflow-hidden rounded-lg;
 }
 
 .code-block > header,
@@ -224,7 +218,7 @@ html.dark .astro-code span {
 .code-block button,
 .code-group button[aria-label='Copy code'],
 .preview button[aria-label='Copy code'] {
-  @apply flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:hover:bg-accent/50 [&_svg]:size-4;
+  @apply text-muted-foreground [&_svg]:size-4;
 }
 
 .code-block > header > button,
@@ -234,7 +228,7 @@ html.dark .astro-code span {
 }
 
 .code-group {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg;
+  @apply relative my-6 w-full max-w-full overflow-hidden rounded-lg;
 }
 
 .code-group > header > .tabs {
@@ -298,8 +292,16 @@ html.dark .astro-code span {
   counter-increment: step;
 }
 
+.steps > section + section {
+  @apply mt-6;
+}
+
 .steps > section > h3 {
   @apply relative mt-12 scroll-m-28 text-lg font-medium tracking-tight;
+}
+
+.steps > section + section > h3 {
+  @apply mt-0;
 }
 
 .steps > section:first-child > h3 {
@@ -342,7 +344,6 @@ html.dark .astro-code span {
 }
 
 .prose > .alert,
-.prose > .alert-destructive,
 .prose > .docs-card,
 .prose > .grid,
 .prose > .tabs {

@@ -1,16 +1,17 @@
 ---
-const { tabs = [], defaultTab, orientation = "horizontal", variant, class: className = "" } = Astro.props;
+const { tabs = [], variant, class: className = "" } = Astro.props;
 const id = `tabs-${Math.random().toString(36).slice(2)}`;
-const normalizedTabs = tabs.map((tab, index) => ({
+const configuredTabs = typeof tabs === "string" ? JSON.parse(tabs) : tabs;
+const normalizedTabs = configuredTabs.map((tab, index) => ({
   ...tab,
   slot: tab.slot || String(index),
   value: tab.value || tab.slot || String(index),
 }));
-const defaultValue = defaultTab || normalizedTabs.find((tab) => !tab.disabled)?.value || normalizedTabs[0]?.value;
+const defaultValue = normalizedTabs[0]?.value;
 ---
 
 <div class:list={["tabs", className]}>
-  <nav role="tablist" aria-orientation={orientation} data-variant={variant}>
+  <nav role="tablist" aria-orientation="horizontal" data-variant={variant}>
     {
       normalizedTabs.map((tab, index) => {
         const selected = tab.value === defaultValue;
@@ -21,8 +22,7 @@ const defaultValue = defaultTab || normalizedTabs.find((tab) => !tab.disabled)?.
             id={`${id}-tab-${index + 1}`}
             aria-controls={`${id}-panel-${index + 1}`}
             aria-selected={selected ? "true" : "false"}
-            tabindex={selected && !tab.disabled ? "0" : "-1"}
-            disabled={tab.disabled}
+            tabindex={selected ? "0" : "-1"}
           >
             {tab.label}
           </button>

@@ -1,66 +1,48 @@
-export const stepsSource = `<Steps>
-  <Step title="Install packages">
-    Add RSD, Basecoat, and Tailwind CSS to your Astro app.
-    <CodeGroup
-      defaultTab="npm"
-    >
-      <Code title="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-      <Code title="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-      <Code title="yarn" lang="bash">yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-      <Code title="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-    </CodeGroup>
-  </Step>
-  <Step title="Create docs">
-    Add docs/docs.json and one or more Markdown or MDX pages.
-  </Step>
-  <Step title="Run Astro">
-    Start the dev server and open the URL printed by Astro.
-    <div class="mt-6">
-      <a href="/install/" class="btn-secondary">Read install docs</a>
-    </div>
-  </Step>
-</Steps>`;
-
 # Steps
 
 Use `Steps` for ordered setup and installation flows. It renders a numbered rail, with each step title and body aligned like common install guides.
 
 ## Usage
 
-<Code lang="mdx">
-  {`<Steps>
+```mdx
+<Steps>
   <Step title="Install packages">
-    Add RSD, Basecoat, and Tailwind CSS.
+    Add ReallySimpleDocs, Basecoat, and Tailwind CSS.
   </Step>
   <Step title="Configure Astro">
-    Add the RSD integration to astro.config.mjs.
+    Add the ReallySimpleDocs integration to astro.config.mjs.
   </Step>
-</Steps>`}
-</Code>
+</Steps>
+```
 
 ## Options
 
-| Component | Prop | Type | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `Steps` | `class` | `string` | `""` | Extra classes applied to the ordered list. |
-| `Step` | `title` | `string` | `undefined` | Optional heading. |
-| `Step` | `class` | `string` | `""` | Extra classes applied to the list item. |
+### Steps
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `class` | `string` | `""` | Extra classes applied to the ordered list. |
+
+### Step
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `title` | `string` | `undefined` | Optional heading. |
+| `class` | `string` | `""` | Extra classes applied to the list item. |
 
 ## Examples
 
 ### Installation flow
 
-<Preview code={stepsSource} lang="mdx" class="block w-full items-stretch justify-start">
+<Preview lang="mdx" class="block w-full items-stretch justify-start">
   <Steps>
     <Step title="Install packages">
-      Add RSD, Basecoat, and Tailwind CSS to your Astro app.
-      <CodeGroup
-        defaultTab="npm"
-      >
-        <Code title="pnpm" lang="bash">pnpm add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-        <Code title="npm" lang="bash">npm install reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-        <Code title="yarn" lang="bash">yarn add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
-        <Code title="bun" lang="bash">bun add reallysimpledocs@beta basecoat-css@beta tailwindcss</Code>
+      Add ReallySimpleDocs, Basecoat, and Tailwind CSS to your Astro app.
+      <CodeGroup>
+        <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
+        <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
+        <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
+        <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
       </CodeGroup>
     </Step>
     <Step title="Create docs">
@@ -69,7 +51,7 @@ Use `Steps` for ordered setup and installation flows. It renders a numbered rail
     <Step title="Run Astro">
       Start the dev server and open the URL printed by Astro.
       <div class="mt-6">
-        <a href="/install/" class="btn-secondary">Read install docs</a>
+        <a href="/install/" class="btn" data-variant="secondary">Read Quickstart</a>
       </div>
     </Step>
   </Steps>
