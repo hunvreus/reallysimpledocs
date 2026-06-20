@@ -6,6 +6,8 @@ import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
 import { remarkPreviewSource } from "./preview-source.js";
 
+const basecoatStyles = new Set(["vega", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea"]);
+
 const normalizeRouteBase = (routeBase) => {
   const value = String(routeBase || "/").trim();
   if (!value || value === "/") return "";
@@ -57,13 +59,18 @@ function collectMdxModules(docsDir) {
 }
 
 export default function reallySimpleDocs(options = {}) {
+  const style = options.style || "vega";
+  if (!basecoatStyles.has(style)) {
+    throw new Error(`Invalid ReallySimpleDocs style "${style}". Expected one of: ${Array.from(basecoatStyles).join(", ")}.`);
+  }
+
   const normalizedOptions = {
     docsDir: options.docsDir || "./docs",
     site: options.site || {},
     siteFile: options.siteFile || null,
+    style,
     customCss: normalizeArray(options.customCss),
     css: normalizeBoolean(options.css),
-    js: normalizeBoolean(options.js),
     components: options.components || {},
     routeBase: options.routeBase ?? "/docs",
     assetsBase: options.assetsBase || "/assets",
@@ -87,7 +94,7 @@ export default function reallySimpleDocs(options = {}) {
         const mdxModules = collectMdxModules(docsDir);
         const resolveUserId = (id) => (id?.startsWith(".") ? path.resolve(root, id) : id);
         const componentDefaults = {
-          Head: runtimePath("components/DefaultHead.astro"),
+          Head: runtimePath("components/DefaultHeadContent.astro"),
           SidebarHeader: runtimePath("components/DefaultSidebarHeader.astro"),
           SidebarFooter: runtimePath("components/DefaultSidebarFooter.astro"),
           ContentHeader: runtimePath("components/DefaultContentHeader.astro"),
@@ -102,8 +109,8 @@ export default function reallySimpleDocs(options = {}) {
         const styleSource = normalizedOptions.css
           ? [
               '@import "tailwindcss";',
-              '@import "basecoat-css";',
-              `@import ${JSON.stringify(cssPath("sources.css"))};`,
+              '@import "basecoat-css/base";',
+              `@import "basecoat-css/styles/${style}";`,
               `@import ${JSON.stringify(cssPath("custom.css"))};`,
               `@import ${JSON.stringify(cssPath("overrides.css"))};`,
               ...normalizedOptions.customCss.map((css) => `@import ${JSON.stringify(resolveUserId(css))};`),

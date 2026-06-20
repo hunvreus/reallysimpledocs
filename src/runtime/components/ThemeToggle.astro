@@ -1,0 +1,21 @@
+---
+import Moon from "lucide-static/icons/moon.svg?raw";
+import Sun from "lucide-static/icons/sun.svg?raw";
+---
+
+<nav class="hidden items-center gap-2 sm:flex">
+  <button
+    type="button"
+    aria-label="Toggle dark mode"
+    data-tooltip="Toggle dark mode"
+    data-side="bottom"
+    data-align="end"
+    onclick="window.basecoat?.theme.toggle()"
+    class="btn"
+    data-variant="ghost"
+    data-size="icon-sm"
+  >
+    <span class="hidden dark:block"><Fragment set:html={Sun} /></span>
+    <span class="block dark:hidden"><Fragment set:html={Moon} /></span>
+  </button>
+</nav>

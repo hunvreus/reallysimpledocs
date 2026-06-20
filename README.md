@@ -24,6 +24,7 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       routeBase: "/docs",
+      style: "vega",
       customCss: ["./src/docs.css"],
       site: {
         title: "ReallySimpleDocs",
@@ -62,6 +63,18 @@ Welcome to the docs.
 
 ReallySimpleDocs injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
 
+Use component overrides for layout chrome such as sidebar branding, extra head tags, or header controls between search and the built-in theme toggle:
+
+```js
+reallySimpleDocs({
+  components: {
+    ContentHeader: "./src/components/ContentHeader.astro",
+  },
+});
+```
+
+For example, put only the GitHub button in `ContentHeader`; the theme toggle stays built in.
+
 Use `.mdx` when a page needs ReallySimpleDocs components. Common components are available by default, so you do not need to import them in each page:
 
 ```mdx
@@ -74,22 +87,29 @@ Use `.mdx` when a page needs ReallySimpleDocs components. Common components are 
 
 By default, ReallySimpleDocs manages one Tailwind/Basecoat stylesheet for the app. It scans `src/`, `docs/`, and the ReallySimpleDocs runtime, so Basecoat and Tailwind classes used by custom Astro pages outside the docs route are included in the same CSS build.
 
-Disable the managed assets only when you want to provide the full CSS or JavaScript pipeline yourself:
+Disable managed CSS only when you want to provide the full stylesheet pipeline yourself:
 
 ```js
 reallySimpleDocs({
   css: false,
-  js: false,
 });
 ```
 
-Use `css: false` when you bring your own Tailwind/Basecoat stylesheet. Use `js: false` when you bring your own Basecoat and ReallySimpleDocs behavior scripts.
+Use `css: false` when you bring your own Tailwind/Basecoat/RSD stylesheet. ReallySimpleDocs still provides its managed JavaScript.
 
 ## Local development (this repo)
 
 ```bash
 npm install
 npm run dev
+```
+
+Useful checks before publishing changes:
+
+```bash
+npm run build
+npm pack --dry-run
+npm run smoke:consumer
 ```
 
 ## Documentation

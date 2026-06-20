@@ -16,6 +16,7 @@ import CommandDialog from "./CommandDialog.astro";
 import ContentHeader from "virtual:reallysimpledocs/components/ContentHeader";
 import DropdownMenu from "./DropdownMenu.astro";
 import Sidebar from "./Sidebar.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { buildMenus, getNavigation } from "../lib/docs.js";
 import { addSvgClass } from "../lib/html.js";
 import { routeFilePath } from "../lib/paths.js";
@@ -23,7 +24,6 @@ import { getSite } from "../lib/site.js";
 
 const { page, headings } = Astro.props;
 const site = getSite(config);
-const enableJs = config.js !== false;
 const navigation = getNavigation(config, page);
 const { sidebar } = buildMenus(config, page.slug);
 const searchIndexUrl = routeFilePath(config.routeBase, "search-index.json");
@@ -65,7 +65,7 @@ const actionItems = [
 ---
 
 <BaseLayout title={page.title} description={site.description} pagePath={page.path}>
-  {enableJs && <CommandDialog indexUrl={searchIndexUrl} />}
+  <CommandDialog indexUrl={searchIndexUrl} />
   <Sidebar menu={sidebar} />
 
   <main id="content">
@@ -85,21 +85,18 @@ const actionItems = [
           <Fragment set:html={panelLeftIcon} />
         </button>
 
-        {
-          enableJs && (
-            <button
-              type="button"
-              class="relative flex h-8 w-full min-w-0 max-w-72 cursor-text items-center gap-x-2 rounded-md border border-input bg-background px-3 py-1 text-base text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 sm:ml-auto md:text-sm"
-              onclick="window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal()"
-            >
-              <Fragment set:html={searchIcon} />
-              Search...
-              <kbd class="kbd ml-auto -mr-1.5">⌘K</kbd>
-            </button>
-          )
-        }
+        <button
+          type="button"
+          class="relative flex h-8 w-full min-w-0 max-w-72 cursor-text items-center gap-x-2 rounded-md border border-input bg-background px-3 py-1 text-base text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 sm:ml-auto md:text-sm"
+          onclick="window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal()"
+        >
+          <Fragment set:html={searchIcon} />
+          Search...
+          <kbd class="kbd ml-auto -mr-1.5">⌘K</kbd>
+        </button>
 
         <ContentHeader site={site} page={page} />
+        <ThemeToggle />
 
         <div class="sm:hidden">
           <button
@@ -132,7 +129,7 @@ const actionItems = [
                     data-variant="secondary"
                     data-size="sm"
                     data-md-url={page.markdownPath}
-                    onclick={enableJs ? "copyPageMarkdown(this)" : undefined}
+                    onclick="copyPageMarkdown(this)"
                   >
                     <Fragment set:html={Copy} />
                     Copy page
@@ -204,9 +201,7 @@ const actionItems = [
     </div>
   </main>
 
-  {
-    enableJs && (
-      <script is:inline define:vars={{ checkIcon: Check }}>
+  <script is:inline define:vars={{ checkIcon: Check }}>
     window.copyPageMarkdown = async function copyPageMarkdown(button) {
       const markdownUrl = button?.dataset?.mdUrl;
       if (!markdownUrl) return;
@@ -308,7 +303,5 @@ const actionItems = [
     }
 
     initDocsToc();
-      </script>
-    )
-  }
+  </script>
 </BaseLayout>

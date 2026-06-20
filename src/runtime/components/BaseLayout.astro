@@ -1,11 +1,11 @@
 ---
 import config from "virtual:reallysimpledocs/config";
 import Head from "virtual:reallysimpledocs/components/Head";
+import DefaultHead from "./DefaultHead.astro";
 import { getSite } from "../lib/site.js";
 
 const { title, description, pagePath = "/" } = Astro.props;
 const site = getSite(config);
-const enableJs = config.js !== false;
 const metaDescription = description || site.description || "";
 const metaTitle = pagePath === "/" ? `${site.title} | ${metaDescription}` : `${title || metaDescription} | ${site.title}`;
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") || site.url || "";
@@ -28,6 +28,15 @@ const absoluteAssetUrl = (value) => {
 <!doctype html>
 <html lang="en">
   <head>
+    <DefaultHead
+      config={config}
+      site={site}
+      title={title}
+      description={metaDescription}
+      pagePath={pagePath}
+      metaTitle={metaTitle}
+      absoluteUrl={absoluteUrl}
+    />
     <Head
       config={config}
       site={site}
@@ -36,7 +45,6 @@ const absoluteAssetUrl = (value) => {
       pagePath={pagePath}
       metaTitle={metaTitle}
       absoluteUrl={absoluteUrl}
-      enableJs={enableJs}
     />
     <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en" />

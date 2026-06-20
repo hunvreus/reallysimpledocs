@@ -2,141 +2,119 @@
 import Copy from "lucide-static/icons/copy.svg?raw";
 import Check from "lucide-static/icons/check.svg?raw";
 import basecoatJsUrl from "basecoat-css/all.min?url";
-
-const { enableJs } = Astro.props;
 ---
 
-{
-  enableJs && (
-    <>
-      <script is:inline>
-        {`
-          (() => {
-            try {
-              const stored = localStorage.getItem("themeMode");
-              if (stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches) {
-                document.documentElement.classList.add("dark");
-              }
-            } catch (_) {}
+<script is:inline>
+  (() => {
+    try {
+      const stored = localStorage.getItem("themeMode");
+      if (stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
+      }
+    } catch (_) {}
+  })();
+</script>
+<script src={basecoatJsUrl}></script>
+<script is:inline define:vars={{ copyIcon: Copy, checkIcon: Check }}>
+  const copyText = async (text) => {
+    if (window.isSecureContext && navigator.clipboard?.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
 
-            const apply = (dark) => {
-              document.documentElement.classList.toggle("dark", dark);
-              try {
-                localStorage.setItem("themeMode", dark ? "dark" : "light");
-              } catch (_) {}
-            };
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.top = "-9999px";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const ok = document.execCommand("copy");
+    textarea.remove();
+    if (!ok) throw new Error("Copy failed");
+  };
 
-            document.addEventListener("basecoat:theme", (event) => {
-              const mode = event.detail?.mode;
-              apply(mode === "dark" ? true : mode === "light" ? false : !document.documentElement.classList.contains("dark"));
-            });
-          })();
-        `}
-      </script>
-      <script src={basecoatJsUrl}></script>
-      <script is:inline define:vars={{ copyIcon: Copy, checkIcon: Check }}>
-        const copyText = async (text) => {
-          if (window.isSecureContext && navigator.clipboard?.writeText) {
-            return navigator.clipboard.writeText(text);
-          }
+  const activePanelCode = (root) => root.querySelector(':scope > [role="tabpanel"]:not([hidden]) code');
 
-          const textarea = document.createElement("textarea");
-          textarea.value = text;
-          textarea.setAttribute("readonly", "");
-          textarea.style.position = "fixed";
-          textarea.style.top = "-9999px";
-          textarea.style.left = "-9999px";
-          document.body.appendChild(textarea);
-          textarea.select();
-          const ok = document.execCommand("copy");
-          textarea.remove();
-          if (!ok) throw new Error("Copy failed");
-        };
+  const initCopyCode = (codeBlock) => {
+    if (codeBlock.dataset.copyCodeInitialized) return;
+    const codeEl = codeBlock.querySelector(":scope > code");
+    if (!codeEl) return;
 
-        const activePanelCode = (root) => root.querySelector(':scope > [role="tabpanel"]:not([hidden]) code');
+    let target = null;
+    let frame = codeBlock.closest(".code-group");
+    let getCode = frame ? () => activePanelCode(frame) || codeEl : () => codeEl;
+    if (frame) target = frame.querySelector(":scope > header");
 
-        const initCopyCode = (codeBlock) => {
-          if (codeBlock.dataset.copyCodeInitialized) return;
-          const codeEl = codeBlock.querySelector(":scope > code");
-          if (!codeEl) return;
+    const preview = codeBlock.closest(".preview");
+    const previewCodePanel = preview?.querySelector(":scope > [data-code-panel]");
+    if (!frame && previewCodePanel?.contains(codeBlock)) {
+      frame = preview;
+      target = frame.querySelector(":scope > header");
+      getCode = () => codeEl;
+    }
 
-          let target = null;
-          let frame = codeBlock.closest(".code-group");
-          let getCode = frame ? () => activePanelCode(frame) || codeEl : () => codeEl;
-          if (frame) target = frame.querySelector(":scope > header");
+    if (!frame) {
+      frame = codeBlock.parentElement?.classList.contains("code-block") ? codeBlock.parentElement : null;
+      if (!frame) {
+        frame = document.createElement("div");
+        frame.className = "code-block";
+        codeBlock.parentNode.insertBefore(frame, codeBlock);
+        frame.appendChild(codeBlock);
+      }
+    }
 
-          const preview = codeBlock.closest(".preview");
-          const previewCodePanel = preview?.querySelector(":scope > [data-code-panel]");
-          if (!frame && previewCodePanel?.contains(codeBlock)) {
-            frame = preview;
-            target = frame.querySelector(":scope > header");
-            getCode = () => codeEl;
-          }
+    target ||= frame.querySelector(":scope > header") || frame;
+    if (target.querySelector(":scope > button[aria-label='Copy code']")) {
+      codeBlock.dataset.copyCodeInitialized = "true";
+      return;
+    }
 
-          if (!frame) {
-            frame = codeBlock.parentElement?.classList.contains("code-block") ? codeBlock.parentElement : null;
-            if (!frame) {
-              frame = document.createElement("div");
-              frame.className = "code-block";
-              codeBlock.parentNode.insertBefore(frame, codeBlock);
-              frame.appendChild(codeBlock);
-            }
-          }
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn";
+    button.dataset.variant = "ghost";
+    button.dataset.size = "icon-xs";
+    button.setAttribute("aria-label", "Copy code");
+    button.innerHTML = copyIcon;
 
-          target ||= frame.querySelector(":scope > header") || frame;
-          if (target.querySelector(":scope > button[aria-label='Copy code']")) {
-            codeBlock.dataset.copyCodeInitialized = "true";
-            return;
-          }
+    button.addEventListener("click", async () => {
+      const text = (getCode()?.textContent || "").replace(/\n$/, "");
+      if (!text) return;
 
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "btn";
-          button.dataset.variant = "ghost";
-          button.dataset.size = "icon-xs";
-          button.setAttribute("aria-label", "Copy code");
-          button.innerHTML = copyIcon;
+      try {
+        await copyText(text);
+        button.innerHTML = checkIcon;
+      } catch (error) {
+        console.error("[copy] Failed to copy:", error);
+        button.textContent = "Failed";
+      }
+      window.setTimeout(() => {
+        button.innerHTML = copyIcon;
+      }, 1200);
+    });
 
-          button.addEventListener("click", async () => {
-            const text = (getCode()?.textContent || "").replace(/\n$/, "");
-            if (!text) return;
+    target.appendChild(button);
+    codeBlock.dataset.copyCodeInitialized = "true";
+  };
 
-            try {
-              await copyText(text);
-              button.innerHTML = checkIcon;
-            } catch (error) {
-              console.error("[copy] Failed to copy:", error);
-              button.textContent = "Failed";
-            }
-            window.setTimeout(() => {
-              button.innerHTML = copyIcon;
-            }, 1200);
-          });
+  const initCopyButtons = (root = document) => {
+    root.querySelectorAll("pre:has(> code):not([data-copy-code-initialized])").forEach(initCopyCode);
+  };
 
-          target.appendChild(button);
-          codeBlock.dataset.copyCodeInitialized = "true";
-        };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => initCopyButtons(), { once: true });
+  } else {
+    initCopyButtons();
+  }
 
-        const initCopyButtons = (root = document) => {
-          root.querySelectorAll("pre:has(> code):not([data-copy-code-initialized])").forEach(initCopyCode);
-        };
-
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", () => initCopyButtons(), { once: true });
-        } else {
-          initCopyButtons();
-        }
-
-        new MutationObserver((mutations) => {
-          for (const mutation of mutations) {
-            mutation.addedNodes.forEach((node) => {
-              if (node.nodeType !== Node.ELEMENT_NODE) return;
-              if (node.matches?.("pre:has(> code)")) initCopyCode(node);
-              initCopyButtons(node);
-            });
-          }
-        }).observe(document.documentElement, { childList: true, subtree: true });
-      </script>
-    </>
-  )
-}
+  new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        if (node.matches?.("pre:has(> code)")) initCopyCode(node);
+        initCopyButtons(node);
+      });
+    }
+  }).observe(document.documentElement, { childList: true, subtree: true });
+</script>
