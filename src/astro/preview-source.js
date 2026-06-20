@@ -1,14 +1,27 @@
 import { toMarkdown } from "mdast-util-to-markdown";
 import { mdxToMarkdown } from "mdast-util-mdx";
 
-export function remarkPreviewSource() {
-  return (tree) => {
+export function remarkPreviewSource({ docsDir } = {}) {
+  const normalizedDocsDir = docsDir ? normalizePath(docsDir).replace(/\/$/, "") : "";
+
+  return (tree, file) => {
+    if (normalizedDocsDir && !isDocsFile(file?.path, normalizedDocsDir)) return;
+
     visit(tree, (node) => {
       if (node?.type !== "mdxJsxFlowElement") return;
       if (node.name === "Preview") addPreviewSource(node);
       if (node.name === "Tabs") addTabsMetadata(node);
     });
   };
+}
+
+function isDocsFile(filePath, docsDir) {
+  const normalized = normalizePath(filePath || "");
+  return normalized === docsDir || normalized.startsWith(`${docsDir}/`);
+}
+
+function normalizePath(value) {
+  return String(value || "").replaceAll("\\", "/");
 }
 
 function addPreviewSource(node) {

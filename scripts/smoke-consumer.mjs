@@ -112,6 +112,18 @@ fs.writeFileSync(
 </main>
 `,
 );
+fs.writeFileSync(
+  path.join(appDir, "src", "pages", "outside.mdx"),
+  `export const Tabs = ({ tabs, children }) => <section data-tabs-prop={tabs ? "mutated" : "clean"}>{children}</section>;
+export const Tab = ({ title, slot, children }) => <article data-slot-prop={slot || "clean"}>{title}{children}</article>;
+
+# Outside MDX
+
+<Tabs>
+  <Tab title="Outside tab">outside-mdx-smoke</Tab>
+</Tabs>
+`,
+);
 writeJson(path.join(appDir, "docs", "docs.json"), {
   menu: [
     {
@@ -195,6 +207,7 @@ assertFile(path.join(appDir, "dist", "docs", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "guide", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "interactive", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "deep", "nested", "index.html"));
+assertFile(path.join(appDir, "dist", "outside", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "search-index.json"));
 assertFile(path.join(appDir, "dist", "docs", "index.md"));
 assertFile(path.join(appDir, "dist", "docs", "guide.md"));
@@ -211,6 +224,11 @@ if (!cssOutput.includes(".text-balance") || !cssOutput.includes(".decoration-wav
 
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "Welcome");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "_astro/");
+assertIncludes(path.join(appDir, "dist", "index.html"), "_astro/");
+assertIncludes(path.join(appDir, "dist", "index.html"), 'rel="stylesheet"');
+assertIncludes(path.join(appDir, "dist", "outside", "index.html"), 'data-tabs-prop="clean"');
+assertIncludes(path.join(appDir, "dist", "outside", "index.html"), 'data-slot-prop="clean"');
+assertNotIncludes(path.join(appDir, "dist", "outside", "index.html"), 'data-tabs-prop="mutated"');
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'data-md-url="/docs/index.md"');
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs/index.md"');
 assertNotIncludes(path.join(appDir, "dist", "docs", "index.html"), 'href="/docs.md"');

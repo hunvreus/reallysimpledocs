@@ -80,7 +80,7 @@ export default function reallySimpleDocs(options = {}) {
   return {
     name: "reallysimpledocs",
     hooks: {
-      "astro:config:setup": ({ injectRoute, updateConfig, config }) => {
+      "astro:config:setup": ({ injectRoute, injectScript, updateConfig, config }) => {
         const root = fileURLToPath(config.root);
         const generatedDir = path.join(root, ".astro", "reallysimpledocs");
         const generatedStyles = path.join(generatedDir, "styles.css");
@@ -123,6 +123,9 @@ export default function reallySimpleDocs(options = {}) {
             ].join("\n")
           : "/* ReallySimpleDocs CSS disabled by config. */\n";
         fs.writeFileSync(generatedStyles, styleSource);
+        if (normalizedOptions.css) {
+          injectScript("page-ssr", 'import "virtual:reallysimpledocs/styles.css";');
+        }
 
         injectRoute({
           pattern: routePattern(normalizedOptions.routeBase),
@@ -154,7 +157,7 @@ export default function reallySimpleDocs(options = {}) {
           ],
           markdown: {
             processor: unified({
-              remarkPlugins: [remarkPreviewSource],
+              remarkPlugins: [[remarkPreviewSource, { docsDir }]],
             }),
             shikiConfig,
           },
