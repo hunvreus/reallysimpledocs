@@ -35,7 +35,7 @@ export default defineConfig({
 | `components.Head` | Default head scripts | Astro component rendered in the document `<head>`. |
 | `components.SidebarHeader` | Default header | Astro component used for the sidebar header. |
 | `components.SidebarFooter` | Empty footer | Astro component used for the sidebar footer. |
-| `components.ContentHeader` | Theme toggle | Astro component used for the right side of the sticky content header. |
+| `components.ContentHeader` | Theme toggle | Astro component used for controls on the right side of the sticky content header. |
 | `site` | `{}` | Site metadata used by layout, SEO tags, and default UI. |
 
 ## Site metadata
@@ -56,9 +56,6 @@ reallySimpleDocs({
     },
     logo: {
       url: "/assets/favicon.svg",
-    },
-    repository: {
-      url: "https://github.com/acme/project",
     },
   },
 });
@@ -122,6 +119,7 @@ Use `SidebarFooter` for persistent sidebar actions or secondary links.
 ### ContentHeader
 
 Use `ContentHeader` for controls on the right side of the sticky page header.
+Header actions, such as a GitHub link, belong in this component rather than in `site` metadata.
 
 ```astro
 <nav class="hidden items-center gap-2 sm:flex">

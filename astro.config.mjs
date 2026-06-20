@@ -10,6 +10,9 @@ export default defineConfig({
   integrations: [
     reallySimpleDocs({
       docsDir: "./docs",
+      components: {
+        ContentHeader: "./docs/_components/ContentHeader.astro",
+      },
       site: {
         title: "ReallySimpleDocs",
         subtitle: "v1.0.0-beta.2",
@@ -21,9 +24,6 @@ export default defineConfig({
           socialImage: "social.png",
         },
         logo: { svg: logo },
-        repository: {
-          url: "https://github.com/hunvreus/reallysimpledocs",
-        },
       },
       routeBase: "/",
     }),
