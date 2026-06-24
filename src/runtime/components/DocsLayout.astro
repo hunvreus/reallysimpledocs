@@ -61,7 +61,11 @@ const actionItems = [
 ];
 ---
 
-<BaseLayout title={page.title} description={site.description} pagePath={page.path}>
+<BaseLayout
+  title={page.title}
+  description={site.description}
+  pagePath={page.path}
+>
   <CommandDialog />
   <Sidebar menu={sidebar} />
 
@@ -85,16 +89,26 @@ const actionItems = [
         </button>
 
         <div
-          class="input-group h-8 w-full min-w-0 max-w-72 cursor-text sm:ml-auto"
+          class="input-group h-8 w-full min-w-0 max-w-72 cursor-text ml-auto"
           role="button"
           tabindex="0"
           aria-label="Search docs"
           onclick="window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal()"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal(); }"
         >
-          <input type="text" placeholder="Search..." readonly tabindex="-1" aria-hidden="true" />
-          <span data-align="start" aria-hidden="true"><Fragment set:html={searchIcon} /></span>
-          <span data-align="end" aria-hidden="true"><kbd class="kbd">⌘K</kbd></span>
+          <input
+            type="text"
+            placeholder="Search..."
+            readonly
+            tabindex="-1"
+            aria-hidden="true"
+          />
+          <span data-align="start" aria-hidden="true"
+            ><Fragment set:html={searchIcon} /></span
+          >
+          <span data-align="end" aria-hidden="true"
+            ><kbd class="kbd">⌘K</kbd></span
+          >
         </div>
 
         <ContentHeader site={site} page={page} />
@@ -106,9 +120,17 @@ const actionItems = [
       <article class="min-w-0 flex-1 wrap-break-word">
         <div class="mx-auto w-full max-w-2xl flex-1 space-y-10">
           <header class="space-y-2">
-            <div class="flex flex-col-reverse items-start gap-3 sm:flex-row sm:gap-x-2">
-              <h1 class="mr-auto text-3xl font-semibold tracking-tight sm:text-4xl">{page.title}</h1>
-              <div class="flex w-full items-center justify-end gap-x-2 sm:mt-1 sm:w-auto">
+            <div
+              class="flex flex-col-reverse items-start gap-3 sm:flex-row sm:gap-x-2"
+            >
+              <h1
+                class="mr-auto text-3xl font-semibold tracking-tight sm:text-4xl"
+              >
+                {page.title}
+              </h1>
+              <div
+                class="flex w-full items-center justify-end gap-x-2 sm:mt-1 sm:w-auto"
+              >
                 <div role="group" class="button-group">
                   <button
                     type="button"
@@ -127,16 +149,30 @@ const actionItems = [
                 <div role="group" class="button-group">
                   {
                     navigation.prev && (
-                      <a href={navigation.prev.path} class="btn" data-variant="secondary" data-size="icon-sm">
+                      <a
+                        href={navigation.prev.path}
+                        class="btn"
+                        data-variant="secondary"
+                        data-size="icon-sm"
+                      >
                         <span class="sr-only">{navigation.prev.title}</span>
                         <Fragment set:html={ArrowLeft} />
                       </a>
                     )
                   }
-                  {navigation.prev && navigation.next && <hr role="separator" />}
+                  {
+                    navigation.prev && navigation.next && (
+                      <hr role="separator" />
+                    )
+                  }
                   {
                     navigation.next && (
-                      <a href={navigation.next.path} class="btn" data-variant="secondary" data-size="icon-sm">
+                      <a
+                        href={navigation.next.path}
+                        class="btn"
+                        data-variant="secondary"
+                        data-size="icon-sm"
+                      >
                         <span class="sr-only">{navigation.next.title}</span>
                         <Fragment set:html={ArrowRight} />
                       </a>
@@ -152,7 +188,12 @@ const actionItems = [
           <footer class="mt-12 flex items-center">
             {
               navigation.prev && (
-                <a href={navigation.prev.path} class="btn mr-auto" data-variant="secondary" data-size="sm">
+                <a
+                  href={navigation.prev.path}
+                  class="btn mr-auto"
+                  data-variant="secondary"
+                  data-size="sm"
+                >
                   <Fragment set:html={ArrowLeft} />
                   {navigation.prev.title}
                 </a>
@@ -160,7 +201,12 @@ const actionItems = [
             }
             {
               navigation.next && (
-                <a href={navigation.next.path} class="btn ml-auto" data-variant="secondary" data-size="sm">
+                <a
+                  href={navigation.next.path}
+                  class="btn ml-auto"
+                  data-variant="secondary"
+                  data-size="sm"
+                >
                   {navigation.next.title}
                   <Fragment set:html={ArrowRight} />
                 </a>
@@ -170,15 +216,18 @@ const actionItems = [
         </div>
       </article>
       <aside class="hidden w-56 xl:block">
-        <div class="docs-toc sticky top-20 space-y-2 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-foreground [&_a[aria-current='location']]:text-foreground [&_ol]:space-y-2 [&_ol_ol]:mt-2 [&_ol_ol]:pl-3" data-docs-toc>
-          <h2 class="flex items-center gap-1 font-medium">
-            On this page
-          </h2>
+        <div
+          class="docs-toc sticky top-20 space-y-2 text-sm [&_a]:text-muted-foreground [&_a]:hover:text-foreground [&_a[aria-current='location']]:text-foreground [&_ol]:space-y-2 [&_ol_ol]:mt-2 [&_ol_ol]:pl-3"
+          data-docs-toc
+        >
+          <h2 class="flex items-center gap-1 font-medium">On this page</h2>
           <ol>
             {
               headings.map((heading) => (
                 <li class={heading.depth === 3 ? "pl-3" : ""}>
-                  <a href={`#${heading.id}`} data-toc-link>{heading.text}</a>
+                  <a href={`#${heading.id}`} data-toc-link>
+                    {heading.text}
+                  </a>
                 </li>
               ))
             }
@@ -196,7 +245,10 @@ const actionItems = [
       const originalIcon = icon?.outerHTML || "";
 
       try {
-        const response = await fetch(markdownUrl, { credentials: "same-origin", cache: "no-store" });
+        const response = await fetch(markdownUrl, {
+          credentials: "same-origin",
+          cache: "no-store",
+        });
         if (!response.ok) throw new Error("Failed to fetch markdown");
         const markdown = await response.text();
         await writeToClipboard(markdown);
@@ -204,11 +256,16 @@ const actionItems = [
           icon.outerHTML = checkIcon;
           window.setTimeout(() => {
             const currentIcon = button.querySelector("svg");
-            if (currentIcon && originalIcon) currentIcon.outerHTML = originalIcon;
+            if (currentIcon && originalIcon)
+              currentIcon.outerHTML = originalIcon;
           }, 1200);
         }
       } catch (_) {
-        window.open(new URL(markdownUrl, window.location.href).toString(), "_blank", "noopener");
+        window.open(
+          new URL(markdownUrl, window.location.href).toString(),
+          "_blank",
+          "noopener",
+        );
       }
     };
 
@@ -259,7 +316,8 @@ const actionItems = [
         let current = entries[0];
 
         for (const entry of entries) {
-          if (entry.heading.getBoundingClientRect().top <= marker) current = entry;
+          if (entry.heading.getBoundingClientRect().top <= marker)
+            current = entry;
           else break;
         }
 
@@ -286,7 +344,9 @@ const actionItems = [
       activeFromScroll();
       window.addEventListener("scroll", queueActiveUpdate, { passive: true });
       window.addEventListener("resize", queueActiveUpdate);
-      window.addEventListener("hashchange", () => window.setTimeout(activeFromScroll, 0));
+      window.addEventListener("hashchange", () =>
+        window.setTimeout(activeFromScroll, 0),
+      );
     }
 
     initDocsToc();
