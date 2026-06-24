@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "reallysimpledocs",
+  "compatibility_date": "2026-06-24",
+  "assets": {
+    "directory": "./dist"
+  }
+}
