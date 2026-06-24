@@ -245,7 +245,8 @@ Install htmx first:
 npm install htmx.org
 ```
 
-Then load htmx from the installed package (or from a CDN) and use `bodyAttrs` and `Head` to boost links into the docs content container:
+Then load htmx from the installed package (or from a CDN) and use `bodyAttrs` to boost links into the docs content container.
+Because the sidebar is outside `#content`, update its current-page state from `Head` after htmx swaps:
 
 <CodeGroup>
 ```js title="astro.config.mjs"
@@ -267,6 +268,34 @@ reallySimpleDocs({
 ---
 import htmxUrl from "htmx.org/dist/htmx.min.js?url";
 ---
+
+<script is:inline>
+  (() => {
+    const key = (href) => {
+      const url = new URL(href, window.location.origin);
+      return `${url.pathname.replace(/\/$/, "")}${url.search}`;
+    };
+
+    const syncSidebar = () => {
+      for (const link of document.querySelectorAll("#sidebar a[href]")) {
+        const isCurrent = key(link.href) === key(window.location.href);
+        if (isCurrent) {
+          link.setAttribute("aria-current", "page");
+          link.closest("details")?.setAttribute("open", "");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", syncSidebar);
+    document.addEventListener("htmx:afterSettle", () => {
+      window.basecoat?.initAll?.();
+      syncSidebar();
+    });
+    window.addEventListener("popstate", syncSidebar);
+  })();
+</script>
 
 <script src={htmxUrl} defer></script>
 ```

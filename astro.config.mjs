@@ -10,6 +10,13 @@ export default defineConfig({
   integrations: [
     reallySimpleDocs({
       docsDir: "./docs",
+      bodyAttrs: {
+        "hx-boost": "true",
+        "hx-target": "#content",
+        "hx-select": "#content",
+        "hx-swap": "outerHTML",
+        "hx-push-url": "true",
+      },
       components: {
         Head: "./site/Head.astro",
         ContentHeader: "./site/ContentHeader.astro",
