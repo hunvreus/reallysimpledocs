@@ -177,7 +177,7 @@ html.dark .astro-code span {
 }
 
 .tabs-frame > header {
-  @apply flex items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b bg-muted px-3 py-0.5 text-sm font-medium dark:bg-muted/50;
+  @apply flex items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b bg-muted px-3 text-sm font-medium dark:bg-muted/50;
   scrollbar-width: none;
 }
 

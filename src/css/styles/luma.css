@@ -4,6 +4,7 @@
   @apply rounded-2xl;
 }
 
-.code-frame > header {
-  @apply h-[40px];
+.code-frame > header,
+.tabs-frame > header {
+  @apply h-[39px];
 }

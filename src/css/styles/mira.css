@@ -4,6 +4,7 @@
   @apply rounded-lg;
 }
 
-.code-frame > header {
-  @apply h-[32px];
+.code-frame > header,
+.tabs-frame > header {
+  @apply h-[33px];
 }
