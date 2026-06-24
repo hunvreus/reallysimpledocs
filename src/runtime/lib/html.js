@@ -6,6 +6,15 @@ export function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
+export function decodeHtml(value) {
+  return String(value ?? "")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, "&");
+}
+
 export function attrs(values = {}) {
   return Object.entries(values)
     .filter(([, value]) => value !== undefined && value !== null && value !== false)

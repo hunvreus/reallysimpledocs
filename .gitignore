@@ -1,7 +1,6 @@
 .*
 !.gitignore
 !.gitkeep
-!.pages.yml
 
 dist/
 .astro/

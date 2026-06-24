@@ -4,7 +4,7 @@ ReallySimpleDocs renders Markdown and MDX files from `docs/`. Add a page, then a
 
 ## Create a page
 
-```md
+```md title="docs/page-title.md"
 # Page title
 
 Page content starts here.
@@ -36,11 +36,19 @@ npm run build
 
 Code blocks get syntax highlighting and copy buttons.
 
+Add `title="..."` after the language for a titled code block:
+
+````md
+```js title="astro.config.mjs"
+export default {};
+```
+````
+
 ## Use MDX when needed
 
 Use `.mdx` only when a page needs ReallySimpleDocs or Astro components. Markdown remains the default.
 
-```mdx
+```mdx title="docs/page.mdx"
 # Page title
 
 <Callout title="MDX works">

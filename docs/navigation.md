@@ -11,7 +11,7 @@ Navigation lives in `docs/docs.json`. It controls:
 
 Start with one top-level group:
 
-```json
+```json title="docs/docs.json"
 {
   "menu": [
     {
@@ -19,7 +19,7 @@ Start with one top-level group:
       "label": "Docs",
       "items": [
         { "slug": "index", "icon": "info" },
-        { "slug": "install", "label": "Quickstart", "icon": "download" },
+        { "slug": "quickstart", "label": "Quickstart", "icon": "download" },
         "pages"
       ]
     }
@@ -71,7 +71,7 @@ Use an object when you need a label, icon, badge, or attributes:
 
 ```json
 {
-  "slug": "install",
+  "slug": "quickstart",
   "label": "Quickstart",
   "icon": "download",
   "badge": "New"
@@ -136,14 +136,14 @@ You can also use `page` instead of `slug`.
 
 ## Full example
 
-```json
+```json title="docs/docs.json"
 {
   "menu": [
     {
       "type": "group",
       "label": "Getting started",
       "items": [
-        { "slug": "install", "label": "Quickstart", "icon": "download" },
+        { "slug": "quickstart", "label": "Quickstart", "icon": "download" },
         { "slug": "customization", "icon": "slidersVertical" },
         {
           "type": "submenu",

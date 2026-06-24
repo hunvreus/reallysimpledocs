@@ -1,9 +1,7 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-<style>
-  path { fill: #0a0a0a; stroke: #0a0a0a; }
-  @media (prefers-color-scheme: dark) {
-    path { fill: #fafafa; stroke: #fafafa; }
-  }
-</style>
-<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="2" y="2" width="28" height="28" rx="7" fill="#1447e6"/>
+<g transform="translate(4 4)" fill="#fafafa" stroke="#fafafa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 7v14"/>
+  <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+</g>
 </svg>

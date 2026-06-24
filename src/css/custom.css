@@ -1,3 +1,5 @@
+@source "../runtime/**/*.{astro,js,ts}";
+
 @theme {
   --color-search-highlight: oklch(90.5% 0.182 98.111);
 }
@@ -23,16 +25,20 @@
   > h1:first-child {
     @apply hidden;
   }
-  p > a,
-  li > a,
-  dt > a,
-  dd > a,
-  td > a,
-  th > a {
+  > p a,
+  > li a,
+  > dl a,
+  > .table-container a,
+  [role="listitem"] > p > a,
+  [role="listitem"] > li > a {
     @apply underline underline-offset-2 decoration-muted-foreground/50 hover:decoration-foreground/50 transition-all;
   }
+  b,
+  strong {
+    @apply font-semibold;
+  }
   code:not(pre > code) {
-    @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono;
+    @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[13px];
   }
   pre {
     @apply rounded-lg;
@@ -41,33 +47,19 @@
     @apply block min-w-full w-max px-4 py-3 text-[13px];
   }
   pre:has(> code) {
-    @apply max-w-full overflow-x-auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-
-    &::-webkit-scrollbar {
-      width: var(--scrollbar-width);
-      height: var(--scrollbar-width);
-    }
-    &::-webkit-scrollbar-track {
-      background: var(--scrollbar-track);
-    }
-    &::-webkit-scrollbar-thumb {
-      background: var(--scrollbar-thumb);
-      border-radius: var(--scrollbar-radius);
-    }
+    @apply scrollbar max-w-full overflow-x-auto;
   }
-  blockquote {
+  > blockquote {
     @apply border-l-4 border-border pl-4;
   }
-  ol {
+  > ol {
     @apply list-decimal ml-6;
   }
-  ul {
+  > ul {
     @apply list-disc ml-6;
   }
-  ol,
-  ul {
+  > ol,
+  > ul {
     li {
       @apply mt-2;
 
@@ -77,7 +69,7 @@
       }
     }
   }
-  dl {
+  > dl {
     @apply border-b pb-3 my-6;
     dt {
       @apply border-t pt-3 mt-3 first:mt-0;
@@ -89,16 +81,12 @@
       @apply mt-4 border-b-0 pb-0 pl-8 my-0;
     }
   }
-  b,
-  strong {
-    @apply font-semibold;
-  }
   > p,
-  blockquote,
-  ul,
-  ol,
-  dl,
-  pre {
+  > blockquote,
+  > ul,
+  > ol,
+  > dl,
+  > pre {
     @apply my-6;
   }
   > *:first-child {
@@ -107,36 +95,21 @@
   > *:last-child {
     @apply !mb-0;
   }
-  table {
-    @apply w-full caption-bottom text-sm;
-    thead {
-      @apply [&_tr]:border-b;
-    }
-    tbody {
-      @apply [&_tr:last-child]:border-0;
-    }
-    tfoot {
-      @apply bg-muted/50 border-t font-medium [&>tr]:last:border-b-0;
-    }
-    tr {
-      @apply hover:bg-muted/50 border-b transition-colors;
-    }
-    th {
-      @apply text-foreground h-10 px-2 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px];
-    }
-    td {
-      @apply p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px];
-    }
-    caption {
-      @apply text-muted-foreground mt-4 text-sm;
-    }
+
+  > .table-container .table th,
+  > .table-container .table td {
+    @apply whitespace-normal;
   }
 }
 
 .shiki,
 .astro-code {
   @apply bg-muted/50;
-  background-color: color-mix(in oklab, var(--color-muted) 50%, transparent) !important;
+  background-color: color-mix(
+    in oklab,
+    var(--color-muted) 50%,
+    transparent
+  ) !important;
   color: var(--shiki-light);
 }
 
@@ -155,24 +128,20 @@ html.dark .astro-code span {
   color: var(--shiki-dark);
 }
 
-#command-search > .command {
-  @apply sm:max-w-2xl;
-}
-
-[data-search] .command a[role='menuitem'] {
+[data-search] .command a[role="menuitem"] {
   @apply h-auto min-h-0 flex-col items-start gap-1 overflow-visible whitespace-normal py-2;
 }
 
-[data-search] .command a[role='menuitem'] > strong {
+[data-search] .command a[role="menuitem"] > strong {
   @apply w-full font-medium leading-5;
 }
 
-[data-search] .command a[role='menuitem'] > span {
+[data-search] .command a[role="menuitem"] > span {
   @apply text-muted-foreground line-clamp-2 w-full text-sm font-normal leading-5;
 }
 
 .command mark {
-  @apply bg-search-highlight/50 text-foreground rounded-sm dark:bg-search-highlight/25;
+  @apply bg-search-highlight/50 text-foreground dark:bg-search-highlight/25;
 }
 
 .docs-card {
@@ -191,44 +160,38 @@ html.dark .astro-code span {
   @apply transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
 }
 
-.alert[data-variant='warning'] > svg,
-.alert[data-variant='warning'] > h3,
-.alert[data-variant='warning'] > section {
+.alert[data-variant="warning"] > svg,
+.alert[data-variant="warning"] > h3,
+.alert[data-variant="warning"] > section {
   @apply text-amber-700 dark:text-amber-300;
+}
+
+.code-frame,
+.tabs-frame {
+  @apply relative my-6 w-full max-w-full rounded-lg;
+}
+
+.code-frame > header {
+  @apply flex h-10 items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b bg-muted px-3 text-sm font-medium dark:bg-muted/50;
+  scrollbar-width: none;
+}
+
+.tabs-frame > header {
+  @apply flex items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b bg-muted px-3 py-0.5 text-sm font-medium dark:bg-muted/50;
+  scrollbar-width: none;
+}
+
+.code-frame > header::-webkit-scrollbar,
+.tabs-frame > header::-webkit-scrollbar {
+  display: none;
 }
 
 .code-block {
   @apply relative my-6 w-full max-w-full overflow-hidden rounded-lg;
 }
 
-.code-block > header,
-.code-group > header,
-.preview > header {
-  @apply flex h-10 items-center gap-2 border-b border-border/50 bg-muted/50 px-3 text-sm font-medium;
-}
-
-.code-block > header > :first-child,
-.code-group > header > :first-child,
-.preview > header > :first-child {
-  @apply mr-auto;
-}
-
 .code-block > pre {
-  @apply my-0 max-w-full overflow-x-auto rounded-none border-0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-
-  &::-webkit-scrollbar {
-    width: var(--scrollbar-width);
-    height: var(--scrollbar-width);
-  }
-  &::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-  }
-  &::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: var(--scrollbar-radius);
-  }
+  @apply scrollbar my-0 max-w-full overflow-x-auto rounded-none border-0;
 }
 
 .code-block > pre > code {
@@ -240,75 +203,28 @@ html.dark .astro-code span {
 }
 
 .code-block > button {
-  @apply absolute right-2.5 top-2.5;
+  @apply absolute right-2.5 top-2.5 z-10 [&_svg]:size-4 flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none bg-muted/50 dark:bg-muted/25 backdrop-blur-sm hover:text-foreground transition-colors;
 }
 
-.code-block button,
-.code-group button[aria-label='Copy code'],
-.preview button[aria-label='Copy code'] {
-  @apply text-muted-foreground [&_svg]:size-4;
+.code-frame > .code-block,
+.tabs-frame > [data-code-panel] .code-block {
+  @apply my-0 min-w-0 rounded-none rounded-b-[inherit];
 }
 
-.code-block > header > button,
-.code-group > header > button,
-.preview > header > button {
-  @apply ml-auto;
+.tabs-frame {
+  @apply overflow-visible;
 }
 
-.code-group {
-  @apply relative my-6 w-full max-w-full overflow-hidden rounded-lg;
+.code-frame {
+  @apply overflow-hidden;
 }
 
-.code-group > header > .tabs {
-  @apply my-0 min-w-0 max-w-full gap-0;
+.tabs-frame > [role="tabpanel"] {
+  @apply rounded-b-[inherit];
 }
 
-.code-group > header > .tabs > nav {
-  @apply h-full justify-start rounded-none bg-transparent p-0;
-}
-
-.code-group > [role='tabpanel'] {
-  @apply border-t-0;
-}
-
-.code-group .code-block {
-  @apply my-0 min-w-0 rounded-none;
-}
-
-.code-group .code-block > header {
-  @apply hidden;
-}
-
-.preview {
-  @apply relative my-6 max-w-full overflow-hidden rounded-lg border border-border/50;
-}
-
-.preview > header > .tabs {
-  @apply my-0 min-w-0 max-w-full gap-0;
-}
-
-.preview > header > .tabs > nav {
-  @apply h-full justify-start rounded-none bg-transparent p-0;
-}
-
-.preview > [role='tabpanel'] {
-  @apply border-t-0;
-}
-
-.preview > [data-code-panel] .code-block {
-  @apply my-0 min-w-0 rounded-none;
-}
-
-.preview > header > button[aria-label='Copy code'] {
-  display: none;
-}
-
-.preview:has(> [data-code-panel]:not([hidden])) > header > button[aria-label='Copy code'] {
-  display: flex;
-}
-
-.preview > [data-preview-panel] > div {
-  @apply flex min-h-64 w-full items-center justify-center p-6;
+.tabs-frame > [data-preview-panel] {
+  @apply flex min-h-64 items-center justify-center p-6 bg-muted/50 dark:bg-muted/25;
 }
 
 .steps {
@@ -352,11 +268,15 @@ html.dark .astro-code span {
 }
 
 .steps > section > * + * {
-  @apply mt-6;
+  @apply mt-3;
 }
 
 .steps > section > h3 + * {
-  @apply mt-4;
+  @apply mt-2;
+}
+
+.steps > section > :where(.code-frame, .code-block, .tabs-frame) {
+  @apply my-3;
 }
 
 .steps > section > * {
@@ -374,6 +294,19 @@ html.dark .astro-code span {
 .prose > .alert,
 .prose > .docs-card,
 .prose > .grid,
-.prose > .tabs {
+.prose > .tabs,
+.prose > .tabs-frame {
   @apply my-6;
+}
+
+.command [role="menu"][data-loading]::before {
+  content: none;
+}
+
+.command [role="menu"] > [data-rsd-command-loading] {
+  @apply flex min-h-16 items-center justify-center gap-2 py-6 text-center text-sm text-muted-foreground;
+
+  svg {
+    @apply size-4 animate-spin;
+  }
 }

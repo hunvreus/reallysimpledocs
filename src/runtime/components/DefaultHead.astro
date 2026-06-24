@@ -8,7 +8,11 @@ import basecoatJsUrl from "basecoat-css/all.min?url";
   (() => {
     try {
       const stored = localStorage.getItem("themeMode");
-      if (stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches) {
+      if (
+        stored
+          ? stored === "dark"
+          : matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
         document.documentElement.classList.add("dark");
       }
     } catch (_) {}
@@ -34,37 +38,22 @@ import basecoatJsUrl from "basecoat-css/all.min?url";
     if (!ok) throw new Error("Copy failed");
   };
 
-  const activePanelCode = (root) => root.querySelector(':scope > [role="tabpanel"]:not([hidden]) code');
-
   const initCopyCode = (codeBlock) => {
     if (codeBlock.dataset.copyCodeInitialized) return;
     const codeEl = codeBlock.querySelector(":scope > code");
     if (!codeEl) return;
 
-    let target = null;
-    let frame = codeBlock.closest(".code-group");
-    let getCode = frame ? () => activePanelCode(frame) || codeEl : () => codeEl;
-    if (frame) target = frame.querySelector(":scope > header");
-
-    const preview = codeBlock.closest(".preview");
-    const previewCodePanel = preview?.querySelector(":scope > [data-code-panel]");
-    if (!frame && previewCodePanel?.contains(codeBlock)) {
-      frame = preview;
-      target = frame.querySelector(":scope > header");
-      getCode = () => codeEl;
-    }
-
+    let frame = codeBlock.parentElement?.classList.contains("code-block")
+      ? codeBlock.parentElement
+      : null;
     if (!frame) {
-      frame = codeBlock.parentElement?.classList.contains("code-block") ? codeBlock.parentElement : null;
-      if (!frame) {
-        frame = document.createElement("div");
-        frame.className = "code-block";
-        codeBlock.parentNode.insertBefore(frame, codeBlock);
-        frame.appendChild(codeBlock);
-      }
+      frame = document.createElement("div");
+      frame.className = "code-block";
+      codeBlock.parentNode.insertBefore(frame, codeBlock);
+      frame.appendChild(codeBlock);
     }
 
-    target ||= frame.querySelector(":scope > header") || frame;
+    const target = frame;
     if (target.querySelector(":scope > button[aria-label='Copy code']")) {
       codeBlock.dataset.copyCodeInitialized = "true";
       return;
@@ -72,14 +61,11 @@ import basecoatJsUrl from "basecoat-css/all.min?url";
 
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "btn";
-    button.dataset.variant = "ghost";
-    button.dataset.size = "icon-xs";
     button.setAttribute("aria-label", "Copy code");
     button.innerHTML = copyIcon;
 
     button.addEventListener("click", async () => {
-      const text = (getCode()?.textContent || "").replace(/\n$/, "");
+      const text = (codeEl.textContent || "").replace(/\n$/, "");
       if (!text) return;
 
       try {
@@ -99,11 +85,15 @@ import basecoatJsUrl from "basecoat-css/all.min?url";
   };
 
   const initCopyButtons = (root = document) => {
-    root.querySelectorAll("pre:has(> code):not([data-copy-code-initialized])").forEach(initCopyCode);
+    root
+      .querySelectorAll("pre:has(> code):not([data-copy-code-initialized])")
+      .forEach(initCopyCode);
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => initCopyButtons(), { once: true });
+    document.addEventListener("DOMContentLoaded", () => initCopyButtons(), {
+      once: true,
+    });
   } else {
     initCopyButtons();
   }

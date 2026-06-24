@@ -4,6 +4,9 @@ import { marked } from "marked";
 import GithubSlugger from "github-slugger";
 import { codeToHtml } from "shiki";
 import * as lucideIcons from "lucide-static";
+import { transformBasecoatTablesHtml } from "../../astro/rehype-basecoat-tables.js";
+import { parseCodeMeta } from "./code-meta.js";
+import { escapeHtml } from "./html.js";
 import { normalizeDocMarkdown } from "./markdown-export.js";
 import { markdownPath, routePath } from "./paths.js";
 
@@ -102,25 +105,10 @@ export async function renderDoc(config, page) {
     return `<h${depth} id="${id}" tabindex="-1"><a class="header-anchor" href="#${id}">${text}</a></h${depth}>`;
   };
 
-  renderer.table = (token) => {
-    const header = renderer.tablerow({
-      text: token.header.map((cell) => renderer.tablecell(cell)).join(""),
-    });
-    const body = token.rows
-      .map((row) =>
-        renderer.tablerow({
-          text: row.map((cell) => renderer.tablecell(cell)).join(""),
-        }),
-      )
-      .join("");
-    const tbody = body ? `<tbody>${body}</tbody>` : "";
-    return `<div class="relative my-6 w-full overflow-auto"><table><thead>${header}</thead>${tbody}</table></div>`;
-  };
-
   const tokens = marked.lexer(content);
   await highlightCode(tokens);
   const html = marked.parser(tokens, { renderer });
-  return { page, html, headings };
+  return { page, html: await transformBasecoatTablesHtml(html), headings };
 }
 
 export function getDocHeadings(config, page) {
@@ -374,7 +362,7 @@ function normalizeDocSource(source) {
 async function highlightCode(tokens) {
   for (const token of tokens) {
     if (token.type === "code") {
-      const html = await highlightToken(token);
+      const html = codeBlockHtml(token, await highlightToken(token));
       Object.assign(token, {
         type: "html",
         raw: html,
@@ -388,6 +376,12 @@ async function highlightCode(tokens) {
       await highlightCode(childTokens);
     }
   }
+}
+
+function codeBlockHtml(token, html) {
+  const title = parseCodeMeta(token.lang).title;
+  if (!title) return html;
+  return `<div class="code-frame" data-code-title="${escapeHtml(title)}"><header><span>${escapeHtml(title)}</span></header><div class="code-block">${html}</div></div>`;
 }
 
 async function highlightToken(token) {

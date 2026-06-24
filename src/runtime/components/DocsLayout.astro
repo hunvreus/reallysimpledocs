@@ -4,7 +4,6 @@ import ArrowLeft from "lucide-static/icons/arrow-left.svg?raw";
 import ArrowRight from "lucide-static/icons/arrow-right.svg?raw";
 import Check from "lucide-static/icons/check.svg?raw";
 import Copy from "lucide-static/icons/copy.svg?raw";
-import Menu from "lucide-static/icons/menu.svg?raw";
 import PanelLeft from "lucide-static/icons/panel-left.svg?raw";
 import Search from "lucide-static/icons/search.svg?raw";
 import ClaudeLogo from "../../icons/logos/claude.svg?raw";
@@ -19,14 +18,12 @@ import Sidebar from "./Sidebar.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { buildMenus, getNavigation } from "../lib/docs.js";
 import { addSvgClass } from "../lib/html.js";
-import { routeFilePath } from "../lib/paths.js";
 import { getSite } from "../lib/site.js";
 
 const { page, headings } = Astro.props;
 const site = getSite(config);
 const navigation = getNavigation(config, page);
 const { sidebar } = buildMenus(config, page.slug);
-const searchIndexUrl = routeFilePath(config.routeBase, "search-index.json");
 const panelLeftIcon = addSvgClass(PanelLeft, "size-4");
 const searchIcon = addSvgClass(Search, "size-4");
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") || site.url || "";
@@ -65,11 +62,13 @@ const actionItems = [
 ---
 
 <BaseLayout title={page.title} description={site.description} pagePath={page.path}>
-  <CommandDialog indexUrl={searchIndexUrl} />
+  <CommandDialog />
   <Sidebar menu={sidebar} />
 
   <main id="content">
-    <header class="bg-background sticky inset-x-0 top-0 isolate z-10 flex shrink-0 items-center gap-2 border-b">
+    <header
+      class="sticky inset-x-0 top-0 isolate z-30 flex shrink-0 items-center gap-2 border-b bg-background"
+    >
       <div class="flex h-14 w-full items-center justify-between gap-2 px-4">
         <button
           type="button"
@@ -85,33 +84,21 @@ const actionItems = [
           <Fragment set:html={panelLeftIcon} />
         </button>
 
-        <button
-          type="button"
-          class="relative flex h-8 w-full min-w-0 max-w-72 cursor-text items-center gap-x-2 rounded-md border border-input bg-background px-3 py-1 text-base text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 sm:ml-auto md:text-sm"
+        <div
+          class="input-group h-8 w-full min-w-0 max-w-72 cursor-text sm:ml-auto"
+          role="button"
+          tabindex="0"
+          aria-label="Search docs"
           onclick="window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal()"
+          onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.rsdOpenCommandSearch ? window.rsdOpenCommandSearch() : document.getElementById('command-search')?.showModal(); }"
         >
-          <Fragment set:html={searchIcon} />
-          Search...
-          <kbd class="kbd ml-auto -mr-1.5">⌘K</kbd>
-        </button>
+          <input type="text" placeholder="Search..." readonly tabindex="-1" aria-hidden="true" />
+          <span data-align="start" aria-hidden="true"><Fragment set:html={searchIcon} /></span>
+          <span data-align="end" aria-hidden="true"><kbd class="kbd">⌘K</kbd></span>
+        </div>
 
         <ContentHeader site={site} page={page} />
         <ThemeToggle />
-
-        <div class="sm:hidden">
-          <button
-            type="button"
-            class="btn peer group"
-            data-variant="ghost"
-            data-size="icon-sm"
-            aria-label="Toggle sidebar"
-            aria-expanded="false"
-            aria-controls="sidebar"
-            onclick="document.getElementById('sidebar')?.toggle()"
-          >
-            <Fragment set:html={Menu} />
-          </button>
-        </div>
       </div>
     </header>
 
@@ -119,9 +106,9 @@ const actionItems = [
       <article class="min-w-0 flex-1 wrap-break-word">
         <div class="mx-auto w-full max-w-2xl flex-1 space-y-10">
           <header class="space-y-2">
-            <div class="flex items-start gap-x-2">
+            <div class="flex flex-col-reverse items-start gap-3 sm:flex-row sm:gap-x-2">
               <h1 class="mr-auto text-3xl font-semibold tracking-tight sm:text-4xl">{page.title}</h1>
-              <div class="mt-1 flex items-center gap-x-2">
+              <div class="flex w-full items-center justify-end gap-x-2 sm:mt-1 sm:w-auto">
                 <div role="group" class="button-group">
                   <button
                     type="button"

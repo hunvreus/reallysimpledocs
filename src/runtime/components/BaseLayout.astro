@@ -23,29 +23,12 @@ const absoluteAssetUrl = (value) => {
   const path = assetPath(value);
   return path.startsWith("http") ? path : `${siteUrl}${path}`;
 };
+const bodyAttrs = config.bodyAttrs || {};
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <DefaultHead
-      config={config}
-      site={site}
-      title={title}
-      description={metaDescription}
-      pagePath={pagePath}
-      metaTitle={metaTitle}
-      absoluteUrl={absoluteUrl}
-    />
-    <Head
-      config={config}
-      site={site}
-      title={title}
-      description={metaDescription}
-      pagePath={pagePath}
-      metaTitle={metaTitle}
-      absoluteUrl={absoluteUrl}
-    />
     <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -69,8 +52,26 @@ const absoluteAssetUrl = (value) => {
     <meta name="twitter:description" content={metaDescription} />
     {socialImage && <meta name="twitter:image" content={absoluteAssetUrl(socialImage)} />}
     {site.author?.x && <meta name="twitter:creator" content={site.author.x} />}
+    <DefaultHead
+      config={config}
+      site={site}
+      title={title}
+      description={metaDescription}
+      pagePath={pagePath}
+      metaTitle={metaTitle}
+      absoluteUrl={absoluteUrl}
+    />
+    <Head
+      config={config}
+      site={site}
+      title={title}
+      description={metaDescription}
+      pagePath={pagePath}
+      metaTitle={metaTitle}
+      absoluteUrl={absoluteUrl}
+    />
   </head>
-  <body>
+  <body {...bodyAttrs}>
     <slot />
   </body>
 </html>

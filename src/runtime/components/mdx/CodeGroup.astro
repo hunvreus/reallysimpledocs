@@ -1,38 +1,131 @@
 ---
-const { defaultTab, class: className = "" } = Astro.props;
+import { decodeHtml } from "../../lib/html.js";
+
+const { class: className = "" } = Astro.props;
 const id = `code-group-${Math.random().toString(36).slice(2)}`;
 const slotHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 const normalizedTabs = parseCodeTabs(slotHtml);
-const defaultValue = defaultTab || normalizedTabs[0]?.value;
+const defaultValue = normalizedTabs[0]?.value;
 
 function parseCodeTabs(html) {
   const blocks = [];
-  const pattern =
-    /<div\b(?=[^>]*\bclass="[^"]*\bcode-block\b[^"]*")(?=[^>]*\bdata-code-title="([^"]*)")[^>]*>([\s\S]*?)<\/div>/g;
-  let match;
-  while ((match = pattern.exec(html))) {
-    const label = decodeHtml(match[1]).trim();
-    if (!label) continue;
+  for (const block of findCodeFrames(html)) {
+    const label = decodeHtml(block.title).trim();
+    const code = findCodeBlock(block.html);
+    if (!label || !code) continue;
     blocks.push({
       label,
       value: label,
-      html: match[0],
+      html: code.html,
     });
   }
   return blocks;
 }
 
-function decodeHtml(value) {
-  return String(value || "")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+function findCodeFrames(html) {
+  const blocks = [];
+  let cursor = 0;
+
+  while (cursor < html.length) {
+    const open = findNextDiv(html, cursor);
+    if (!open) break;
+    const title = attrValue(open.source, "data-code-title");
+    if (hasClass(open.source, "code-frame") && title) {
+      const close = findMatchingDivClose(html, open.end);
+      if (!close) break;
+      blocks.push({ title, html: html.slice(open.start, close.end) });
+      cursor = close.end;
+      continue;
+    }
+    cursor = open.end;
+  }
+
+  return blocks;
 }
+
+function findCodeBlock(html) {
+  let cursor = 0;
+
+  while (cursor < html.length) {
+    const open = findNextDiv(html, cursor);
+    if (!open) break;
+    if (hasClass(open.source, "code-block")) {
+      const close = findMatchingDivClose(html, open.end);
+      if (!close) return null;
+      return { html: html.slice(open.start, close.end) };
+    }
+    cursor = open.end;
+  }
+
+  return null;
+}
+
+function findMatchingDivClose(html, fromIndex) {
+  let depth = 1;
+  let cursor = fromIndex;
+
+  while (cursor < html.length) {
+    const tag = findNextDiv(html, cursor);
+    if (!tag) return null;
+    depth += tag.closing ? -1 : 1;
+    if (depth === 0) return tag;
+    cursor = tag.end;
+  }
+
+  return null;
+}
+
+function findNextDiv(html, fromIndex) {
+  let cursor = fromIndex;
+  while (cursor < html.length) {
+    const start = html.indexOf("<div", cursor);
+    const closeStart = html.indexOf("</div", cursor);
+    const isClose = closeStart !== -1 && (start === -1 || closeStart < start);
+    const tagStart = isClose ? closeStart : start;
+    if (tagStart === -1) return null;
+
+    const end = findTagEnd(html, tagStart);
+    if (end === -1) return null;
+    return {
+      start: tagStart,
+      end: end + 1,
+      closing: isClose,
+      source: html.slice(tagStart, end + 1),
+    };
+  }
+
+  return null;
+}
+
+function findTagEnd(html, start) {
+  let quote = "";
+  for (let index = start; index < html.length; index += 1) {
+    const char = html[index];
+    if (quote) {
+      if (char === quote) quote = "";
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      quote = char;
+      continue;
+    }
+    if (char === ">") return index;
+  }
+  return -1;
+}
+
+function attrValue(tag, name) {
+  const pattern = new RegExp(`\\s${name}=(["'])(.*?)\\1`, "s");
+  return tag.match(pattern)?.[2] || "";
+}
+
+function hasClass(tag, name) {
+  return attrValue(tag, "class").split(/\s+/).includes(name);
+}
+
 ---
 
-<div class:list={["code-group", className]}>
+<div class:list={["tabs-frame", className]}>
   <header>
     <div class="tabs">
       <nav role="tablist" aria-orientation="horizontal" data-variant="line">
@@ -62,6 +155,7 @@ function decodeHtml(value) {
       return (
         <div
           role="tabpanel"
+          data-code-panel
           id={`${id}-panel-${index + 1}`}
           aria-labelledby={`${id}-tab-${index + 1}`}
           tabindex="-1"

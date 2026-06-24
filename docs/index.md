@@ -12,7 +12,7 @@ So I built ReallySimpleDocs as an [Astro](https://astro.build) integration with 
 
 - **Fast**: Astro builds static docs with minimal client JavaScript.
 - **Simple**: It's HTML, CSS, and a small amount of vanilla JavaScript.
-- **shadcn/ui-compatible**: It uses [Basecoat](https://basecoatui.com), meaning you can use any shadcn/ui theme.
+- **shadcn/ui-compatible**: It uses [Basecoat](https://basecoatui.com), so the docs UI follows shadcn/ui-style markup without requiring React.
 - **Portable docs**: Keep Markdown pages and navigation in `docs/`, outside Astro's `src/content` conventions.
 - **AI-friendly**: Auto-generated `llms.txt`, `llms-full.txt`, and per-page `/*.md` exports for LLMs.
 - **100% free and open source**: I have nothing to sell. No hosting plan, no advanced features. You can host it for free on Cloudflare Pages.

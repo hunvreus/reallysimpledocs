@@ -7,7 +7,7 @@
       "label": "Getting started",
       "items": [
         { "slug": "index", "icon": "info" },
-        { "slug": "install", "label": "Quickstart", "icon": "download" }
+        { "slug": "quickstart", "label": "Quickstart", "icon": "download" }
       ]
     },
     {

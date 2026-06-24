@@ -4,7 +4,9 @@ import path from "node:path";
 import mdx from "@astrojs/mdx";
 import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
+import { rehypeBasecoatTables } from "./rehype-basecoat-tables.js";
 import { remarkPreviewSource } from "./preview-source.js";
+import { transformPreviewScripts } from "./preview-scripts.js";
 
 const basecoatStyles = new Set(["vega", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea"]);
 
@@ -71,6 +73,7 @@ export default function reallySimpleDocs(options = {}) {
     style,
     customCss: normalizeArray(options.customCss),
     css: normalizeBoolean(options.css),
+    bodyAttrs: options.bodyAttrs || {},
     components: options.components || {},
     routeBase: options.routeBase ?? "/docs",
     assetsBase: options.assetsBase || "/assets",
@@ -112,7 +115,7 @@ export default function reallySimpleDocs(options = {}) {
               '@import "basecoat-css/base";',
               `@import "basecoat-css/styles/${style}";`,
               `@import ${JSON.stringify(cssPath("custom.css"))};`,
-              `@import ${JSON.stringify(cssPath("overrides.css"))};`,
+              `@import ${JSON.stringify(cssPath(`styles/${style}.css`))};`,
               ...normalizedOptions.customCss.map((css) => `@import ${JSON.stringify(resolveUserId(css))};`),
               `@source ${JSON.stringify(path.join(root, "src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"))};`,
               `@source ${JSON.stringify(runtimePath("**/*.{astro,js,ts}"))};`,
@@ -156,6 +159,7 @@ export default function reallySimpleDocs(options = {}) {
           markdown: {
             processor: unified({
               remarkPlugins: [[remarkPreviewSource, { docsDir }]],
+              rehypePlugins: [rehypeBasecoatTables],
             }),
             shikiConfig,
           },
@@ -165,6 +169,15 @@ export default function reallySimpleDocs(options = {}) {
             },
             plugins: [
               tailwindcss(),
+              {
+                name: "reallysimpledocs-preview-scripts",
+                enforce: "pre",
+                transform(code, id) {
+                  if (!id.endsWith(".mdx") || !isInsideDir(id, docsDir)) return null;
+                  const transformed = transformPreviewScripts(code);
+                  return transformed === code ? null : { code: transformed, map: null };
+                },
+              },
               {
                 name: "reallysimpledocs-virtual-modules",
                 resolveId(id) {
@@ -210,4 +223,9 @@ export async function getMdxPage(slug) {
       },
     },
   };
+}
+
+function isInsideDir(filePath, dir) {
+  const relative = path.relative(dir, filePath);
+  return relative && !relative.startsWith("..") && !path.isAbsolute(relative);
 }

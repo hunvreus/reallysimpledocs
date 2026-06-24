@@ -1,11 +1,14 @@
 {
   "name": "reallysimpledocs",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0",
   "type": "module",
   "exports": {
     ".": "./src/index.js",
     "./astro": "./src/astro/index.js",
-    "./components": "./src/components/index.js"
+    "./components": "./src/components/index.js",
+    "./css": "./src/css/custom.css",
+    "./css/styles/*": "./src/css/styles/*.css",
+    "./css/styles/*.css": "./src/css/styles/*.css"
   },
   "files": [
     "src",
@@ -27,16 +30,19 @@
     "lucide-static": "^0.552.0",
     "lunr": "^2.3.9",
     "marked": "^16.4.1",
-    "shiki": "^4.1.0"
+    "rehype-parse": "^9.0.1",
+    "rehype-stringify": "^10.0.1",
+    "shiki": "^4.1.0",
+    "unified": "^11.0.5"
   },
   "peerDependencies": {
     "astro": "^6.4.6",
-    "basecoat-css": "^0.3.11",
+    "basecoat-css": "^1.0.0-beta.6",
     "tailwindcss": ">=4.1.17 <5"
   },
   "devDependencies": {
     "astro": "^6.4.6",
-    "basecoat-css": "^0.3.11",
+    "basecoat-css": "^1.0.0-beta.6",
     "tailwindcss": "4.1.17"
   },
   "overrides": {

@@ -4,7 +4,7 @@
 
 Configure ReallySimpleDocs in `astro.config.mjs`:
 
-```js
+```js title="astro.config.mjs"
 import { defineConfig } from "astro/config";
 import reallySimpleDocs from "reallysimpledocs/astro";
 
@@ -32,6 +32,7 @@ export default defineConfig({
 | `style` | `"vega"` | Basecoat style: `vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, or `rhea`. |
 | `customCss` | `[]` | CSS files imported after Basecoat and ReallySimpleDocs styles. |
 | `css` | `true` | Set to `false` when you provide the full CSS pipeline yourself. |
+| `bodyAttrs` | `{}` | Extra attributes added to `<body>`. |
 | `components.Head` | Empty | Astro component appended to the document `<head>`. |
 | `components.SidebarHeader` | Default header | Astro component used for the sidebar header. |
 | `components.SidebarFooter` | Empty footer | Astro component used for the sidebar footer. |
@@ -42,7 +43,7 @@ export default defineConfig({
 
 `site` controls the default sidebar header, document titles, and metadata:
 
-```js
+```js title="astro.config.mjs"
 reallySimpleDocs({
   site: {
     title: "Acme Docs",
@@ -67,7 +68,7 @@ Relative asset values resolve from `assetsBase`, which defaults to `/assets`.
 
 Override layout regions when the default docs shell is not enough:
 
-```js
+```js title="astro.config.mjs"
 reallySimpleDocs({
   components: {
     Head: "./src/docs/Head.astro",
@@ -83,7 +84,7 @@ reallySimpleDocs({
 Use `Head` to add scripts, styles, preload tags, or site-specific metadata to the document `<head>`.
 The default RSD head scripts and metadata still render.
 
-```astro
+```astro title="src/docs/Head.astro"
 <script src="/assets/docs.js" defer></script>
 ```
 
@@ -93,7 +94,7 @@ The default RSD head scripts and metadata still render.
 
 Use `SidebarHeader` when the default logo/title block is not enough.
 
-```astro
+```astro title="src/components/SidebarHeader.astro"
 ---
 const { site } = Astro.props;
 ---
@@ -107,7 +108,7 @@ const { site } = Astro.props;
 
 Use `SidebarFooter` for persistent sidebar actions or secondary links.
 
-```astro
+```astro title="src/components/SidebarFooter.astro"
 <div class="p-2 text-xs text-muted-foreground">
   v1.0.0
 </div>
@@ -118,8 +119,8 @@ Use `SidebarFooter` for persistent sidebar actions or secondary links.
 Use `ContentHeader` for controls between search and the built-in theme toggle.
 Header actions, such as a GitHub link, belong in this component rather than in `site` metadata.
 
-```astro
-<nav class="hidden items-center gap-2 sm:flex">
+```astro title="src/components/ContentHeader.astro"
+<nav class="flex items-center gap-2">
   <a class="btn" data-variant="outline" data-size="sm" href="https://github.com/acme/project">
     GitHub
   </a>
@@ -134,14 +135,14 @@ Custom landing pages, marketing pages, blogs, and app pages should stay as norma
 
 ReallySimpleDocs is built on [Basecoat](https://basecoatui.com). Pick a Basecoat style with `style`, then add project-specific CSS with `customCss`:
 
-```js
+```js title="astro.config.mjs"
 reallySimpleDocs({
   style: "nova",
   customCss: ["./src/docs.css"],
 });
 ```
 
-```css
+```css title="src/docs.css"
 :root {
   --primary: oklch(54.6% 0.245 262.881);
 }
@@ -163,7 +164,7 @@ That means custom Astro pages outside the docs route can use Tailwind and Baseco
 
 Disable managed CSS only when you want to own the full stylesheet pipeline:
 
-```js
+```js title="astro.config.mjs"
 reallySimpleDocs({
   css: false,
 });
@@ -178,6 +179,15 @@ With managed CSS enabled, ReallySimpleDocs inserts:
 
 Use `css: false` when you bring your own Tailwind/Basecoat/RSD stylesheet.
 
+When managed CSS is disabled, import RSD's own docs CSS from the public package entry:
+
+```css title="src/docs.css"
+@import "reallysimpledocs/css";
+@import "reallysimpledocs/css/styles/vega";
+```
+
+Use the `reallysimpledocs/css/styles/{style}` import that matches your Basecoat style.
+
 ReallySimpleDocs always inserts its managed JavaScript: theme initialization, Basecoat JavaScript, copy-code behavior, and command search behavior.
 
 When you disable managed CSS, use these source files as references for what you may need to reproduce:
@@ -185,8 +195,9 @@ When you disable managed CSS, use these source files as references for what you 
 - [DefaultHead.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/DefaultHead.astro): theme initialization, Basecoat JavaScript, and copy-code behavior.
 - [ThemeToggle.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/ThemeToggle.astro): built-in dark-mode button.
 - [CommandDialog.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/CommandDialog.astro): search dialog behavior.
-- [Sidebar.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/Sidebar.astro): sidebar shell and mobile toggle target.
-- [custom.css](https://github.com/hunvreus/reallysimpledocs/blob/main/src/css/custom.css) and [overrides.css](https://github.com/hunvreus/reallysimpledocs/blob/main/src/css/overrides.css): RSD-specific CSS layered on top of Basecoat.
+- [Sidebar.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/Sidebar.astro): sidebar shell and toggle target.
+- [reallysimpledocs/css](https://github.com/hunvreus/reallysimpledocs/blob/main/src/css/custom.css): shared RSD-specific CSS layered on top of Basecoat.
+- [reallysimpledocs/css/styles/*](https://github.com/hunvreus/reallysimpledocs/tree/main/src/css/styles): style-specific RSD CSS for code and tabbed surfaces.
 
 Prefer `style` and `customCss` for normal styling changes, and `Head` or `ContentHeader` for additive UI. Use `css: false` only when you are replacing RSD's stylesheet pipeline.
 
@@ -194,7 +205,7 @@ Prefer `style` and `customCss` for normal styling changes, and `Head` or `Conten
 
 Put docs media in `public/media/` and reference it with absolute paths:
 
-```md
+```md title="docs/page.md"
 ![Diagram](/media/diagram.png)
 ```
 
@@ -203,3 +214,66 @@ Put favicon and social assets in `public/assets/` when using the default `assets
 ## Search
 
 Search uses a generated Lunr index. ReallySimpleDocs indexes normalized Markdown, including fallback Markdown for known MDX components, while keeping code examples separate so prose matches stay readable.
+
+Render the exported `CommandDialog` on any Astro page when you want docs search outside the ReallySimpleDocs route:
+
+```astro title="src/pages/index.astro"
+---
+import { CommandDialog } from "reallysimpledocs/components";
+---
+
+<CommandDialog />
+
+<button type="button" class="btn" onclick="window.rsdOpenCommandSearch?.()">
+  Search docs
+</button>
+```
+
+`CommandDialog` uses the generated docs search index by default. Pass `indexUrl` only when you need to point at a different index.
+
+```astro title="src/pages/index.astro"
+<CommandDialog indexUrl="/docs/search-index.json" />
+```
+
+The dialog registers `window.rsdOpenCommandSearch()` and the `⌘K` / `Ctrl+K` shortcut on pages where it is rendered.
+
+## htmx
+
+Install htmx first:
+
+```bash
+npm install htmx.org
+```
+
+Then load htmx from the installed package (or from a CDN) and use `bodyAttrs` and `Head` to boost links into the docs content container:
+
+<CodeGroup>
+```js title="astro.config.mjs"
+reallySimpleDocs({
+  bodyAttrs: {
+    "hx-boost": "true",
+    "hx-target": "#content",
+    "hx-select": "#content",
+    "hx-swap": "outerHTML",
+    "hx-push-url": "true",
+  },
+  components: {
+    Head: "./src/docs/Head.astro",
+  },
+});
+```
+
+```astro title="src/docs/Head.astro"
+---
+import htmxUrl from "htmx.org/dist/htmx.min.js?url";
+---
+
+<script src={htmxUrl} defer></script>
+```
+
+```astro title="src/docs/Head.astro (CDN)"
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" defer></script>
+```
+</CodeGroup>
+
+See the [htmx installation docs](https://htmx.org/docs/#installing) for the current package and CDN options.

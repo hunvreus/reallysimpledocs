@@ -67,7 +67,7 @@ export function renderSidebarContent(items = [], parentIdPrefix = "content") {
 }
 
 function renderSidebarMeta(item) {
-  const badge = item.badge ? `<span class="badge">${escapeHtml(item.badge)}</span>` : "";
+  const badge = item.badge ? `<span class="badge" data-variant="outline">${escapeHtml(item.badge)}</span>` : "";
   const external = item.external ? addSvgClass(ArrowUpRight, "size-3 opacity-50") : "";
   if (!badge && !external) return "";
   return `<span class="ml-auto inline-flex items-center gap-1">${badge}${external}</span>`;

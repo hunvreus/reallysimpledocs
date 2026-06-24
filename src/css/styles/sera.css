@@ -1,0 +1,9 @@
+.code-frame,
+.code-block,
+.tabs-frame {
+  @apply rounded-none;
+}
+
+.code-frame > header {
+  @apply h-[40px];
+}

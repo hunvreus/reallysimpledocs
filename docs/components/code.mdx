@@ -1,24 +1,25 @@
 # Code
 
-Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the same example has package-manager, framework, or platform variants.
+Use fenced code blocks for single syntax-highlighted examples. Use `CodeGroup` when the same example has package-manager, framework, or platform variants.
 
 ## Usage
 
-```mdx
-<Code title="Install" lang="bash">
-  npm install reallysimpledocs
-</Code>
+````md
+```bash title="Install"
+npm install reallysimpledocs
 ```
+````
+
+Add `title="..."` after the language to render a titled code block.
 
 ## Options
 
-### Code
+### Fenced code
 
-| Prop | Type | Default | Notes |
+| Metadata | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `lang` | `string` | `"text"` | Language passed to Shiki. |
-| `title` | `string` | `undefined` | Optional header label. In a `CodeGroup`, this becomes the tab label. |
-| `class` | `string` | `""` | Extra classes applied to the wrapper. |
+| `language` | `string` | `"text"` | Language passed to Shiki. |
+| `title` | `string` | `undefined` | Optional header label, written as `title="..."` after the language. |
 
 ### CodeGroup
 
@@ -26,23 +27,20 @@ Use `Code` for a single syntax-highlighted code block. Use `CodeGroup` when the 
 | --- | --- | --- | --- |
 | `class` | `string` | `""` | Extra classes applied to the wrapper. |
 
-`CodeGroup` expects child `Code` blocks with a `title`; untitled `Code` blocks are ignored because there is no tab label.
+`CodeGroup` expects titled fenced code blocks as children. Untitled code blocks are ignored because there is no tab label. Keep the `CodeGroup` name for tabbed code; use `Tabs` for generic grouped content.
 
 ## Examples
 
 ### Default
 
-<Preview lang="mdx" class="block w-full">
-  <Code lang="bash">
-    npm install reallysimpledocs
-  </Code>
-</Preview>
+```bash
+npm install reallysimpledocs
+```
 
 ### With title
 
-<Preview lang="mdx" class="block w-full">
-  <Code title="astro.config.mjs" lang="js">
-{`import { defineConfig } from "astro/config";
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
 import reallySimpleDocs from "reallysimpledocs/astro";
 
 export default defineConfig({
@@ -53,17 +51,27 @@ export default defineConfig({
       },
     }),
   ],
-});`}
-  </Code>
-</Preview>
+});
+```
 
 ### Tabbed group
 
 <Preview lang="mdx" class="block w-full">
-  <CodeGroup>
-    <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
-    <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
-    <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
-    <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
-  </CodeGroup>
+<CodeGroup>
+```bash title="npm"
+npm install reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="pnpm"
+pnpm add reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="yarn"
+yarn add reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="bun"
+bun add reallysimpledocs basecoat-css@beta tailwindcss
+```
+</CodeGroup>
 </Preview>

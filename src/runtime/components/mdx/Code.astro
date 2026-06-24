@@ -1,25 +1,33 @@
 ---
 import { highlightCode } from "../../lib/highlight.js";
+import { decodeHtml } from "../../lib/html.js";
 
-const { lang = "text", title, class: className = "" } = Astro.props;
+const { lang = "text", title, code, class: className = "" } = Astro.props;
 const slotHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const rawCode = decodeSlotText(slotHtml);
+const rawCode = typeof code === "string" ? code.trim() : decodeSlotText(slotHtml);
 const html = await highlightCode(rawCode, lang);
 
 function decodeSlotText(value) {
-  return String(value || "")
+  const text = String(value || "")
     .replace(/^<p>/, "")
-    .replace(/<\/p>$/, "")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .trim();
+    .replace(/<\/p>$/, "");
+  return decodeHtml(text).trim();
 }
 ---
 
-<div class:list={["code-block", className]} data-code-title={title || undefined}>
-  {title && <header><span>{title}</span></header>}
-  <Fragment set:html={html} />
-</div>
+{
+  title ? (
+    <div class:list={["code-frame", className]} data-code-title={title}>
+      <header>
+        <span>{title}</span>
+      </header>
+      <div class="code-block">
+        <Fragment set:html={html} />
+      </div>
+    </div>
+  ) : (
+    <div class:list={["code-block", className]}>
+      <Fragment set:html={html} />
+    </div>
+  )
+}

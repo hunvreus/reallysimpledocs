@@ -70,7 +70,7 @@ writeJson(path.join(appDir, "package.json"), {
   },
   dependencies: {
     astro: "^6.4.6",
-    "basecoat-css": "^0.3.11",
+    "basecoat-css": "^1.0.0-beta.6",
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
     tailwindcss: "4.1.17",
   },
@@ -88,6 +88,14 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       routeBase: "/docs",
+      style: "nova",
+      bodyAttrs: {
+        "data-smoke-body": "ok",
+        "hx-target": "#content",
+      },
+      components: {
+        Head: "./src/components/DocsHead.astro",
+      },
       site: {
         title: "Consumer docs",
         description: "Consumer smoke test docs.",
@@ -100,7 +108,16 @@ export default defineConfig({
 );
 
 fs.mkdirSync(path.join(appDir, "docs"), { recursive: true });
+fs.mkdirSync(path.join(appDir, "src", "components"), { recursive: true });
 fs.mkdirSync(path.join(appDir, "src", "pages"), { recursive: true });
+fs.writeFileSync(
+  path.join(appDir, "src", "components", "DocsHead.astro"),
+  `---
+---
+
+<meta name="docs-head-smoke" content="ok" />
+`,
+);
 fs.writeFileSync(
   path.join(appDir, "src", "pages", "index.astro"),
   `---
@@ -163,6 +180,14 @@ This page proves the packaged integration can render a consumer docs site.
 ## First section
 
 Search should find this consumer-only keyword: orbit-smoke.
+
+| Option | Value |
+| --- | --- |
+| Theme | Nova |
+
+\`\`\`bash title="index.sh"
+npm run build
+\`\`\`
 `,
 );
 fs.writeFileSync(
@@ -187,6 +212,38 @@ This page proves packaged MDX docs can render default ReallySimpleDocs component
 <Preview code={demoSource} lang="html">
   <button type="button" class="btn">Smoke action</button>
 </Preview>
+
+<Preview>
+  <div>Script preview smoke</div>
+  <script>window.__rsdScriptPreview = "</Preview>";</script>
+</Preview>
+
+<Preview class="w-full max-w-xs">
+  <label for="smoke-input" class="flex w-full items-center gap-2">
+    Email
+    <span class="badge ml-auto" data-variant="secondary">Recommended</span>
+  </label>
+</Preview>
+
+<CodeGroup>
+  \`\`\`bash title='npm "quoted"'
+  npm run build
+  \`\`\`
+
+  \`\`\`bash title="pnpm &amp; friends"
+  pnpm build
+  \`\`\`
+</CodeGroup>
+
+\`\`\`json title="smoke.json"
+{
+  "fenced": true
+}
+\`\`\`
+
+| Prop | Value |
+| --- | --- |
+| MDX table | Basecoat |
 
 <Code title="Command" lang="bash" code={\`npm run build\`} />
 `,
@@ -221,8 +278,18 @@ const cssOutput = cssFiles.map((file) => fs.readFileSync(path.join(appDir, "dist
 if (!cssOutput.includes(".text-balance") || !cssOutput.includes(".decoration-wavy")) {
   throw new Error("Expected managed ReallySimpleDocs CSS to include classes used by custom src/pages content.");
 }
+if (!cssOutput.includes('.btn:not([data-size]), .btn[data-size="default"] {\n    height: calc(var(--spacing) * 8);')) {
+  throw new Error("Expected managed ReallySimpleDocs CSS to include the configured Basecoat style.");
+}
 
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "Welcome");
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), '<body data-smoke-body="ok" hx-target="#content">');
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), '<meta name="docs-head-smoke" content="ok">');
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), '<div class="table-container scrollbar my-6">');
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), '<table class="table">');
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), 'data-code-title="index.sh"');
+assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "window.basecoat?.theme.toggle()");
+assertNotIncludes(path.join(appDir, "dist", "docs", "index.html"), "basecoat:theme");
 assertIncludes(path.join(appDir, "dist", "docs", "index.html"), "_astro/");
 assertIncludes(path.join(appDir, "dist", "index.html"), "_astro/");
 assertIncludes(path.join(appDir, "dist", "index.html"), 'rel="stylesheet"');
@@ -237,9 +304,21 @@ assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "smoke");
 assertIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "mdx");
 assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "MDX works");
 assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "Smoke action");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "Script preview smoke");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "window.__rsdScriptPreview");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "npm &quot;quoted&quot;");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "pnpm &amp; friends");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), 'data-code-title="smoke.json"');
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), '"fenced"');
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), '<div class="table-container scrollbar my-6">');
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), '<table class="table">');
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), '<label for="smoke-input" class="flex w-full items-center gap-2">');
+assertNotIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), '<label for="smoke-input" class="flex w-full items-center gap-2"><p>');
 assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "lucide-sparkles");
 assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), 'from "reallysimpledocs/components"');
 assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Callout");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "```html\n<button type=\"button\" class=\"btn\">Smoke action</button>\n```");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive.md"), 'window.__rsdScriptPreview = "</Preview>";');
 assertIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "> **MDX works**");
 assertNotIncludes(path.join(appDir, "dist", "docs", "search-index.json"), "<Callout");
 assertSearchBodyHasNoHtml(path.join(appDir, "dist", "docs", "search-index.json"));

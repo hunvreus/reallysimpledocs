@@ -10,17 +10,28 @@ ReallySimpleDocs is an Astro integration. Add it to an existing Astro site, or c
   <Step title="Install packages">
 
 <CodeGroup>
-  <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
-  <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
-  <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
-  <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
+```bash title="npm"
+npm install reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="pnpm"
+pnpm add reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="yarn"
+yarn add reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="bun"
+bun add reallysimpledocs basecoat-css@beta tailwindcss
+```
 </CodeGroup>
 
   </Step>
   <Step title="Add the Astro integration">
 
-<Code lang="js">
-{`import { defineConfig } from "astro/config";
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
 import reallySimpleDocs from "reallysimpledocs/astro";
 
 export default defineConfig({
@@ -32,21 +43,19 @@ export default defineConfig({
     }),
   ],
 });
-`}
-</Code>
+```
 
   </Step>
   <Step title="Create docs">
+<CodeGroup>
+```md title="docs/index.md"
+# Introduction
 
-<Code lang="text">
-{`docs/
-├── docs.json
-└── index.md
-`}
-</Code>
+Welcome to the docs.
+```
 
-<Code lang="json">
-{`{
+```json title="docs/docs.json"
+{
   "menu": [
     {
       "type": "group",
@@ -55,22 +64,14 @@ export default defineConfig({
     }
   ]
 }
-`}
-</Code>
-
-<Code lang="md">
-{`# Introduction
-
-Welcome to the docs.
-`}
-</Code>
-
+```
+</CodeGroup>
   </Step>
   <Step title="Run Astro">
 
-<Code lang="bash">
-{`npm run dev`}
-</Code>
+```bash
+npm run dev
+```
 
   </Step>
 </Steps>
@@ -88,7 +89,7 @@ docs/
 
 Use `docs/docs.json` to manage [navigation](/navigation/). Add Markdown and MDX files as [pages](/pages/).
 
-Use `.mdx` only when a page needs richer [components](/components): `Callout`, `Code`, `Preview`, `Tabs`, `Steps`, or `Card`.
+Use `.mdx` only when a page needs richer [components](/components): `Callout`, `Code`, `CodeGroup`, `Preview`, `Tabs`, `Steps`, `Card`, or `CardGrid`.
 
 ReallySimpleDocs also wires up
 
@@ -105,10 +106,21 @@ For themes, custom CSS, assets, and component overrides, see [Customization](/cu
 Update ReallySimpleDocs and its peer packages together:
 
 <CodeGroup>
-  <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
-  <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
-  <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
-  <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
+```bash title="npm"
+npm install reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="pnpm"
+pnpm add reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="yarn"
+yarn add reallysimpledocs basecoat-css@beta tailwindcss
+```
+
+```bash title="bun"
+bun add reallysimpledocs basecoat-css@beta tailwindcss
+```
 </CodeGroup>
 
 Then rebuild:

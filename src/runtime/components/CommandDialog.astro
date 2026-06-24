@@ -1,8 +1,11 @@
 ---
+import config from "virtual:reallysimpledocs/config";
 import { renderCommandDialog } from "../lib/macros.js";
+import { routeFilePath } from "../lib/paths.js";
+import LoaderCircle from "lucide-static/icons/loader-circle.svg?raw";
 import lunrUrl from "lunr/lunr.min.js?url";
 
-const { indexUrl } = Astro.props;
+const { indexUrl = routeFilePath(config.routeBase, "search-index.json") } = Astro.props;
 ---
 
 <div data-search data-index-url={indexUrl}>
@@ -17,7 +20,7 @@ const { indexUrl } = Astro.props;
 </div>
 
 <script src={lunrUrl}></script>
-<script is:inline>
+<script is:inline define:vars={{ loadingIcon: LoaderCircle }}>
   const root = document.querySelector("[data-search]");
   const indexUrl = root?.getAttribute("data-index-url");
   const dialog = document.getElementById("command-search");
@@ -177,6 +180,7 @@ const { indexUrl } = Astro.props;
 
   function renderItems(items, label, query = "") {
     if (!menu) return;
+    delete menu.dataset.loading;
     if (!items.length) {
       menu.innerHTML = "";
       refreshCommand();
@@ -200,10 +204,18 @@ const { indexUrl } = Astro.props;
 
   function renderLoading() {
     if (!menu) return;
-    menu.innerHTML = `<div role="group" aria-labelledby="command-search-loading-heading">
-      <span role="heading" id="command-search-loading-heading">Search</span>
-      <div role="menuitem" aria-disabled="true" data-force><span>Loading...</span></div>
+    menu.dataset.loading = "true";
+    menu.innerHTML = `<div role="status" aria-live="polite" data-rsd-command-loading>
+      <span aria-hidden="true">${loadingIcon}</span>
+      <span>Loading...</span>
     </div>`;
+    refreshCommand();
+  }
+
+  function renderEmpty() {
+    if (!menu) return;
+    delete menu.dataset.loading;
+    menu.innerHTML = "";
     refreshCommand();
   }
 
@@ -213,12 +225,20 @@ const { indexUrl } = Astro.props;
     if (!state.loadPromise) {
       renderLoading();
       state.loadPromise = fetch(indexUrl)
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) throw new Error(`Failed to load search index: ${response.status}`);
+          return response.json();
+        })
         .then((data) => {
           state.documents = data.documents || [];
           state.bySlug = new Map(state.documents.map((doc) => [doc.slug, doc]));
           state.index = lunr.Index.load(data.index);
           return state;
+        })
+        .catch((error) => {
+          state.loadPromise = null;
+          renderEmpty();
+          throw error;
         });
     }
     return state.loadPromise;
@@ -248,10 +268,14 @@ const { indexUrl } = Astro.props;
   }
 
   async function refreshResults() {
-    await loadIndex();
-    const query = input?.value || "";
-    const results = search(query).slice(0, MAX_RESULTS);
-    renderItems(results, query.trim() ? "Results" : "Docs", query);
+    try {
+      await loadIndex();
+      const query = input?.value || "";
+      const results = search(query).slice(0, MAX_RESULTS);
+      renderItems(results, query.trim() ? "Results" : "Docs", query);
+    } catch (error) {
+      console.error("[search] Failed to load index:", error);
+    }
   }
 
   window.rsdOpenCommandSearch = async () => {

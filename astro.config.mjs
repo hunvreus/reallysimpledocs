@@ -11,11 +11,11 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       components: {
-        ContentHeader: "./docs/_components/ContentHeader.astro",
+        ContentHeader: "./site/ContentHeader.astro",
       },
       site: {
         title: "ReallySimpleDocs",
-        subtitle: "v1.0.0-beta.2",
+        subtitle: "v1.0.0",
         description: "A really simple documentation system for Astro.",
         url: "https://reallysimpledocs.com",
         assets: {

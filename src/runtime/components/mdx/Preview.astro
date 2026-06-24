@@ -4,9 +4,10 @@ import { highlightCode } from "../../lib/highlight.js";
 const { code = "", lang = "html", title = "Preview", class: className = "" } = Astro.props;
 const id = `preview-${Math.random().toString(36).slice(2)}`;
 const html = await highlightCode(code, lang);
+const previewClassName = className || "w-fit";
 ---
 
-<section class="preview">
+<section class="tabs-frame">
   <header>
     <div class="tabs">
       <nav role="tablist" aria-orientation="horizontal" data-variant="line">
@@ -41,7 +42,7 @@ const html = await highlightCode(code, lang);
     tabindex="-1"
     aria-selected="true"
   >
-    <div class={className}>
+    <div class={previewClassName}>
       <slot />
     </div>
   </section>

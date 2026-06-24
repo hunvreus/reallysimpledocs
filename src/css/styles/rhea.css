@@ -1,0 +1,9 @@
+.code-frame,
+.code-block,
+.tabs-frame {
+  @apply rounded-2xl;
+}
+
+.code-frame > header {
+  @apply h-[36px];
+}

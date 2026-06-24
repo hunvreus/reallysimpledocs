@@ -1,18 +1,18 @@
 # ReallySimpleDocs
 
-A simple documentation system for Astro, built with **Basecoat** and **Tailwind CSS**.
+A simple documentation system for Astro, built with Basecoat and Tailwind CSS.
 
-ReallySimpleDocs keeps docs portable: content lives in `docs/`, navigation lives in `docs/docs.json`, and the Astro integration owns the docs UI.
+ReallySimpleDocs keeps docs portable: content lives in `docs/`, navigation lives in `docs/docs.json`, and the Astro integration owns the docs UI, search, Markdown exports, and LLM files.
 
-## Add to an Astro site
+## Install
 
-ReallySimpleDocs is an Astro integration. Add it to an existing Astro site, or create one first with `npm create astro@latest`.
+Add ReallySimpleDocs to an Astro site:
 
 ```bash
-npm install reallysimpledocs basecoat-css tailwindcss
+npm install reallysimpledocs basecoat-css@beta tailwindcss
 ```
 
-Add the integration:
+Configure the integration:
 
 ```js
 // astro.config.mjs
@@ -25,17 +25,16 @@ export default defineConfig({
       docsDir: "./docs",
       routeBase: "/docs",
       style: "vega",
-      customCss: ["./src/docs.css"],
       site: {
-        title: "ReallySimpleDocs",
-        description: "A simple documentation system for Astro.",
+        title: "Acme Docs",
+        description: "Documentation for Acme.",
       },
     }),
   ],
 });
 ```
 
-Create docs:
+Create your first docs page:
 
 ```text
 docs/
@@ -61,9 +60,19 @@ docs/
 Welcome to the docs.
 ```
 
-ReallySimpleDocs injects docs pages, Lunr search, per-page Markdown exports, `llms.txt`, and `llms-full.txt`.
+## What it provides
 
-Use component overrides for layout chrome such as sidebar branding, extra head tags, or header controls between search and the built-in theme toggle:
+- Static docs routes from Markdown and MDX files.
+- Sidebar navigation from `docs/docs.json`.
+- Lunr search with a built-in command dialog.
+- Syntax-highlighted code blocks with copy buttons.
+- `llms.txt`, `llms-full.txt`, and per-page Markdown exports.
+- Basecoat styling with style-specific RSD CSS for docs surfaces.
+- Component slots for additive head content, sidebar chrome, and header controls.
+
+## Customization
+
+Use `components.ContentHeader` for controls between search and the built-in theme toggle:
 
 ```js
 reallySimpleDocs({
@@ -73,38 +82,48 @@ reallySimpleDocs({
 });
 ```
 
-For example, put only the GitHub button in `ContentHeader`; the theme toggle stays built in.
+Use `components.Head` to add tags to `<head>`. RSD's built-in metadata, theme setup, Basecoat JavaScript, copy-code behavior, and search behavior still render.
 
-Use `.mdx` when a page needs ReallySimpleDocs components. Common components are available by default, so you do not need to import them in each page:
-
-```mdx
-# Button
-
-<Callout title="MDX works">MDX is optional. Plain Markdown stays the default.</Callout>
-```
-
-## Use Basecoat outside the docs
-
-By default, ReallySimpleDocs manages one Tailwind/Basecoat stylesheet for the app. It scans `src/`, `docs/`, and the ReallySimpleDocs runtime, so Basecoat and Tailwind classes used by custom Astro pages outside the docs route are included in the same CSS build.
-
-Disable managed CSS only when you want to provide the full stylesheet pipeline yourself:
+Use `customCss` for project CSS imported after Basecoat and RSD styles:
 
 ```js
 reallySimpleDocs({
-  css: false,
+  style: "nova",
+  customCss: ["./src/docs.css"],
 });
 ```
 
-Use `css: false` when you bring your own Tailwind/Basecoat/RSD stylesheet. ReallySimpleDocs still provides its managed JavaScript.
+Use `css: false` only when you provide the full Tailwind/Basecoat/RSD stylesheet pipeline yourself. RSD exports its own CSS for that case:
 
-## Local development (this repo)
+```css
+@import "reallysimpledocs/css";
+@import "reallysimpledocs/css/styles/vega";
+```
+
+## Search outside docs
+
+Render the exported `CommandDialog` on any Astro page where you want docs search:
+
+```astro
+---
+import { CommandDialog } from "reallysimpledocs/components";
+---
+
+<CommandDialog />
+
+<button type="button" class="btn" onclick="window.rsdOpenCommandSearch?.()">
+  Search docs
+</button>
+```
+
+## Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Useful checks before publishing changes:
+Useful checks before publishing:
 
 ```bash
 npm run build
@@ -112,17 +131,18 @@ npm pack --dry-run
 npm run smoke:consumer
 ```
 
+`npm run check` runs all three.
+
 ## Documentation
 
-Go to [ReallySimpleDocs.com](https://reallysimpledocs.com).
+Go to [reallysimpledocs.com](https://reallysimpledocs.com).
 
-## Support the project 
+## Support
 
-- [Contribute code](/CONTRIBUTING.md)
 - [Report issues](https://github.com/hunvreus/reallysimpledocs/issues)
 - [Sponsor me](https://github.com/sponsors/hunvreus)
 - [Star the project on GitHub](https://github.com/hunvreus/reallysimpledocs)
 
 ## License
 
-[MIT](/LICENSE.md)
+[MIT](LICENSE.md)

@@ -34,25 +34,42 @@ Use `Steps` for ordered setup and installation flows. It renders a numbered rail
 
 ### Installation flow
 
-<Preview lang="mdx" class="block w-full items-stretch justify-start">
-  <Steps>
-    <Step title="Install packages">
-      Add ReallySimpleDocs, Basecoat, and Tailwind CSS to your Astro app.
-      <CodeGroup>
-        <Code title="npm" lang="bash">npm install reallysimpledocs basecoat-css tailwindcss</Code>
-        <Code title="pnpm" lang="bash">pnpm add reallysimpledocs basecoat-css tailwindcss</Code>
-        <Code title="yarn" lang="bash">yarn add reallysimpledocs basecoat-css tailwindcss</Code>
-        <Code title="bun" lang="bash">bun add reallysimpledocs basecoat-css tailwindcss</Code>
-      </CodeGroup>
-    </Step>
-    <Step title="Create docs">
-      Add `docs/docs.json` and one or more Markdown or MDX pages.
-    </Step>
-    <Step title="Run Astro">
-      Start the dev server and open the URL printed by Astro.
-      <div class="mt-6">
-        <a href="/install/" class="btn" data-variant="secondary">Read Quickstart</a>
-      </div>
-    </Step>
-  </Steps>
+<Preview class="w-full">
+<Steps>
+  <Step title="Install packages">
+    Add ReallySimpleDocs, Basecoat, and Tailwind CSS to your Astro app.
+
+    <CodeGroup>
+      ```bash title="npm"
+      npm install reallysimpledocs basecoat-css@beta tailwindcss
+      ```
+
+      ```bash title="pnpm"
+      pnpm add reallysimpledocs basecoat-css@beta tailwindcss
+      ```
+
+      ```bash title="yarn"
+      yarn add reallysimpledocs basecoat-css@beta tailwindcss
+      ```
+
+      ```bash title="bun"
+      bun add reallysimpledocs basecoat-css@beta tailwindcss
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Create docs">
+    Add `docs/docs.json` and one or more Markdown or MDX pages.
+  </Step>
+
+  <Step title="Run Astro">
+    Start the dev server and open the URL printed by Astro.
+
+    <div>
+      <a href="/quickstart/" class="btn" data-variant="secondary">
+        Read Quickstart
+      </a>
+    </div>
+  </Step>
+</Steps>
 </Preview>
