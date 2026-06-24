@@ -239,13 +239,13 @@ The dialog registers `window.rsdOpenCommandSearch()` and the `⌘K` / `Ctrl+K` s
 
 ## htmx
 
-Install htmx first:
+Install htmx first, or use the CDN script shown below:
 
 ```bash
 npm install htmx.org
 ```
 
-Then load htmx from the installed package (or from a CDN) and use `bodyAttrs` to boost links into the docs content container.
+Use `bodyAttrs` to boost links into the docs content container.
 Because the sidebar is outside `#content`, update its current-page state from `Head` after htmx swaps:
 
 <CodeGroup>
@@ -300,9 +300,12 @@ import htmxUrl from "htmx.org/dist/htmx.min.js?url";
 <script src={htmxUrl} defer></script>
 ```
 
-```astro title="src/docs/Head.astro (CDN)"
+</CodeGroup>
+
+If you prefer the CDN, keep the same sidebar sync script and replace the final htmx script tag with:
+
+```astro title="src/docs/Head.astro"
 <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" defer></script>
 ```
-</CodeGroup>
 
 See the [htmx installation docs](https://htmx.org/docs/#installing) for the current package and CDN options.
