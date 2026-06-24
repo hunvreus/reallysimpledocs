@@ -1,0 +1,50 @@
+---
+import htmxUrl from "htmx.org/dist/htmx.min.js?url";
+---
+
+<script is:inline>
+  (() => {
+    const pageKey = (href) => {
+      const url = new URL(href, window.location.origin);
+      return `${url.pathname.replace(/\/$/, "")}${url.search}`;
+    };
+
+    const updateSidebarState = () => {
+      const sidebar = document.getElementById("sidebar");
+      if (!sidebar) return;
+
+      const currentKey = pageKey(window.location.href);
+      sidebar.querySelectorAll("a[href]").forEach((link) => {
+        const isCurrent = pageKey(link.href) === currentKey;
+        if (isCurrent) {
+          link.setAttribute("aria-current", "page");
+          link.closest("details")?.setAttribute("open", "");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const content = document.getElementById("content");
+      if (!content) return;
+
+      document.body.setAttribute("hx-boost", "true");
+      document.body.setAttribute("hx-target", "#content");
+      document.body.setAttribute("hx-select", "#content");
+      document.body.setAttribute("hx-swap", "outerHTML");
+      document.body.setAttribute("hx-push-url", "true");
+
+      window.htmx?.process(document.body);
+      updateSidebarState();
+    });
+
+    document.addEventListener("htmx:afterSettle", () => {
+      window.basecoat?.initAll?.();
+      updateSidebarState();
+    });
+    window.addEventListener("popstate", updateSidebarState);
+  })();
+</script>
+
+<script src={htmxUrl} defer></script>

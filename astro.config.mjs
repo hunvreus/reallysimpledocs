@@ -11,6 +11,7 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       components: {
+        Head: "./site/Head.astro",
         ContentHeader: "./site/ContentHeader.astro",
       },
       site: {
