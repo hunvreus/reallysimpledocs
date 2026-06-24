@@ -239,7 +239,7 @@ The dialog registers `window.rsdOpenCommandSearch()` and the `⌘K` / `Ctrl+K` s
 
 ## htmx
 
-Install htmx first, or use the CDN script shown below:
+Install htmx first:
 
 ```bash
 npm install htmx.org
@@ -302,10 +302,4 @@ import htmxUrl from "htmx.org/dist/htmx.min.js?url";
 
 </CodeGroup>
 
-If you prefer the CDN, keep the same sidebar sync script and replace the final htmx script tag with:
-
-```astro title="src/docs/Head.astro"
-<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" defer></script>
-```
-
-See the [htmx installation docs](https://htmx.org/docs/#installing) for the current package and CDN options.
+Using a CDN is also fine; see the [htmx installation docs](https://htmx.org/docs/#installing) for options.
