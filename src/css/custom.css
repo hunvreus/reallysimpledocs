@@ -9,10 +9,12 @@
 
   > h2,
   > h3,
-  > h4 {
+  > h4,
+  > h5,
+  > h6 {
     @apply sm:text-lg my-6 scroll-m-18 font-semibold tracking-tight;
 
-    a {
+    > a.header-anchor {
       @apply no-underline;
     }
   }
@@ -47,7 +49,7 @@
     @apply block min-w-full w-max px-4 py-3 text-[13px];
   }
   pre:has(> code) {
-    @apply scrollbar max-w-full overflow-x-auto;
+    @apply max-w-full overflow-x-auto;
   }
   > blockquote {
     @apply border-l-4 border-border pl-4;
@@ -191,7 +193,7 @@ html.dark .astro-code span {
 }
 
 .code-block > pre {
-  @apply scrollbar my-0 max-w-full overflow-x-auto rounded-none border-0;
+  @apply my-0 max-w-full overflow-x-auto rounded-none border-0;
 }
 
 .code-block > pre > code {

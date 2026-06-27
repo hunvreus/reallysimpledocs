@@ -38,6 +38,7 @@ export default defineConfig({
 | `components.SidebarFooter` | Empty footer | Astro component used for the sidebar footer. |
 | `components.ContentHeader` | Empty | Astro component rendered between search and the built-in theme toggle. |
 | `site` | `{}` | Site metadata used by layout, SEO tags, and default UI. |
+| `assetsBase` | `"/assets"` | Base path for relative favicon, social image, and logo asset values. |
 
 ## Site metadata
 
@@ -50,11 +51,9 @@ reallySimpleDocs({
     subtitle: "v1.0.0",
     description: "Documentation for Acme.",
     url: "https://docs.example.com",
-    assets: {
-      favicon: "favicon.svg",
-      appleTouchIcon: "apple-touch-icon.png",
-      socialImage: "social.png",
-    },
+    favicon: "favicon.svg",
+    appleTouchIcon: "apple-touch-icon.png",
+    socialImage: "social.png",
     logo: {
       url: "/assets/favicon.svg",
     },
@@ -62,7 +61,39 @@ reallySimpleDocs({
 });
 ```
 
-Relative asset values resolve from `assetsBase`, which defaults to `/assets`.
+Relative asset values resolve from `assetsBase`, which defaults to `/assets`. Favicon and social image tags are emitted only when configured.
+
+## Sitemap
+
+Use Astro's sitemap integration when you need a sitemap. ReallySimpleDocs does not generate its own sitemap.
+
+```bash
+npm install @astrojs/sitemap
+```
+
+```js title="astro.config.mjs"
+import sitemap from "@astrojs/sitemap";
+import { defineConfig } from "astro/config";
+import reallySimpleDocs from "reallysimpledocs/astro";
+
+export default defineConfig({
+  site: "https://docs.example.com",
+  integrations: [reallySimpleDocs(), sitemap()],
+});
+```
+
+The integration writes `sitemap-index.xml` and sitemap chunk files during `astro build`. It is not served by `astro dev`.
+
+## Robots
+
+Add `robots.txt` as a static file when you need one:
+
+```txt title="public/robots.txt"
+User-agent: *
+Allow: /
+
+Sitemap: https://docs.example.com/sitemap-index.xml
+```
 
 ## Component overrides
 

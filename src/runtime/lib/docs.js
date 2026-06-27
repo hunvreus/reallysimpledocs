@@ -102,7 +102,8 @@ export async function renderDoc(config, page) {
     const headingText = plainText(tokens);
     const id = slugger.slug(headingText);
     if (depth > 1 && depth < 4) headings.push({ depth, id, text: headingText });
-    return `<h${depth} id="${id}" tabindex="-1"><a class="header-anchor" href="#${id}">${text}</a></h${depth}>`;
+    const content = hasTokenType(tokens, "link") ? text : `<a class="header-anchor" href="#${id}">${text}</a>`;
+    return `<h${depth} id="${id}" tabindex="-1">${content}</h${depth}>`;
   };
 
   const tokens = marked.lexer(content);
@@ -430,6 +431,10 @@ function plainText(tokens) {
       return token.text ?? token.raw ?? "";
     })
     .join("");
+}
+
+function hasTokenType(tokens, type) {
+  return tokens.some((token) => token.type === type || (token.tokens && hasTokenType(token.tokens, type)));
 }
 
 function tokensText(tokens) {

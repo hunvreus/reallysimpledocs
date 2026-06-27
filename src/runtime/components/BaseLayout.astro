@@ -11,9 +11,9 @@ const metaTitle = pagePath === "/" ? `${site.title} | ${metaDescription}` : `${t
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") || site.url || "";
 const absoluteUrl = `${siteUrl}${pagePath}`;
 const assetsBase = config.assetsBase || "/assets";
-const favicon = site.assets?.favicon || site.favicon || "";
-const appleTouchIcon = site.assets?.appleTouchIcon || site.appleTouchIcon || "";
-const socialImage = site.assets?.socialImage || site.socialImage || "";
+const favicon = site.favicon || "";
+const appleTouchIcon = site.appleTouchIcon || "";
+const socialImage = site.socialImage || "";
 const assetPath = (value) => {
   const path = String(value || "");
   if (!path || path.startsWith("http") || path.startsWith("/")) return path;

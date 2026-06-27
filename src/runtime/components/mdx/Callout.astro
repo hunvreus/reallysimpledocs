@@ -2,9 +2,11 @@
 import * as lucideIcons from "lucide-static";
 import { addSvgClass } from "../../lib/html.js";
 
-const { type, title = "Note", icon: iconName, class: className = "" } = Astro.props;
+const { type, title = "Note", icon: iconName, action, class: className = "" } = Astro.props;
 const normalizedType = String(type || "").toLowerCase();
 const calloutType = normalizedType === "warning" || normalizedType === "destructive" ? normalizedType : "";
+const actionLabel = typeof action?.label === "string" ? action.label.trim() : "";
+const actionHref = typeof action?.href === "string" ? action.href.trim() : "";
 
 function resolveNamedIcon(name) {
   if (!name || typeof name !== "string") return "";
@@ -31,4 +33,13 @@ const heading = title;
   <section>
     <slot />
   </section>
+  {
+    actionLabel && actionHref && (
+      <footer>
+        <a class="btn" data-variant="outline" data-size="sm" href={actionHref}>
+          {actionLabel}
+        </a>
+      </footer>
+    )
+  }
 </div>

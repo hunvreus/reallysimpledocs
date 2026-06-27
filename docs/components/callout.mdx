@@ -27,6 +27,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 | `type` | `"warning"` \| `"destructive"` | `undefined` | Optional severity variant. |
 | `title` | `string` | `"Note"` | Heading displayed in the alert. |
 | `icon` | `string` | `undefined` | Optional Lucide icon name or custom SVG. |
+| `action` | `{ label: string; href: string }` | `undefined` | Optional callout action link. |
 | `class` | `string` | `""` | Extra classes applied to the alert root. |
 
 ## Examples
@@ -44,6 +45,14 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 <Preview lang="mdx" class="block w-full">
 <Callout icon="lightbulb" title="Custom icon">
   Add a Lucide icon when it helps explain the message.
+</Callout>
+</Preview>
+
+### Action
+
+<Preview lang="mdx" class="block w-full">
+<Callout title="Template macros available" icon="code" action={{ label: "More", href: "#" }}>
+  This component ships an optional action link for related documentation.
 </Callout>
 </Preview>
 

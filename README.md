@@ -28,6 +28,9 @@ export default defineConfig({
       site: {
         title: "Acme Docs",
         description: "Documentation for Acme.",
+        url: "https://docs.example.com",
+        favicon: "favicon.svg",
+        socialImage: "social.png",
       },
     }),
   ],

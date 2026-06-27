@@ -94,12 +94,14 @@ function serializePreview(attrs, children, context = new Map()) {
 
 function serializeCallout(attrs, children, context = new Map()) {
   const title = getStringAttr(attrs, "title") || calloutTitle(getStringAttr(attrs, "type"));
+  const action = getObjectAttr(attrs, "action");
   const body = normalizeMdxComponents(children, context)
     .trim()
     .split("\n")
     .map((line) => `> ${line}`)
     .join("\n");
-  return `\n\n> **${title}**\n${body ? `${body}\n` : ""}\n`;
+  const footer = action?.label && action?.href ? `> [${action.label}](${action.href})\n` : "";
+  return `\n\n> **${title}**\n${body ? `${body}\n` : ""}${footer}`;
 }
 
 function serializeSteps(_attrs, children, context = new Map()) {
@@ -135,6 +137,14 @@ function getStringAttr(attrs, name) {
 
 function getExpressionAttr(attrs, name) {
   return String(attrs || "").match(new RegExp(`${name}=\\{([A-Za-z_$][\\w$]*)\\}`))?.[1] || "";
+}
+
+function getObjectAttr(attrs, name) {
+  const value = String(attrs || "").match(new RegExp(`${name}=\\{\\{([\\s\\S]*?)\\}\\}`))?.[1] || "";
+  if (!value) return null;
+  return Object.fromEntries(
+    [...value.matchAll(/([A-Za-z_$][\w$]*)\s*:\s*["']([^"']*)["']/g)].map(([, key, item]) => [key, item]),
+  );
 }
 
 function getCodeAttr(attrs, context = new Map()) {

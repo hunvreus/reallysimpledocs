@@ -1,6 +1,6 @@
 {
   "name": "reallysimpledocs",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "type": "module",
   "exports": {
     ".": "./src/index.js",
@@ -20,7 +20,7 @@
     "build": "rm -rf dist && astro build",
     "preview": "astro preview",
     "smoke:consumer": "node scripts/smoke-consumer.mjs",
-    "check": "npm run build && npm pack --dry-run && npm run smoke:consumer"
+    "check": "npm run build && node scripts/assert-site-output.mjs && npm pack --dry-run && npm run smoke:consumer"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.0",
@@ -41,6 +41,7 @@
     "tailwindcss": ">=4.1.17 <5"
   },
   "devDependencies": {
+    "@astrojs/sitemap": "^3.6.0",
     "astro": "^6.4.6",
     "basecoat-css": "^1.0.0-beta.6",
     "htmx.org": "^2.0.10",
