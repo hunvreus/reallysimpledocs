@@ -1,6 +1,12 @@
 {
   "name": "reallysimpledocs",
-  "version": "1.0.8",
+  "version": "1.0.9",
+  "description": "A simple documentation system for Astro, built with Basecoat and Tailwind CSS.",
+  "author": {
+    "name": "hunvreus",
+    "url": "https://x.com/hunvreus"
+  },
+  "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
@@ -10,6 +16,16 @@
     "url": "https://github.com/hunvreus/reallysimpledocs/issues"
   },
   "homepage": "https://reallysimpledocs.com",
+  "keywords": [
+    "astro",
+    "documentation",
+    "docs",
+    "markdown",
+    "mdx",
+    "basecoat",
+    "tailwindcss",
+    "llms"
+  ],
   "exports": {
     ".": "./src/index.js",
     "./astro": "./src/astro/index.js",
