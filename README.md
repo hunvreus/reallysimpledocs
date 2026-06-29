@@ -4,12 +4,14 @@ A simple documentation system for Astro, built with Basecoat and Tailwind CSS.
 
 ReallySimpleDocs keeps docs portable: content lives in `docs/`, navigation lives in `docs/docs.json`, and the Astro integration owns the docs UI, search, Markdown exports, and LLM files.
 
+![ReallySimpleDocs screenshot](assets/screenshot.png)
+
 ## Install
 
 Add ReallySimpleDocs to an Astro site:
 
 ```bash
-npm install reallysimpledocs basecoat-css@beta tailwindcss
+npm install reallysimpledocs basecoat-css tailwindcss
 ```
 
 Configure the integration:

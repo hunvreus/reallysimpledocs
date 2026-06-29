@@ -24,7 +24,7 @@ export default defineConfig({
       },
       site: {
         title: "ReallySimpleDocs",
-        subtitle: "v1.0.6",
+        subtitle: "v1.0.7",
         description: "A really simple documentation system for Astro.",
         url: "https://reallysimpledocs.com",
         favicon: "favicon.svg",
