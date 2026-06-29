@@ -86,10 +86,15 @@ function transformCodeBlocks(parent) {
   for (const child of parent.children) {
     if (isElement(child, "pre") && child.children?.some((node) => isElement(node, "code"))) {
       addClass(child, ["scrollbar"]);
+      if (isShikiBlock(child)) addClass(child, ["shiki"]);
       continue;
     }
     transformCodeBlocks(child);
   }
+}
+
+function isShikiBlock(node) {
+  return String(node?.properties?.style || "").includes("--shiki-");
 }
 
 function nodeText(node) {

@@ -259,6 +259,10 @@ This page proves packaged MDX docs can render default ReallySimpleDocs component
 }
 \`\`\`
 
+\`\`\`bash
+npm run dev
+\`\`\`
+
 | Prop | Value |
 | --- | --- |
 | MDX table | Basecoat |
@@ -439,6 +443,10 @@ assertIncludes(
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
   'data-code-title="smoke.json"',
+);
+assertIncludes(
+  path.join(appDir, "dist", "docs", "interactive", "index.html"),
+  '<pre class="scrollbar shiki" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> dev</span></span></code></pre>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
