@@ -1,7 +1,15 @@
 {
   "name": "reallysimpledocs",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hunvreus/reallysimpledocs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hunvreus/reallysimpledocs/issues"
+  },
+  "homepage": "https://reallysimpledocs.com",
   "exports": {
     ".": "./src/index.js",
     "./astro": "./src/astro/index.js",
