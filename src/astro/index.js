@@ -32,13 +32,23 @@ const normalizeImportPath = (filePath) => filePath.replaceAll(path.sep, "/");
 
 const normalizeBoolean = (value, fallback = true) => (value === undefined ? fallback : Boolean(value));
 
-const shikiConfig = {
+const defaultShikiConfig = {
   themes: {
     light: "github-light",
     dark: "github-dark",
   },
   defaultColor: false,
 };
+
+function normalizeShikiConfig(value = {}) {
+  return {
+    themes: {
+      ...defaultShikiConfig.themes,
+      ...(value.themes || {}),
+    },
+    defaultColor: value.defaultColor ?? defaultShikiConfig.defaultColor,
+  };
+}
 
 function collectMdxModules(docsDir) {
   if (!fs.existsSync(docsDir)) return {};
@@ -77,6 +87,7 @@ export default function reallySimpleDocs(options = {}) {
     components: options.components || {},
     routeBase: options.routeBase ?? "/docs",
     assetsBase: options.assetsBase || "/assets",
+    shiki: normalizeShikiConfig(options.shiki),
   };
 
   return {
@@ -153,7 +164,7 @@ export default function reallySimpleDocs(options = {}) {
           integrations: [
             mdx({
               syntaxHighlight: "shiki",
-              shikiConfig,
+              shikiConfig: normalizedOptions.shiki,
             }),
           ],
           markdown: {
@@ -161,7 +172,7 @@ export default function reallySimpleDocs(options = {}) {
               remarkPlugins: [[remarkPreviewSource, { docsDir }]],
               rehypePlugins: [rehypeBasecoatTables],
             }),
-            shikiConfig,
+            shikiConfig: normalizedOptions.shiki,
           },
           vite: {
             build: {

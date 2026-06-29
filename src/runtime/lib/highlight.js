@@ -1,17 +1,31 @@
 import { codeToHtml } from "shiki";
 
-export async function highlightCode(code, lang = "text") {
+const defaultShikiConfig = {
+  themes: {
+    light: "github-light",
+    dark: "github-dark",
+  },
+  defaultColor: false,
+};
+
+export async function highlightCode(code, lang = "text", shiki = defaultShikiConfig) {
   const value = String(code || "");
   const language = String(lang || "text").toLowerCase() === "mdx" ? "tsx" : String(lang || "text");
   const html = await codeToHtml(value, {
     lang: language,
-    themes: {
-      light: "github-light",
-      dark: "github-dark",
-    },
-    defaultColor: false,
+    ...normalizeShikiConfig(shiki),
   });
   return addPreClass(html, "scrollbar");
+}
+
+function normalizeShikiConfig(value = {}) {
+  return {
+    themes: {
+      ...defaultShikiConfig.themes,
+      ...(value.themes || {}),
+    },
+    defaultColor: value.defaultColor ?? defaultShikiConfig.defaultColor,
+  };
 }
 
 function addPreClass(html, className) {

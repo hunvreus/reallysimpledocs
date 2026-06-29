@@ -107,7 +107,7 @@ export async function renderDoc(config, page) {
   };
 
   const tokens = marked.lexer(content);
-  await highlightCode(tokens);
+  await highlightCode(tokens, config.shiki);
   const html = marked.parser(tokens, { renderer });
   return { page, html: await transformBasecoatTablesHtml(html), headings };
 }
@@ -360,10 +360,10 @@ function normalizeDocSource(source) {
     .trimStart();
 }
 
-async function highlightCode(tokens) {
+async function highlightCode(tokens, shiki) {
   for (const token of tokens) {
     if (token.type === "code") {
-      const html = codeBlockHtml(token, await highlightToken(token));
+      const html = codeBlockHtml(token, await highlightToken(token, shiki));
       Object.assign(token, {
         type: "html",
         raw: html,
@@ -374,7 +374,7 @@ async function highlightCode(tokens) {
     }
 
     for (const childTokens of nestedTokenLists(token)) {
-      await highlightCode(childTokens);
+      await highlightCode(childTokens, shiki);
     }
   }
 }
@@ -385,26 +385,30 @@ function codeBlockHtml(token, html) {
   return `<div class="code-frame" data-code-title="${escapeHtml(title)}"><header><span>${escapeHtml(title)}</span></header><div class="code-block">${html}</div></div>`;
 }
 
-async function highlightToken(token) {
+async function highlightToken(token, shiki = {}) {
+  const shikiConfig = normalizeShikiConfig(shiki);
   try {
     return await codeToHtml(token.text, {
       lang: normalizeLanguage(token.lang),
-      themes: {
-        light: "github-light",
-        dark: "github-dark",
-      },
-      defaultColor: false,
+      ...shikiConfig,
     });
   } catch {
     return codeToHtml(token.text, {
       lang: "text",
-      themes: {
-        light: "github-light",
-        dark: "github-dark",
-      },
-      defaultColor: false,
+      ...shikiConfig,
     });
   }
+}
+
+function normalizeShikiConfig(value = {}) {
+  return {
+    themes: {
+      light: "github-light",
+      dark: "github-dark",
+      ...(value.themes || {}),
+    },
+    defaultColor: value.defaultColor ?? false,
+  };
 }
 
 function normalizeLanguage(lang) {

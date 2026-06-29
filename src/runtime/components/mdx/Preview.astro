@@ -1,9 +1,10 @@
 ---
+import config from "virtual:reallysimpledocs/config";
 import { highlightCode } from "../../lib/highlight.js";
 
 const { code = "", lang = "html", title = "Preview", class: className = "" } = Astro.props;
 const id = `preview-${Math.random().toString(36).slice(2)}`;
-const html = await highlightCode(code, lang);
+const html = await highlightCode(code, lang, config.shiki);
 const previewClassName = className || "w-fit";
 ---
 

@@ -1,11 +1,12 @@
 ---
+import config from "virtual:reallysimpledocs/config";
 import { highlightCode } from "../../lib/highlight.js";
 import { decodeHtml } from "../../lib/html.js";
 
 const { lang = "text", title, code, class: className = "" } = Astro.props;
 const slotHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 const rawCode = typeof code === "string" ? code.trim() : decodeSlotText(slotHtml);
-const html = await highlightCode(rawCode, lang);
+const html = await highlightCode(rawCode, lang, config.shiki);
 
 function decodeSlotText(value) {
   const text = String(value || "")

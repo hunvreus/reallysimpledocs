@@ -39,6 +39,7 @@ export default defineConfig({
 | `components.ContentHeader` | Empty | Astro component rendered between search and the built-in theme toggle. |
 | `site` | `{}` | Site metadata used by layout, SEO tags, and default UI. |
 | `assetsBase` | `"/assets"` | Base path for relative favicon, social image, and logo asset values. |
+| `shiki` | See below | Shiki options used for syntax-highlighted code blocks. |
 
 ## Site metadata
 
@@ -62,6 +63,36 @@ reallySimpleDocs({
 ```
 
 Relative asset values resolve from `assetsBase`, which defaults to `/assets`. Favicon and social image tags are emitted only when configured.
+
+## Syntax highlighting
+
+ReallySimpleDocs uses Shiki for fenced code blocks, `Code`, `CodeGroup`, and `Preview`.
+
+```js title="astro.config.mjs"
+reallySimpleDocs({
+  shiki: {
+    themes: {
+      light: "vesper",
+      dark: "vesper",
+    },
+    defaultColor: false,
+  },
+});
+```
+
+The default is:
+
+```js
+{
+  themes: {
+    light: "github-light",
+    dark: "github-dark",
+  },
+  defaultColor: false,
+}
+```
+
+`defaultColor` is passed to Shiki. Keep it `false` when you want ReallySimpleDocs CSS to control the code block foreground and background while Shiki handles token colors.
 
 ## Sitemap
 

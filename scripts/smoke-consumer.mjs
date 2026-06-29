@@ -106,6 +106,13 @@ export default defineConfig({
       components: {
         Head: "./src/components/DocsHead.astro",
       },
+      shiki: {
+        themes: {
+          light: "vesper",
+          dark: "vesper",
+        },
+        defaultColor: false,
+      },
       site: {
         title: "Consumer docs",
         description: "Consumer smoke test docs.",
@@ -446,7 +453,7 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  '<pre class="scrollbar shiki" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> dev</span></span></code></pre>',
+  '<pre class="scrollbar shiki" style="--shiki-light:#FFF;--shiki-dark:#FFF;--shiki-light-bg:#101010;--shiki-dark-bg:#101010;overflow-x:auto" tabindex="0" data-language="bash">',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
@@ -454,7 +461,7 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  'data-code-title="Command"><header><span>Command</span></header><div class="code-block"><pre class="shiki shiki-themes github-light github-dark scrollbar"',
+  'data-code-title="Command"><header><span>Command</span></header><div class="code-block"><pre class="shiki shiki-themes vesper scrollbar"',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
