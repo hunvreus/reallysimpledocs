@@ -174,12 +174,12 @@ html.dark .astro-code span {
 }
 
 .code-frame > header {
-  @apply flex h-10 items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b bg-muted px-3 text-sm font-medium dark:bg-muted/50;
+  @apply flex h-10 items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
   scrollbar-width: none;
 }
 
 .tabs-frame > header {
-  @apply flex items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b bg-muted px-3 text-sm font-medium dark:bg-muted/50;
+  @apply flex items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
   scrollbar-width: none;
 }
 
