@@ -67,6 +67,7 @@ export function getPages(config) {
       path: routePath(config.routeBase, slug),
       markdownPath: markdownPath(config.routeBase, slug),
       title: parsed.title,
+      description: parsed.description,
     };
   });
 }
@@ -319,21 +320,39 @@ export function getPageItemSlug(item) {
 }
 
 function parseDocMarkdown(source, fallbackTitle) {
+  const frontmatter = parseFrontmatter(source);
   const content = normalizeDocSource(source);
   const tokens = marked.lexer(content);
   const first = tokens[0];
 
   if (first?.type !== "heading" || first.depth !== 1) {
     return {
-      title: fallbackTitle,
+      title: frontmatter.title || fallbackTitle,
+      description: frontmatter.description,
       body: content,
     };
   }
 
   return {
-    title: plainText(first.tokens || []).trim() || fallbackTitle,
+    title: frontmatter.title || plainText(first.tokens || []).trim() || fallbackTitle,
+    description: frontmatter.description,
     body: content.slice(first.raw.length).trimStart(),
   };
+}
+
+function parseFrontmatter(source) {
+  const match = String(source || "").trimStart().match(/^---\s*\n([\s\S]*?)\n---\s*(?:\n|$)/);
+  if (!match) return {};
+
+  const values = {};
+  for (const line of match[1].split("\n")) {
+    const field = line.match(/^([A-Za-z][\w-]*)\s*:\s*(.*)$/);
+    if (!field) continue;
+    const key = field[1];
+    const value = field[2].trim().replace(/^(['"])(.*)\1$/, "$2");
+    if (key === "title" || key === "description") values[key] = value;
+  }
+  return values;
 }
 
 function markdownPlainText(markdown) {

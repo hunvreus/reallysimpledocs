@@ -63,7 +63,7 @@ const actionItems = [
 
 <BaseLayout
   title={page.title}
-  description={site.description}
+  description={page.description || site.description}
   pagePath={page.path}
 >
   <CommandDialog />

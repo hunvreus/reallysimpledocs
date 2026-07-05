@@ -27,5 +27,13 @@ assertIncludes(
   "dist/robots.txt",
   "Sitemap: https://reallysimpledocs.com/sitemap-index.xml",
 );
+assertIncludes(
+  "dist/pages/index.html",
+  '<meta name="description" content="Learn how ReallySimpleDocs turns Markdown and MDX files into documentation pages.">',
+);
+assertIncludes(
+  "dist/pages/index.html",
+  '<meta property="og:description" content="Learn how ReallySimpleDocs turns Markdown and MDX files into documentation pages.">',
+);
 
 console.log("Site output assertions passed.");

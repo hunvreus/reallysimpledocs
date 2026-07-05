@@ -1,3 +1,7 @@
+---
+description: "Learn how ReallySimpleDocs turns Markdown and MDX files into documentation pages."
+---
+
 # Pages
 
 ReallySimpleDocs renders Markdown and MDX files from `docs/`. Add a page, then add its slug to `docs/docs.json`.
@@ -13,6 +17,19 @@ Page content starts here.
 Save it as `docs/page-title.md`, then add `"page-title"` to the navigation.
 
 ReallySimpleDocs uses the first H1 as the page title. If there is no H1, it falls back to the slug.
+
+Use frontmatter to override the title or description used for page metadata:
+
+```md title="docs/page-title.md"
+---
+title: Metadata title
+description: Metadata description for this page.
+---
+
+# Page title
+```
+
+`title` overrides the rendered page title and metadata title. `description` overrides the global `site.description` for this page.
 
 ## Write Markdown
 
