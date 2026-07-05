@@ -64,6 +64,19 @@ reallySimpleDocs({
 
 Relative asset values resolve from `assetsBase`, which defaults to `/assets`. Favicon and social image tags are emitted only when configured.
 
+Individual pages can override the metadata title and description with frontmatter:
+
+```md title="docs/page.md"
+---
+title: Custom metadata title
+description: Custom metadata description.
+---
+
+# Page title
+```
+
+`title` replaces the H1-derived page title for the layout and metadata. `description` replaces `site.description` for that page.
+
 ## Syntax highlighting
 
 ReallySimpleDocs uses Shiki for fenced code blocks, `Code`, `CodeGroup`, and `Preview`.
