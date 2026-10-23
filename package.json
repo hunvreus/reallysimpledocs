@@ -7,6 +7,9 @@
     "url": "https://x.com/hunvreus"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "type": "module",
   "repository": {
     "type": "git",
