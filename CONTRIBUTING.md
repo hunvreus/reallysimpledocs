@@ -21,11 +21,11 @@ To release:
 1. Bump the version in `package.json` (for example to `1.0.14`) and commit.
 2. Tag that commit with the same version, with no `v` prefix, and push: `git tag 1.0.14 && git push origin main 1.0.14`.
 3. Publish a GitHub release for the tag, for example `gh release create 1.0.14 --generate-notes`.
-4. Approve the staged version on npmjs.com, in the package's Staged Packages tab, or with `npm stage approve <stage-id>`. Both ask for 2FA.
+4. Approve the staged version on npmjs.com, in the package's Staged Packages tab, or with `npm stage approve <stage-id>`. Both ask for 2FA. The site deploys once the approved version is on npm.
 
-Publishing the release runs `.github/workflows/release.yml`. It checks that the tag is on `main` and that the version in `package.json` matches it, runs the build checks, and stages that version on npm with `npm stage publish`, using trusted publishing. A staged version is not installable until a maintainer approves it. If the version is already staged or published, the workflow skips this step. It then points `release` at the tag, and Cloudflare builds and deploys the site. If staging fails, the site is not deployed.
+Publishing the release runs `.github/workflows/release.yml`. It checks that the tag is on `main` and that the version in `package.json` matches it, runs the build checks, and stages that version on npm with `npm stage publish`, using trusted publishing. A staged version is not installable until a maintainer approves it. If the version is already staged or published, the workflow skips this step. If staging fails, the site is not deployed.
 
-The site goes live right after staging, before the npm approval. Until you approve, the docs can describe a version that npm does not serve yet, so approve soon after publishing the release. If you reject the staged version instead, roll the site back with a manual run (see below).
+The site only goes live after you approve the staged version. The workflow checks npm every 30 seconds for up to about 6 hours. Once the version is published, it points `release` at the tag, and Cloudflare builds and deploys the site. If the version was already on npm, it deploys right away. If you approve after the wait times out, open the workflow run and re-run the failed `deploy-site` job. If you reject the staged version, nothing is deployed. Let the wait time out, or cancel the run.
 
 Do not run `npm publish` by hand. Versions reach npm only through this workflow and your approval. The workflow needs no npm token and adds a provenance statement linking each version to the commit it was built from. Prereleases are neither staged nor deployed.
 
