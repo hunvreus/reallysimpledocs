@@ -1,8 +1,9 @@
 name: Release
 
 # Publishing a GitHub release (not a prerelease):
-#   1. publish: stages the tagged version on npm with `npm stage publish`, using trusted
-#      publishing (OIDC, no token). A maintainer then approves it on npmjs.com (Staged
+#   1. publish: checks the tag is on main and matches package.json, then stages the
+#      tagged version on npm with `npm stage publish`, using trusted publishing (OIDC,
+#      no token). A maintainer then approves it on npmjs.com (Staged
 #      Packages tab) or with `npm stage approve <stage-id>`, with 2FA. Until then the
 #      version is not installable.
 #   2. deploy-site: points the `release` branch at the tag. Cloudflare Workers Builds
@@ -41,15 +42,26 @@ jobs:
     env:
       TAG: ${{ github.event.release.tag_name }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: refs/tags/${{ github.event.release.tag_name }}
           persist-credentials: false
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Check the tag is on main
+        run: |
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor HEAD FETCH_HEAD; then
+            echo "::error::Tag $TAG is not on main. Release from a commit on main."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          # No dependency cache in a publishing job (cache poisoning).
+          package-manager-cache: false
 
       - name: Ensure npm supports staged publishing (>= 11.15.0)
         run: |
@@ -124,7 +136,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -133,4 +145,8 @@ jobs:
           TAG: ${{ inputs.tag || github.event.release.tag_name }}
         run: |
           SHA=$(git rev-parse --verify "refs/tags/$TAG^{commit}")
+          if ! git merge-base --is-ancestor "$SHA" origin/main; then
+            echo "::error::Tag $TAG is not on main. Only tags on main can go live."
+            exit 1
+          fi
           git push --force origin "$SHA:refs/heads/release"

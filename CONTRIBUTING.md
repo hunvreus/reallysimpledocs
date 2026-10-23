@@ -23,7 +23,7 @@ To release:
 3. Publish a GitHub release for the tag, for example `gh release create 1.0.14 --generate-notes`.
 4. Approve the staged version on npmjs.com, in the package's Staged Packages tab, or with `npm stage approve <stage-id>`. Both ask for 2FA.
 
-Publishing the release runs `.github/workflows/release.yml`. It checks that the version in `package.json` matches the tag, runs the build checks, and stages that version on npm with `npm stage publish`, using trusted publishing. A staged version is not installable until a maintainer approves it. If the version is already staged or published, the workflow skips this step. It then points `release` at the tag, and Cloudflare builds and deploys the site. If staging fails, the site is not deployed.
+Publishing the release runs `.github/workflows/release.yml`. It checks that the tag is on `main` and that the version in `package.json` matches it, runs the build checks, and stages that version on npm with `npm stage publish`, using trusted publishing. A staged version is not installable until a maintainer approves it. If the version is already staged or published, the workflow skips this step. It then points `release` at the tag, and Cloudflare builds and deploys the site. If staging fails, the site is not deployed.
 
 The site goes live right after staging, before the npm approval. Until you approve, the docs can describe a version that npm does not serve yet, so approve soon after publishing the release. If you reject the staged version instead, roll the site back with a manual run (see below).
 
