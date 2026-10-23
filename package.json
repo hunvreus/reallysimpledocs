@@ -44,7 +44,7 @@
     "build": "rm -rf dist && astro build",
     "preview": "astro preview",
     "smoke:consumer": "node scripts/smoke-consumer.mjs",
-    "check": "npm run build && node scripts/assert-site-output.mjs && npm pack --dry-run && npm run smoke:consumer"
+    "check": "npm run build && node scripts/assert-site-output.mjs && npm run smoke:consumer"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.0",

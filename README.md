@@ -128,15 +128,13 @@ npm install
 npm run dev
 ```
 
-Useful checks before publishing:
+Run the checks before opening a pull request:
 
 ```bash
-npm run build
-npm pack --dry-run
-npm run smoke:consumer
+npm run check
 ```
 
-`npm run check` runs all three.
+It builds the site, checks the built output (`scripts/assert-site-output.mjs`), then packs the package and builds a throwaway consumer app from the tarball (`npm run smoke:consumer`). CI runs the same command on every pull request and push to `main`. Use `npm pack --dry-run` to see which files would be published.
 
 ## Documentation
 
