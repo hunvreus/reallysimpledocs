@@ -525,19 +525,19 @@ assertIncludes(
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "Consumer docs");
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Welcome](https://example.com/docs/)",
+  "- [Welcome](https://example.com/docs/index.md)",
 );
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Guide](https://example.com/docs/guide/)",
+  "- [Guide](https://example.com/docs/guide.md)",
 );
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Interactive](https://example.com/docs/interactive/)",
+  "- [Interactive](https://example.com/docs/interactive.md)",
 );
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Nested](https://example.com/docs/deep/nested/)",
+  "- [Nested](https://example.com/docs/deep/nested.md)",
 );
 
 console.log("Consumer smoke test passed.");
