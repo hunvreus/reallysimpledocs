@@ -9,7 +9,7 @@
   - Issues are addressed in `issue/123-main-issue` branches.
   - When ready, open a PR against `main`.
 - Keep changes focused: one feature or fix per PR.
-- Test locally before submitting.
+- Run `npm run check` before submitting. CI runs it on every pull request.
 - Follow existing code style.
 
 ## Releases and the docs site

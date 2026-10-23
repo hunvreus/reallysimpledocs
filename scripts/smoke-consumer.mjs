@@ -3,6 +3,10 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 
 const root = process.cwd();
+// Install the same peer versions this repo develops against, so they cannot drift.
+const { devDependencies } = JSON.parse(
+  fs.readFileSync(path.join(root, "package.json"), "utf8"),
+);
 const tempRoot = path.join(root, ".tmp", "consumer-smoke");
 const packDir = path.join(tempRoot, "pack");
 const appDir = path.join(tempRoot, "app");
@@ -79,10 +83,10 @@ writeJson(path.join(appDir, "package.json"), {
     build: "astro build",
   },
   dependencies: {
-    astro: "^6.4.6",
-    "basecoat-css": "^1.0.1",
+    astro: devDependencies.astro,
+    "basecoat-css": devDependencies["basecoat-css"],
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
-    tailwindcss: "4.1.17",
+    tailwindcss: devDependencies.tailwindcss,
   },
 });
 
