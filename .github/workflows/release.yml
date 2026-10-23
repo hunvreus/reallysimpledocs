@@ -6,9 +6,12 @@ name: Release
 #      no token). A maintainer then approves it on npmjs.com (Staged
 #      Packages tab) or with `npm stage approve <stage-id>`, with 2FA. Until then the
 #      version is not installable.
-#   2. deploy-site: points the `release` branch at the tag. Cloudflare Workers Builds
-#      deploys the site from `release`. This runs right after staging, so the site can
-#      be live before the npm version is approved.
+#   2. deploy-site: waits until the version is published on npm (the maintainer has
+#      approved it), checking the public registry every 30 seconds for up to about 6
+#      hours. Then it points the `release` branch at the tag, and Cloudflare Workers
+#      Builds deploys the site from `release`. If the version was already on npm, it
+#      deploys right away. If the wait times out, approve the staged version, then
+#      re-run the failed deploy-site job from the workflow run page.
 #
 # Running this workflow manually only moves `release` to the given tag (redeploy or
 # roll back the site). It never publishes to npm.
@@ -39,6 +42,10 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    outputs:
+      name: ${{ steps.version.outputs.name }}
+      version: ${{ steps.version.outputs.version }}
+      published: ${{ steps.npm.outputs.published }}
     env:
       TAG: ${{ github.event.release.tag_name }}
     steps:
@@ -133,9 +140,31 @@ jobs:
       always() &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped') &&
       (github.event_name == 'workflow_dispatch' || github.event.release.prerelease == false)
+    # Covers the wait for npm approval below. 360 minutes is the GitHub-hosted maximum.
+    timeout-minutes: 360
     permissions:
       contents: write
     steps:
+      # Skipped when the version was already on npm before this run, and on manual runs,
+      # which redeploy a tag that has already shipped.
+      - name: Wait for the version to be published on npm
+        if: github.event_name == 'release' && needs.publish.outputs.published != 'true'
+        env:
+          NAME: ${{ needs.publish.outputs.name }}
+          VERSION: ${{ needs.publish.outputs.version }}
+        run: |
+          # Stop polling a little before the job timeout so the error below is shown.
+          DEADLINE=$(( $(date +%s) + 355 * 60 ))
+          echo "Waiting for $NAME@$VERSION on npm. Approve the staged version on npmjs.com."
+          until [ "$(npm view "$NAME@$VERSION" version --prefer-online 2>/dev/null)" = "$VERSION" ]; do
+            if [ "$(date +%s)" -ge "$DEADLINE" ]; then
+              echo "::error::$NAME@$VERSION is still not published on npm. Approve the staged version on npmjs.com (Staged Packages tab) or with npm stage approve, then re-run the failed deploy-site job."
+              exit 1
+            fi
+            sleep 30
+          done
+          echo "$NAME@$VERSION is published on npm."
+
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
