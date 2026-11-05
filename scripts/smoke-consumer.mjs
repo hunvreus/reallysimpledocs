@@ -79,10 +79,10 @@ writeJson(path.join(appDir, "package.json"), {
     build: "astro build",
   },
   dependencies: {
-    astro: "^6.4.6",
+    astro: "^7.4.5",
     "basecoat-css": "^1.0.1",
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
-    tailwindcss: "4.1.17",
+    tailwindcss: "4.3.4",
   },
 });
 
@@ -425,7 +425,7 @@ assertNotIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  '<footer> <a class="btn" data-variant="outline" data-size="sm" href="/docs/guide/"> More </a> </footer>',
+  '<footer><a class="btn" data-variant="outline" data-size="sm" href="/docs/guide/">More</a></footer>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),

@@ -151,3 +151,11 @@ Go to [reallysimpledocs.com](https://reallysimpledocs.com).
 ## License
 
 [MIT](LICENSE.md)
+
+### Publish to npm
+
+Configure GitHub Actions as a trusted publisher on npm for
+`hunvreus/reallysimpledocs` and workflow filename `publish.yml`. The workflow
+uses OIDC and needs no npm access token. After merging the release commit,
+push a tag matching the package version, such as `v1.1.0`. The workflow checks
+the tag and tests the packaged consumer before publishing.

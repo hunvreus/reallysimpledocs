@@ -1,6 +1,6 @@
 {
   "name": "reallysimpledocs",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "description": "A simple documentation system for Astro, built with Basecoat and Tailwind CSS.",
   "author": {
     "name": "hunvreus",
@@ -47,9 +47,9 @@
     "check": "npm run build && node scripts/assert-site-output.mjs && npm pack --dry-run && npm run smoke:consumer"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.2.0",
-    "@astrojs/mdx": "^6.0.3",
-    "@tailwindcss/vite": "4.1.17",
+    "@astrojs/markdown-remark": "^7.3.5",
+    "@astrojs/mdx": "^8.1.2",
+    "@tailwindcss/vite": "4.3.4",
     "github-slugger": "^2.0.0",
     "lucide-static": "^0.552.0",
     "lunr": "^2.3.9",
@@ -60,19 +60,22 @@
     "unified": "^11.0.5"
   },
   "peerDependencies": {
-    "astro": "^6.4.6",
+    "astro": "^7.2.10",
     "basecoat-css": "^1.0.1",
     "tailwindcss": ">=4.1.17 <5"
   },
   "devDependencies": {
     "@astrojs/sitemap": "^3.6.0",
-    "astro": "^6.4.6",
+    "astro": "^7.4.5",
     "basecoat-css": "^1.0.1",
     "htmx.org": "^2.0.10",
-    "tailwindcss": "4.1.17"
+    "tailwindcss": "4.3.4"
   },
   "overrides": {
     "esbuild": "^0.28.1",
     "picomatch": "^4.0.4"
+  },
+  "engines": {
+    "node": ">=22.23.4"
   }
 }
