@@ -291,6 +291,14 @@ run("npm", ["run", "build"], { cwd: appDir });
 
 assertFile(path.join(appDir, "dist", "docs", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "guide", "index.html"));
+const guideHtml = fs.readFileSync(path.join(appDir, "dist", "docs", "guide", "index.html"), "utf8");
+for (const asset of ["all.min.", "lunr.min."]) {
+  const script = Array.from(guideHtml.matchAll(/<script[^>]+src="([^"]+)"/g))
+    .find(([, src]) => path.basename(src).startsWith(asset));
+  if (!script) throw new Error(`Missing browser script: ${asset}`);
+  assertFile(path.join(appDir, "dist", script[1]));
+}
+
 assertFile(path.join(appDir, "dist", "docs", "interactive", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "deep", "nested", "index.html"));
 assertFile(path.join(appDir, "dist", "outside", "index.html"));
