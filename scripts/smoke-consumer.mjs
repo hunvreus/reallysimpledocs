@@ -524,7 +524,11 @@ assertSearchBodyHasNoHtml(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "guide", "index.html"),
-  "Beta",
+  '<span class="min-w-0 truncate">Guide</span>',
+);
+assertIncludes(
+  path.join(appDir, "dist", "docs", "guide", "index.html"),
+  '<span class="ms-auto inline-flex shrink-0 items-center gap-1"><span class="badge" data-variant="outline">Beta</span>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "guide", "index.html"),
