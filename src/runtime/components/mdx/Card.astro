@@ -4,6 +4,6 @@ const Tag = href ? "a" : "article";
 ---
 
 <Tag href={href} class:list={["docs-card", href && "docs-card-link", className]}>
-  {title && <h3>{title}</h3>}
+  {title && <h3 class="mt-0">{title}</h3>}
   {description && <p>{description}</p>}
 </Tag>

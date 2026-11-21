@@ -1,4 +1,6 @@
 ---
+import { renderApiMarkdown } from "../lib/api-markdown.js";
+import ApiReference from "../components/ApiReference.astro";
 import config from "virtual:reallysimpledocs/config";
 import { getMdxPage } from "virtual:reallysimpledocs/mdx-pages";
 import * as RsdComponents from "../../components/index.js";
@@ -17,9 +19,21 @@ const { page } = Astro.props;
 const isMdx = page.extension === ".mdx";
 const mdxModule = isMdx ? await getMdxPage(page.slug) : null;
 const MdxContent = mdxModule?.Content || mdxModule?.default;
-const doc = isMdx ? { page, headings: getDocHeadings(config, page), html: "" } : await renderDoc(config, page);
+const overview = page.api ? renderApiMarkdown(page.api.description, 'api-overview') : null;
+const servers = page.api?.spec.servers || [];
+const schemes = Object.entries(page.api?.spec.components?.securitySchemes || {});
+const apiHeadings = page.api ? [
+  ...(servers.length ? [{ depth: 2, id: 'api-servers', text: 'Servers' }] : []),
+  ...overview.headings,
+  ...(schemes.length ? [{ depth: 2, id: 'api-authentication', text: 'Authentication schemes' }] : []),
+  ...page.api.groups.flatMap(group => [
+    { depth: 2, id: group.id, text: group.name },
+    ...group.operations.map(operation => ({ depth: 3, id: operation.id, text: operation.title })),
+  ]),
+] : [];
+const doc = page.api ? { headings: apiHeadings, html: "" } : isMdx ? { page, headings: getDocHeadings(config, page), html: "" } : await renderDoc(config, page);
 ---
 
 <DocsLayout page={page} headings={doc.headings}>
-  {MdxContent ? <MdxContent components={RsdComponents} /> : <Fragment set:html={doc.html} />}
+  {page.api ? <ApiReference api={page.api} overview={overview.html} /> : MdxContent ? <MdxContent components={RsdComponents} /> : <Fragment set:html={doc.html} />}
 </DocsLayout>

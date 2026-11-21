@@ -1,0 +1,5 @@
+---
+import { renderApiMarkdown } from "../lib/api-markdown.js";
+const { text } = Astro.props;
+---
+{text && <div set:html={renderApiMarkdown(text).html} />}

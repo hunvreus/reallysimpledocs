@@ -165,3 +165,22 @@ You can also use `page` instead of `slug`.
   ]
 }
 ```
+
+## Try the OpenAPI POC
+
+An experimental `openapi` item expands a local OpenAPI 3 JSON or YAML file into one service reference grouped by operation tags:
+
+```json
+{
+  "type": "openapi",
+  "label": "Accounts API",
+  "source": "./api/accounts.yaml",
+  "slug": "api/accounts"
+}
+```
+
+Place it inside a group's `items`. The source path is relative to `docs/docs.json`; `slug` sets the generated route prefix. Operation IDs become section anchors. Without an operation ID, the method and path provide a fallback. Tag definitions supply group descriptions and ordering; untagged operations appear under “Other”. The sample reference is linked under “OpenAPI POC”.
+
+The POC renders JSON request bodies and responses, path/query/header parameter definitions, nested object and array fields, enums, defaults, and local `$ref` pointers. The generated reference joins navigation, search, and Markdown exports. It uses the existing site layout.
+
+This is a visual prototype, not complete OpenAPI support. Plain enums show a list of values. For per-value descriptions in OpenAPI 3.1, use `oneOf` or `anyOf` with a `const` and `description` per choice. External references, general schema composition, non-JSON bodies, full validation, and interactive requests are not included. The reference renders Markdown descriptions, operation auth requirements and scopes, OAuth flow metadata, response headers, and inline JSON examples. Request examples can show a bearer token; they do not perform OAuth. nested definitions stop after six levels.

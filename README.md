@@ -151,3 +151,5 @@ Go to [reallysimpledocs.com](https://reallysimpledocs.com).
 ## License
 
 [MIT](LICENSE.md)
+
+Documentation typography uses the upstream [shadcn/ui Typeset](https://ui.shadcn.com/typeset) stylesheet in `src/css/typeset.css`, with only its scope renamed to `.prose`. The `.prose` wrapper is the documentation scope; use `not-typeset` or `data-not-typeset` to opt embedded UI out. Code-frame and Basecoat component styling remain separate.

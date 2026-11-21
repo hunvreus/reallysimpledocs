@@ -1,0 +1,53 @@
+---
+import ApiMarkdown from "./ApiMarkdown.astro";
+import ChevronRight from "lucide-static/icons/chevron-right.svg?raw";
+import { resolveSchema } from '../lib/openapi.js';
+const { spec, schema = {}, depth = 0, prefix = 'field' } = Astro.props;
+const value = resolveSchema(spec, schema);
+---
+<dl class:list={["not-prose m-0 divide-y text-sm", depth === 0 && "border-y"]}>
+  {Object.entries(value.properties || {}).map(([name, field]) => {
+    const prop = resolveSchema(spec, field);
+    const child = resolveSchema(spec, prop.items || prop);
+    const enumSchema = prop.type === 'array' ? child : prop;
+    const choices = enumSchema.oneOf ?? enumSchema.anyOf;
+    const options = Array.isArray(enumSchema.enum)
+      ? enumSchema.enum.map(value => ({ value }))
+      : choices?.length && choices.every(choice => choice && Object.hasOwn(choice, 'const'))
+        ? choices.map(choice => ({ value: choice.const, description: choice.description }))
+        : [];
+    const id = `${prefix}-${name}`;
+    return <div class="scroll-mt-20 py-4" id={id}>
+      <dt class="m-0 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+        <a href={`#${id}`} class="font-mono font-semibold text-foreground no-underline hover:underline">{name}</a>
+        <span class="text-xs text-muted-foreground">{prop.type === 'array' ? `array of ${child.type || 'object'}s` : prop.type || 'object'}{prop.format ? ` · ${prop.format}` : ''}</span>
+        {prop.default !== undefined && <span class="text-xs text-foreground">Default: <code>{JSON.stringify(prop.default)}</code></span>}
+        {value.required?.includes(name) && <span class="badge" data-variant="secondary">required</span>}
+        {prop.readOnly && <span class="badge" data-variant="secondary">read only</span>}
+      </dt>
+      <dd class="m-0 grid p-0 text-foreground">
+        {prop.description && <div class="mt-1 leading-6 text-foreground/85 [&_p:first-child]:mt-0"><ApiMarkdown text={prop.description} /></div>}
+        {options.length > 0 && <div class="mt-3 overflow-hidden rounded-md border">
+          <p class="m-0 flex min-h-8 items-center border-b px-2.5 text-sm font-medium text-muted-foreground">Possible values</p>
+          <ul class="m-0 list-none divide-y p-0">
+            {options.map(option => <li class="m-0 flex flex-col items-start gap-1 ps-2.5 pe-2.5 py-3">
+              <code class="text-xs text-foreground">{String(option.value)}</code>
+              {option.description && <p class="m-0 leading-6">{option.description}</p>}
+            </li>)}
+          </ul>
+        </div>}
+        {child.properties && depth < 6 && <details class="[&[open]>summary>svg]:rotate-90 [&[open]>summary>.api-show]:hidden [&[open]>summary>.api-hide]:inline mt-3 max-w-full">
+          <summary class="btn w-fit list-none text-muted-foreground hover:text-foreground focus-visible:text-foreground [&::-webkit-details-marker]:hidden" data-variant="outline" data-size="sm">
+            <Fragment set:html={ChevronRight.replace('<svg', '<svg aria-hidden="true" data-icon="inline-start"')} />
+            <span class="api-show">Show child fields</span>
+            <span class="api-hide hidden">Hide child fields</span>
+          </summary>
+          <div class="mt-2 rounded-md border px-3">
+          <Astro.self spec={spec} schema={child} depth={depth + 1} prefix={id} />
+          </div>
+        </details>}
+        {depth >= 6 && child.properties && <p class="m-0 mt-3 text-muted-foreground">Further nested fields omitted in this POC.</p>}
+      </dd>
+    </div>;
+  })}
+</dl>

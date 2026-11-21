@@ -1,0 +1,70 @@
+---
+import ApiMarkdown from './ApiMarkdown.astro';
+import ApiOperation from './ApiOperation.astro';
+import { resolveSchema } from '../lib/openapi.js';
+const { api, overview } = Astro.props;
+const servers = api.spec.servers || [];
+---
+{servers.length > 0 && <section>
+  <h2 id="api-servers">Servers</h2>
+  {servers.length === 1 ? <>
+    <p><code>{servers[0].url}</code></p>
+    <ApiMarkdown text={servers[0].description} />
+  </> : <ul>{servers.map(server => <li><code>{server.url}</code><ApiMarkdown text={server.description} /></li>)}</ul>}
+</section>}
+{overview && <div set:html={overview} />}
+{Object.keys(api.spec.components?.securitySchemes || {}).length > 0 && <h2 id="api-authentication">Authentication schemes</h2>}
+{Object.entries(api.spec.components?.securitySchemes || {}).map(([name, entry]) => {
+  const scheme = resolveSchema(api.spec, entry);
+  return <section class="mt-6">
+    <h3>{scheme.type === 'oauth2' ? 'OAuth 2.0 configuration' : name}</h3>
+    <ApiMarkdown text={scheme.description} />
+    {scheme.openIdConnectUrl && <p>Discovery URL: <code>{scheme.openIdConnectUrl}</code></p>}
+    {Object.entries(scheme.flows || {}).map(([flow, config]) => <>
+      <h4>{flow === 'authorizationCode' ? 'Authorization code' : flow}</h4>
+      <ul>
+        {config.authorizationUrl && <li>Authorization URL: <code>{config.authorizationUrl}</code></li>}
+        {config.tokenUrl && <li>Token URL: <code>{config.tokenUrl}</code></li>}
+        {config.refreshUrl && <li>Refresh URL: <code>{config.refreshUrl}</code></li>}
+        {Object.entries(config.scopes || {}).map(([scope, description]) => <li><code>{scope}</code> — {description}</li>)}
+      </ul>
+    </>)}
+  </section>;
+})}
+{api.groups.map(group => <section aria-labelledby={group.id}>
+  <h2 class="mt-12 mb-6 scroll-mt-20" id={group.id}><a class="header-anchor" href={`#${group.id}`}>{group.name}</a></h2>
+  <ApiMarkdown text={group.description} />
+  <div class="mt-4">
+    {group.operations.map(operation => <ApiOperation api={operation} />)}
+  </div>
+</section>)}
+<script>
+  function revealOperation(hash: string) {
+    let id;
+    try {
+      id = decodeURIComponent(hash.slice(1));
+    } catch {
+      return;
+    }
+    const target = document.getElementById(id);
+    const operation = target?.closest<HTMLDetailsElement>("details[data-api-operation]");
+    if (!target || !operation) return;
+
+    operation.open = true;
+    return target;
+  }
+
+  function revealLinkedOperation() {
+    revealOperation(location.hash)?.scrollIntoView();
+  }
+
+  document.addEventListener("click", event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element && event.target.closest<HTMLAnchorElement>('[href^="#"]');
+    if (link) revealOperation(link.hash);
+  });
+
+  window.addEventListener("hashchange", revealLinkedOperation);
+  document.addEventListener("htmx:afterSwap", revealLinkedOperation);
+  revealLinkedOperation();
+</script>

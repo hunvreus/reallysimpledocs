@@ -36,4 +36,10 @@ assertIncludes(
   '<meta property="og:description" content="Learn how ReallySimpleDocs turns Markdown and MDX files into documentation pages.">',
 );
 
+const accountsPage = "dist/api/accounts/index.html";
+for (const id of ["list-accounts", "create-account", "retrieve-account", "check-health"]) {
+  assertIncludes(accountsPage, `<details id="${id}" data-api-operation`);
+  assertIncludes(accountsPage, `href="#${id}"`);
+}
+
 console.log("Site output assertions passed.");

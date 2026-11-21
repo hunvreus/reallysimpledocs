@@ -33,6 +33,18 @@
         },
         { "slug": "customization", "icon": "slidersVertical" }
       ]
+    },
+    {
+      "type": "group",
+      "label": "OpenAPI POC",
+      "items": [
+        {
+          "type": "openapi",
+          "label": "Accounts API",
+          "source": "./api/accounts.yaml",
+          "slug": "api/accounts"
+        }
+      ]
     }
   ]
 }

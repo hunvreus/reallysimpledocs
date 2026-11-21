@@ -1,0 +1,303 @@
+openapi: 3.1.0
+info:
+  title: Example Accounts API
+  version: 1.0.0
+  description: |
+    Manage accounts and check service availability.
+
+    ## Authentication and discovery
+
+    Obtain an OAuth access token and send it in the `Authorization: Bearer` header.
+    Clients that discover the authorization server can start with the
+    [protected resource metadata](https://api.example.com/.well-known/oauth-protected-resource).
+    Each operation below lists the scopes it requires.
+
+    ## Errors and retries
+
+    Error bodies include a machine-readable `code` and a human-readable `message`.
+    Use the code in your application logic. For **429** responses, wait for the
+    number of seconds in `Retry-After` before trying again.
+
+    When retrying account creation after a timeout, reuse the same
+    `Idempotency-Key` and the same request body.
+tags:
+  - name: Accounts
+    description: Create and retrieve accounts for people and businesses.
+  - name: Service
+    description: Check whether the service is available.
+servers:
+  - url: https://api.example.com/v1
+security:
+  - accountsOAuth: [accounts:read]
+components:
+  securitySchemes:
+    accountsOAuth:
+      type: oauth2
+      description: Send the access token in the `Authorization` header.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.example.com/oauth/authorize
+          tokenUrl: https://auth.example.com/oauth/token
+          scopes:
+            accounts:read: List and retrieve accounts.
+            accounts:write: Create accounts.
+  responses:
+    Unauthorized:
+      description: The access token is missing, invalid, or expired. Obtain a fresh token before retrying.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: invalid_token
+            message: The access token has expired.
+    RateLimited:
+      description: Too many requests. Wait for the delay in `Retry-After` before retrying.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait.
+          schema:
+            type: integer
+            minimum: 1
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rate_limited
+            message: Try again in 30 seconds.
+  schemas:
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          description: Stable machine-readable error code.
+        message:
+          type: string
+          description: A human-readable explanation of the error.
+    Address:
+      type: object
+      required: [country]
+      properties:
+        line1:
+          type: string
+          description: Street address, apartment, or building name.
+        city:
+          type: string
+          description: City, district, or town.
+        country:
+          type: string
+          description: Two-letter ISO country code.
+          example: SG
+        postal_code:
+          type: string
+          description: ZIP or postal code.
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          description: Unique identifier for the account.
+        email:
+          type: string
+          format: email
+          description: The account owner's email address.
+        status:
+          type: string
+          oneOf:
+            - const: pending
+              description: The account is awaiting activation.
+            - const: active
+              description: The account is active and can be used.
+            - const: closed
+              description: The account is closed and can no longer be used.
+          description: Current state of the account.
+        address:
+          $ref: '#/components/schemas/Address'
+paths:
+  /accounts:
+    post:
+      operationId: create-account
+      summary: Create an account
+      description: |
+        Create an account for a person or business. New accounts start in the `pending` state.
+
+        **Safe retries:** If a connection drops before you receive a response, send the
+        same body with the same idempotency key. Use a new key for a different account.
+      security:
+        - accountsOAuth: [accounts:write]
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          description: A unique key for this write. Reuse it when retrying the same request.
+          schema:
+            type: string
+          example: create-acct-8f24
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address associated with this account. We use this address for important account updates.
+                name:
+                  type: string
+                  description: The full name of the person or business.
+                address:
+                  $ref: '#/components/schemas/Address'
+                preferences:
+                  type: object
+                  description: Configure how this account receives updates.
+                  properties:
+                    locale:
+                      type: string
+                      default: en
+                      enum: [en, fr, de]
+                      description: Preferred language for notifications.
+                    notifications:
+                      type: object
+                      description: Choose which notifications to receive.
+                      properties:
+                        email:
+                          type: boolean
+                          default: true
+                          description: Receive account updates by email.
+            example:
+              email: alex@example.com
+              name: Alex Morgan
+              address:
+                country: SG
+                city: Singapore
+      responses:
+        '201':
+          description: Returns the newly created account. The `Location` header points to its resource URL.
+          headers:
+            Location:
+              description: URL of the newly created account.
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+              example:
+                id: acct_8f24
+                email: alex@example.com
+                status: pending
+                address:
+                  country: SG
+                  city: Singapore
+        '400':
+          description: One or more request fields are invalid. Correct the input before retrying.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidEmail:
+                  summary: Invalid email
+                  value:
+                    code: invalid_email
+                    message: Provide a valid email address.
+                missingEmail:
+                  summary: Missing email
+                  value:
+                    code: missing_email
+                    message: Email is required.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    get:
+      operationId: list-accounts
+      summary: List accounts
+      description: Returns accounts in reverse chronological order. Use the cursor to retrieve the next page of results.
+      tags: [Accounts]
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of accounts to return (between 1 and 100).
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: starting_after
+          in: query
+          description: Account ID to use as the pagination cursor.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Accounts retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Accounts on this page.
+                    items:
+                      $ref: '#/components/schemas/Account'
+                  has_more:
+                    type: boolean
+                    description: Whether more accounts are available.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /accounts/{id}:
+    get:
+      operationId: retrieve-account
+      summary: Retrieve an account
+      description: Retrieve the details of an existing account using its unique identifier.
+      tags: [Accounts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The identifier of the account to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /health:
+    get:
+      operationId: check-health
+      summary: Check service health
+      description: Returns the current availability of the API.
+      tags: [Service]
+      security: []
+      responses:
+        '200':
+          description: Service available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [ok]
+                    description: Current availability of the service.

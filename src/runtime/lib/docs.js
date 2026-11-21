@@ -1,3 +1,4 @@
+import { loadApi, apiMarkdown } from "./openapi.js";
 import fs from "node:fs";
 import path from "node:path";
 import { marked } from "marked";
@@ -12,7 +13,15 @@ import { markdownPath, routePath } from "./paths.js";
 
 export function getManifest(config) {
   const manifestPath = path.join(config.docsDir, "docs.json");
-  return JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  const expand = (items) => (items || []).map((item) => {
+    if (item?.type === "openapi") {
+      const api = loadApi(config.docsDir, item);
+      return { slug: api.slug, label: api.title, api };
+    }
+    return item?.items ? { ...item, items: expand(item.items) } : item;
+  });
+  return { ...manifest, menu: expand(manifest.menu) };
 }
 
 export const fallbackLabelFromSlug = (slug) => {
@@ -56,7 +65,12 @@ export function flattenMenuSlugs(menu) {
 
 export function getPages(config) {
   const manifest = getManifest(config);
+  const apis = new Map();
+  const collect = (items) => { for (const item of items || []) { if (item.api) apis.set(item.slug, item.api); if (item.items) collect(item.items); } };
+  collect(manifest.menu);
   return flattenMenuSlugs(manifest.menu || []).map((slug) => {
+    const api = apis.get(slug);
+    if (api) return { slug, api, title: api.title, description: api.description, extension: ".openapi", path: routePath(config.routeBase, slug), markdownPath: markdownPath(config.routeBase, slug) };
     const { file, filePath, extension } = resolveDocFile(config, slug);
     const source = fs.readFileSync(filePath, "utf8");
     const parsed = parseDocMarkdown(source, fallbackLabelFromSlug(slug));
@@ -78,6 +92,7 @@ export function getPage(config, slug) {
 }
 
 export function getDocMarkdown(config, page) {
+  if (page.api) return apiMarkdown(page.api);
   const filePath = path.resolve(config.docsDir, page.file);
   const docsRoot = path.resolve(config.docsDir);
   const relativePath = path.relative(docsRoot, filePath);

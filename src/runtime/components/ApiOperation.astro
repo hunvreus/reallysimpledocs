@@ -1,0 +1,102 @@
+---
+import ChevronDown from "lucide-static/icons/chevron-down.svg?raw";
+import { methodColors, successBadgeColor } from "../lib/api-method-colors.js";
+import ApiMarkdown from './ApiMarkdown.astro';
+import ApiFields from './ApiFields.astro';
+import Code from './mdx/Code.astro';
+import { resolveSchema } from '../lib/openapi.js';
+const { api } = Astro.props;
+const prefix = api.id;
+const color = methodColors[api.method];
+const parameters = Object.groupBy(
+  api.parameters.map(parameter => resolveSchema(api.spec, parameter)),
+  parameter => parameter.in,
+);
+const parameterLabels = { path: "URL path", header: "Request headers", cookie: "Cookies" };
+const body = resolveSchema(api.spec, api.requestBody || {});
+const media = body.content?.['application/json'];
+const server = api.spec.servers?.[0]?.url || 'https://api.example.com';
+const security = api.security ?? api.spec.security ?? [];
+const schemes = api.spec.components?.securitySchemes || {};
+const bearer = Object.keys(security[0] || {}).some(name => {
+  const scheme = resolveSchema(api.spec, schemes[name]);
+  return scheme.scheme === 'bearer' || ['oauth2', 'openIdConnect'].includes(scheme.type);
+});
+const auth = bearer ? " \\\n  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN'" : '';
+const request = `curl -X ${api.method} '${server}${api.url}'${auth}${media ? ` \\\n  -H 'Content-Type: application/json'${media.example ? ` \\\n  -d '${JSON.stringify(media.example, null, 2)}'` : ''}` : ''}`;
+const responses = Object.entries(api.responses || {});
+const groups = [
+  { title: 'Returns', id: 'responses', entries: responses.filter(([status]) => /^2(?:[0-9]{2}|XX)$/.test(status)) },
+  { title: 'Errors', id: 'errors', entries: responses.filter(([status]) => /^[45](?:[0-9]{2}|XX)$/.test(status)) },
+  { title: 'Other responses', id: 'other-responses', entries: responses.filter(([status]) => !/^[245](?:[0-9]{2}|XX)$/.test(status)) },
+];
+---
+<details id={prefix} data-api-operation class="group/operation scroll-mt-20 border-b">
+  <summary class="not-prose flex cursor-pointer list-none items-center gap-3 rounded-sm py-3 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+    <span class="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 gap-y-1">
+      <span class:list={["badge border-0 font-mono font-semibold uppercase", color]} data-variant={color === undefined ? "secondary" : "destructive"}>{api.method}</span>
+      <span class="break-all font-mono text-sm">{api.url}</span>
+      <span class="text-sm text-muted-foreground">{api.title}</span>
+    </span>
+    <span aria-hidden="true" class="shrink-0 text-muted-foreground group-open/operation:rotate-180 [&>svg]:size-4" set:html={ChevronDown} />
+  </summary>
+  <div class="space-y-5 pb-5 pt-2">
+{!security.length ? <p class="m-0 text-sm">No authentication required.</p> : <div class="space-y-1 text-sm">
+  {security.map((requirement, alternative) => <div>
+    <a href="#api-authentication" class="header-anchor font-medium">{alternative ? "Or use:" : "Authentication:"}</a>{" "}
+    {Object.keys(requirement).length === 0 ? 'Anonymous access' : Object.entries(requirement).map(([name, scopes], index) => {
+      const scheme = resolveSchema(api.spec, schemes[name]);
+      return <>
+        <strong>{index > 0 && 'And '}{scheme.type === 'oauth2' ? 'OAuth 2.0' : scheme.type === 'openIdConnect' ? 'OpenID Connect' : name}</strong>
+        {scopes.length > 0 && <> · Scopes: {scopes.map((scope, i) => <>{i > 0 && ', '}<code>{scope}</code></>)}</>}
+      </>;
+    })}
+  </div>)}
+</div>}
+<ApiMarkdown text={api.description} />
+<h4 class="pt-5" id={`${prefix}-parameters`}>Parameters</h4>
+{Object.entries(parameters).map(([location, fields]) => (
+  <section class="not-prose">
+    {location !== "query" && <p class="mb-2 text-xs uppercase tracking-wide text-muted-foreground">{parameterLabels[location] || location}</p>}
+    <ApiFields spec={api.spec} schema={{
+      properties: Object.fromEntries(fields.map(p => [p.name, { ...p.schema, description: p.description }])),
+      required: fields.filter(p => p.required).map(p => p.name),
+    }} prefix={`${prefix}-${location}`} />
+  </section>
+))}
+{media && <ApiFields spec={api.spec} schema={media.schema} prefix={`${prefix}-request`} />}
+{!media && !api.parameters.length && <p>This endpoint takes no parameters.</p>}
+<h4 class="pt-5" id={`${prefix}-request-example`}>Request example</h4>
+<Code lang="bash" code={request} />
+{groups.filter(group => group.entries.length).map(group => <>
+  <h4 class="pt-5" id={`${prefix}-${group.id}`}>{group.title}</h4>
+  {group.entries.map(([status, response]) => {
+    const r = resolveSchema(api.spec, response);
+    const content = r.content?.['application/json'];
+    const success = group.id === 'responses';
+    const variant = success || group.id === 'errors' ? 'destructive' : 'secondary';
+    return <section id={`${prefix}-response-${status}`} class="scroll-mt-20">
+      <div class="mb-4 flex items-start gap-2">
+        <span class:list={["badge mt-1 shrink-0 font-mono", success && successBadgeColor]} data-variant={variant}>{status}</span>
+        <div class="min-w-0 [&_p:first-child]:mt-0"><ApiMarkdown text={r.description} /></div>
+      </div>
+      {r.headers && <>
+        <h5>Response headers</h5>
+        <ApiFields spec={api.spec} schema={{
+          properties: Object.fromEntries(Object.entries(r.headers).map(([name, value]) => {
+            const header = resolveSchema(api.spec, value);
+            return [name, { ...resolveSchema(api.spec, header.schema), description: header.description }];
+          })),
+        }} prefix={`${prefix}-response-${status}-headers`} />
+      </>}
+      {content?.schema && <ApiFields spec={api.spec} schema={content.schema} prefix={`${prefix}-response-${status}`} />}
+      {content?.example !== undefined && <Code lang="json" title="Response example" code={JSON.stringify(content.example, null, 2)} />}
+      {Object.entries(content?.examples || {}).map(([name, example]) => {
+        const item = resolveSchema(api.spec, example);
+        return item.value !== undefined && <Code lang="json" title={item.summary || name} code={JSON.stringify(item.value, null, 2)} />;
+      })}
+    </section>;
+  })}
+</>)}
+</div>
+</details>
