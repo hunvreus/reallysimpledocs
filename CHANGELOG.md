@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Updated Basecoat to 1.2.1 and raised its minimum supported version accordingly.
+- Requires Tailwind CSS 4.3 or newer within version 4 to compile Basecoat’s source stylesheets.
+
 ## 1.1.0 — 2026-11-21
 
 ### Upgrading
