@@ -422,8 +422,8 @@ async function highlightToken(token, shiki = {}) {
 function normalizeShikiConfig(value = {}) {
   return {
     themes: {
-      light: "github-light-default",
-      dark: "vesper",
+      light: "github-light",
+      dark: "github-dark",
       ...(value.themes || {}),
     },
     defaultColor: value.defaultColor ?? false,

@@ -33,8 +33,8 @@ const normalizeBoolean = (value, fallback = true) => (value === undefined ? fall
 
 const defaultShikiConfig = {
   themes: {
-    light: "github-light-default",
-    dark: "vesper",
+    light: "github-light",
+    dark: "github-dark",
   },
   defaultColor: false,
 };

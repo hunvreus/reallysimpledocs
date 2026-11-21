@@ -109,8 +109,8 @@ The default is:
 ```js
 {
   themes: {
-    light: "github-light-default",
-    dark: "vesper",
+    light: "github-light",
+    dark: "github-dark",
   },
   defaultColor: false,
 }
@@ -330,7 +330,7 @@ npm install htmx.org
 Use `bodyAttrs` to boost links into the docs content container.
 Because the sidebar is outside `#content`, update its current-page state from `Head` after htmx swaps:
 
-<Tabs variant="line">
+<Tabs>
 <Tab title="astro.config.mjs">
 
 ```js

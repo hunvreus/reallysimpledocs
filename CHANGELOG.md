@@ -4,8 +4,6 @@
 
 ### Changed
 
-- Match shadcn/ui syntax highlighting with GitHub Light Default and Vesper. Use line tabs for tabbed code examples.
-
 - Default to Basecoat Nova and use Basecoat Typeset for document typography. Cards and callouts use native component styling; warnings use the neutral alert style.
 
 - Code blocks and tabs use standard Basecoat styling and behavior. Fenced examples use the same code blocks as `Code`, with optional titles and an actions slot.
