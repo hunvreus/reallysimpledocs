@@ -89,7 +89,7 @@ reallySimpleDocs({
 });
 ```
 
-Use `components.Head` to add tags to `<head>`. RSD's built-in metadata, theme setup, Basecoat JavaScript, copy-code behavior, and search behavior still render.
+Use `components.Head` to add tags to `<head>`. RSD's built-in metadata, theme setup, Basecoat JavaScript (including code copying), and search behavior still render.
 
 Use `customCss` for project CSS imported after Basecoat and RSD styles:
 
@@ -104,7 +104,6 @@ Use `css: false` only when you provide the full Tailwind/Basecoat/RSD stylesheet
 
 ```css
 @import "reallysimpledocs/css";
-@import "reallysimpledocs/css/styles/vega";
 ```
 
 ## Search outside docs

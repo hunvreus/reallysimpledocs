@@ -40,7 +40,6 @@ const defaultValue = normalizedTabs[0]?.value;
             id={`${id}-panel-${index + 1}`}
             aria-labelledby={`${id}-tab-${index + 1}`}
             tabindex="-1"
-            aria-selected={selected ? "true" : "false"}
             hidden={!selected}
           >
             <Fragment set:html={await Astro.slots.render(tab.slot)} />

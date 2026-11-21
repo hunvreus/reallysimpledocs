@@ -9,23 +9,36 @@ ReallySimpleDocs is an Astro integration. Add it to an existing Astro site, or c
 <Steps>
   <Step title="Install packages">
 
-<CodeGroup>
-```bash title="npm"
+<Tabs>
+<Tab title="npm">
+
+```bash
 npm install reallysimpledocs basecoat-css tailwindcss
 ```
 
-```bash title="pnpm"
+</Tab>
+<Tab title="pnpm">
+
+```bash
 pnpm add reallysimpledocs basecoat-css tailwindcss
 ```
 
-```bash title="yarn"
+</Tab>
+<Tab title="yarn">
+
+```bash
 yarn add reallysimpledocs basecoat-css tailwindcss
 ```
 
-```bash title="bun"
+</Tab>
+<Tab title="bun">
+
+```bash
 bun add reallysimpledocs basecoat-css tailwindcss
 ```
-</CodeGroup>
+
+</Tab>
+</Tabs>
 
   </Step>
   <Step title="Add the Astro integration">
@@ -47,14 +60,19 @@ export default defineConfig({
 
   </Step>
   <Step title="Create docs">
-<CodeGroup>
-```md title="docs/index.md"
+<Tabs>
+<Tab title="docs/index.md">
+
+```md
 # Introduction
 
 Welcome to the docs.
 ```
 
-```json title="docs/docs.json"
+</Tab>
+<Tab title="docs/docs.json">
+
+```json
 {
   "menu": [
     {
@@ -65,7 +83,9 @@ Welcome to the docs.
   ]
 }
 ```
-</CodeGroup>
+
+</Tab>
+</Tabs>
   </Step>
   <Step title="Run Astro">
 
@@ -89,7 +109,7 @@ docs/
 
 Use `docs/docs.json` to manage [navigation](/navigation/). Add Markdown and MDX files as [pages](/pages/).
 
-Use `.mdx` only when a page needs richer [components](/components): `Callout`, `Code`, `CodeGroup`, `Preview`, `Tabs`, `Steps`, `Card`, or `CardGrid`.
+Use `.mdx` only when a page needs richer [components](/components): `Callout`, `Code`, `Preview`, `Tabs`, `Steps`, `Card`, or `CardGrid`.
 
 ReallySimpleDocs also wires up
 
@@ -105,23 +125,36 @@ For themes, custom CSS, assets, and component overrides, see [Customization](/cu
 
 Update ReallySimpleDocs and its peer packages together:
 
-<CodeGroup>
-```bash title="npm"
+<Tabs>
+<Tab title="npm">
+
+```bash
 npm install reallysimpledocs basecoat-css tailwindcss
 ```
 
-```bash title="pnpm"
+</Tab>
+<Tab title="pnpm">
+
+```bash
 pnpm add reallysimpledocs basecoat-css tailwindcss
 ```
 
-```bash title="yarn"
+</Tab>
+<Tab title="yarn">
+
+```bash
 yarn add reallysimpledocs basecoat-css tailwindcss
 ```
 
-```bash title="bun"
+</Tab>
+<Tab title="bun">
+
+```bash
 bun add reallysimpledocs basecoat-css tailwindcss
 ```
-</CodeGroup>
+
+</Tab>
+</Tabs>
 
 Then rebuild:
 

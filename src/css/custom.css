@@ -42,15 +42,6 @@
   code:not(pre > code) {
     @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[13px];
   }
-  pre {
-    @apply rounded-lg;
-  }
-  pre > code {
-    @apply block min-w-full w-max px-4 py-3 text-[13px];
-  }
-  pre:has(> code) {
-    @apply max-w-full overflow-x-auto;
-  }
   > blockquote {
     @apply border-l-4 border-border pl-4;
   }
@@ -106,12 +97,7 @@
 
 .shiki,
 .astro-code {
-  @apply bg-muted/50;
-  background-color: color-mix(
-    in oklab,
-    var(--color-muted) 50%,
-    transparent
-  ) !important;
+  background-color: transparent !important;
   color: var(--shiki-light);
 }
 
@@ -168,66 +154,14 @@ html.dark .astro-code span {
   @apply text-amber-700 dark:text-amber-300;
 }
 
-.code-frame,
-.tabs-frame {
-  @apply relative my-6 w-full max-w-full rounded-lg;
+/* Document spacing surrounds components; Basecoat owns their internal layout. */
+.prose > .code-block,
+.prose > .tabs {
+  @apply my-6;
 }
 
-.code-frame > header {
-  @apply flex h-10 items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
-  scrollbar-width: none;
-}
-
-.tabs-frame > header {
-  @apply flex items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
-  scrollbar-width: none;
-}
-
-.code-frame > header::-webkit-scrollbar,
-.tabs-frame > header::-webkit-scrollbar {
-  display: none;
-}
-
-.code-block {
-  @apply relative my-6 w-full max-w-full overflow-hidden rounded-lg;
-}
-
-.code-block > pre {
-  @apply my-0 max-w-full overflow-x-auto rounded-none border-0;
-}
-
-.code-block > pre > code {
-  @apply block min-w-full w-max px-4 py-3 text-[13px];
-}
-
-.code-block > .shiki {
-  @apply my-0 rounded-none border-0;
-}
-
-.code-block > button {
-  @apply absolute right-2.5 top-2.5 z-10 [&_svg]:size-4 flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none bg-muted/50 dark:bg-muted/25 backdrop-blur-sm hover:text-foreground transition-colors;
-}
-
-.code-frame > .code-block,
-.tabs-frame > [data-code-panel] .code-block {
-  @apply my-0 min-w-0 rounded-none rounded-b-[inherit];
-}
-
-.tabs-frame {
-  @apply overflow-visible;
-}
-
-.code-frame {
-  @apply overflow-hidden;
-}
-
-.tabs-frame > [role="tabpanel"] {
-  @apply rounded-b-[inherit];
-}
-
-.tabs-frame > [data-preview-panel] {
-  @apply flex min-h-64 items-center justify-center p-6 bg-muted/50 dark:bg-muted/25;
-}
+.prose .tabs > [role="tabpanel"] > :first-child { margin-top: 0; }
+.prose .tabs > [role="tabpanel"] > :last-child { margin-bottom: 0; }
 
 .steps {
   @apply mb-12 mt-6 md:ml-4 md:border-l md:pl-8;
@@ -277,7 +211,7 @@ html.dark .astro-code span {
   @apply mt-2;
 }
 
-.steps > section > :where(.code-frame, .code-block, .tabs-frame) {
+.steps > section > :where(.code-block, .tabs) {
   @apply my-3;
 }
 
@@ -297,7 +231,7 @@ html.dark .astro-code span {
 .prose > .docs-card,
 .prose > .grid,
 .prose > .tabs,
-.prose > .tabs-frame {
+.prose > .tabs {
   @apply my-6;
 }
 

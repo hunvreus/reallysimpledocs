@@ -1,3 +1,23 @@
+export const previewSource1 = `<Callout title="Neutral">
+  Use a callout when the surrounding paragraph is not enough.
+</Callout>`;
+
+export const previewSource2 = `<Callout icon="lightbulb" title="Custom icon">
+  Add a Lucide icon when it helps explain the message.
+</Callout>`;
+
+export const previewSource3 = `<Callout title="Template macros available" icon="code" action={{ label: "More", href: "#" }}>
+  This component ships an optional action link for related documentation.
+</Callout>`;
+
+export const previewSource4 = `<Callout type="warning" title="Warning">
+  Avoid putting app-only imports in reusable documentation examples.
+</Callout>`;
+
+export const previewSource5 = `<Callout type="destructive" title="Destructive">
+  This variant is for irreversible actions, security risks, or migration warnings.
+</Callout>`;
+
 # Callout
 
 Use `Callout` for notes, warnings, and destructive or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Warning and destructive callouts use variant colors.
@@ -34,7 +54,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ### Neutral
 
-<Preview lang="mdx" class="block w-full">
+<Preview code={previewSource1} lang="mdx" class="block w-full">
 <Callout title="Neutral">
   Use a callout when the surrounding paragraph is not enough.
 </Callout>
@@ -42,7 +62,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ### Custom icon
 
-<Preview lang="mdx" class="block w-full">
+<Preview code={previewSource2} lang="mdx" class="block w-full">
 <Callout icon="lightbulb" title="Custom icon">
   Add a Lucide icon when it helps explain the message.
 </Callout>
@@ -50,7 +70,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ### Action
 
-<Preview lang="mdx" class="block w-full">
+<Preview code={previewSource3} lang="mdx" class="block w-full">
 <Callout title="Template macros available" icon="code" action={{ label: "More", href: "#" }}>
   This component ships an optional action link for related documentation.
 </Callout>
@@ -58,7 +78,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ### Warning
 
-<Preview lang="mdx" class="block w-full">
+<Preview code={previewSource4} lang="mdx" class="block w-full">
 <Callout type="warning" title="Warning">
   Avoid putting app-only imports in reusable documentation examples.
 </Callout>
@@ -66,7 +86,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ### Destructive
 
-<Preview lang="mdx" class="block w-full">
+<Preview code={previewSource5} lang="mdx" class="block w-full">
 <Callout type="destructive" title="Destructive">
   This variant is for irreversible actions, security risks, or migration warnings.
 </Callout>

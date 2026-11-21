@@ -1,10 +1,19 @@
 export function normalizeDocMarkdown(markdown, context = new Map()) {
-  return transformMarkdownTextSegments(markdown, (content) => {
-    return normalizeMdxComponents(stripMdxModuleSyntax(content), context);
-  })
-    .replace(/[ \t]+\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  // Protect examples before serializing components that can span fenced blocks.
+  const fences = [];
+  const source = String(markdown || "").replace(
+    /(^|\n)([ \t]*)(`{3,}|~{3,})[^\n]*\n[\s\S]*?\n\2\3[ \t]*(?=\n|$)/g,
+    (block) => {
+      const token = `\u0000RSD_FENCE_${fences.length}\u0000`;
+      fences.push(block);
+      return token;
+    },
+  );
+  let out = normalizeMdxComponents(stripMdxModuleSyntax(source), context);
+  fences.forEach((block, index) => {
+    out = out.replaceAll(`\u0000RSD_FENCE_${index}\u0000`, block);
+  });
+  return out.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
 function stripMdxModuleSyntax(content) {
@@ -13,18 +22,10 @@ function stripMdxModuleSyntax(content) {
     .replace(/^\s*export\s+(?:const|let|var|function)\s+[\s\S]*?(?=\n(?:#|[A-Z][A-Za-z]*\(|<[A-Z]|\w|\s*$))/gm, "");
 }
 
-function transformMarkdownTextSegments(markdown, transform) {
-  return String(markdown || "")
-    .split(/(```[\s\S]*?```)/g)
-    .map((part) => (part.startsWith("```") ? part : transform(part)))
-    .join("");
-}
-
 const serializers = {
   Code: serializeCode,
-  CodeGroup: serializeChildren,
   Tabs: serializeChildren,
-  Tab: serializeChildren,
+  Tab: serializeTab,
   CardGrid: serializeChildren,
   Preview: serializePreview,
   Callout: serializeCallout,
@@ -42,7 +43,7 @@ export function normalizeMdxComponents(content, context = new Map()) {
     return token;
   });
 
-  for (const name of ["CodeGroup", "Tabs", "Tab", "CardGrid", "Callout", "Steps", "Code"]) {
+  for (const name of ["Tabs", "Tab", "CardGrid", "Callout", "Steps", "Code"]) {
     out = replacePairedComponent(out, name, (attrs, children) => serializers[name](attrs, children, context));
   }
 
@@ -85,10 +86,14 @@ function serializeChildren(_attrs, children, context = new Map()) {
   return `\n\n${normalizeMdxComponents(children, context).trim()}\n\n`;
 }
 
-function serializePreview(attrs, children, context = new Map()) {
+function serializeTab(attrs, children, context) {
+  const title = getStringAttr(attrs, "title");
+  return `\n\n${title ? `**${title}**\n\n` : ""}${normalizeMdxComponents(children, context).trim()}\n\n`;
+}
+
+function serializePreview(attrs, _children, context = new Map()) {
   const lang = getStringAttr(attrs, "lang") || "mdx";
-  const code = getExpressionAttr(attrs, "code");
-  const source = stripCommonIndent(code && context.has(code) ? context.get(code) : children).trim();
+  const source = stripCommonIndent(getCodeAttr(attrs, context)).trim();
   return `\n\n${fencedCode(lang, source)}\n\n`;
 }
 
@@ -119,7 +124,7 @@ function serializeCode(attrs, children, context = new Map()) {
   const lang = getStringAttr(attrs, "lang") || "text";
   const title = getStringAttr(attrs, "title");
   const label = title ? ` ${title}` : "";
-  const code = unwrapMdxString(children, context).trim();
+  const code = (/\bcode=/.test(attrs) ? getCodeAttr(attrs, context) : unwrapMdxString(children, context)).trim();
   return `\n\n${fencedCode(`${lang}${label}`, code)}\n\n`;
 }
 
@@ -151,7 +156,7 @@ function getCodeAttr(attrs, context = new Map()) {
   const direct = String(attrs || "").match(/\bcode=\{`([\s\S]*?)`\}/)?.[1] || "";
   if (direct) return direct.replace(/\\n/g, "\n").replace(/\\`/g, "`");
   const ref = getExpressionAttr(attrs, "code");
-  return ref && context.has(ref) ? context.get(ref) : "";
+  return ref && context.has(ref) ? context.get(ref) : getStringAttr(attrs, "code");
 }
 
 function unwrapMdxString(value, context = new Map()) {
