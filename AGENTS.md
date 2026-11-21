@@ -39,7 +39,7 @@
 ## Testing
 - Add or update focused tests when changing behavior, parsing, routing, navigation, search, exports, package API, or public integration contracts.
 - Run the narrowest useful verification first, then broader checks when the change touches shared behavior.
-- For broad or cross-cutting changes, run `npm run build`, `npm pack --dry-run`, and a clean consumer-app smoke test.
+- For broad or cross-cutting changes, run `npm run check` (site build, site output assertions, and a clean consumer-app smoke test from the packed tarball).
 - For UI changes, verify in a browser at desktop and mobile widths.
 - Do not remove tests just to make a suite pass; fix behavior or update stale expectations deliberately.
 

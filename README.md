@@ -8,6 +8,8 @@ ReallySimpleDocs keeps docs portable: content lives in `docs/`, navigation lives
 
 ## Install
 
+Requires Astro 7.2.10 or newer within version 7 and Node.js 22.23.4 or newer. Version 1.1 drops Astro 6 support.
+
 Add ReallySimpleDocs to an Astro site:
 
 ```bash
@@ -128,15 +130,13 @@ npm install
 npm run dev
 ```
 
-Useful checks before publishing:
+Run the checks before opening a pull request:
 
 ```bash
-npm run build
-npm pack --dry-run
-npm run smoke:consumer
+npm run check
 ```
 
-`npm run check` runs all three.
+It builds the site, checks the built output (`scripts/assert-site-output.mjs`), then packs the package and builds a throwaway consumer app from the tarball (`npm run smoke:consumer`). CI runs the same command on every pull request and push to `main`. Use `npm pack --dry-run` to see which files would be published.
 
 ## Documentation
 
@@ -152,10 +152,6 @@ Go to [reallysimpledocs.com](https://reallysimpledocs.com).
 
 [MIT](LICENSE.md)
 
-### Publish to npm
+## Releases
 
-Configure GitHub Actions as a trusted publisher on npm for
-`hunvreus/reallysimpledocs` and workflow filename `publish.yml`. The workflow
-uses OIDC and needs no npm access token. After merging the release commit,
-push a tag matching the package version, such as `v1.1.0`. The workflow checks
-the tag and tests the packaged consumer before publishing.
+See [the release workflow in CONTRIBUTING.md](CONTRIBUTING.md#releases-and-the-docs-site) for staged npm publishing and docs deployment.

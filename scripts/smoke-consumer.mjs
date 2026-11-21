@@ -3,6 +3,10 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 
 const root = process.cwd();
+// Install the same peer versions this repo develops against, so they cannot drift.
+const { devDependencies } = JSON.parse(
+  fs.readFileSync(path.join(root, "package.json"), "utf8"),
+);
 const tempRoot = path.join(root, ".tmp", "consumer-smoke");
 const packDir = path.join(tempRoot, "pack");
 const appDir = path.join(tempRoot, "app");
@@ -79,10 +83,11 @@ writeJson(path.join(appDir, "package.json"), {
     build: "astro build",
   },
   dependencies: {
-    astro: "^7.4.5",
-    "basecoat-css": "^1.0.1",
+    astro: devDependencies.astro,
+    "basecoat-css": devDependencies["basecoat-css"],
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
-    tailwindcss: "4.3.4",
+    tailwindcss: devDependencies.tailwindcss,
+
   },
 });
 
@@ -119,6 +124,7 @@ export default defineConfig({
         url: "https://example.com",
         favicon: "/favicon.svg",
         socialImage: "/social.png",
+        pageSocialImage: "/og/{slug}.png",
       },
     }),
   ],
@@ -299,6 +305,19 @@ for (const asset of ["all.min.", "lunr.min."]) {
   assertFile(path.join(appDir, "dist", script[1]));
 }
 
+const guideData = JSON.parse(guideHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+const article = guideData["@graph"].find(item => item["@type"] === "TechArticle");
+if (article.headline !== "Guide" || article.url !== "https://example.com/docs/guide/") {
+  throw new Error("Invalid article metadata in packaged consumer.");
+}
+const breadcrumbs = guideData["@graph"].find(item => item["@type"] === "BreadcrumbList");
+if (breadcrumbs.itemListElement.map(item => item.item).join(",") !== "https://example.com/docs/,https://example.com/docs/guide/") {
+  throw new Error("Invalid documentation breadcrumbs.");
+}
+assertIncludes(path.join(appDir, "dist", "docs", "guide", "index.html"),
+  '<meta property="og:image" content="https://example.com/og/guide.png">');
+assertIncludes(path.join(appDir, "dist", "docs", "deep", "nested", "index.html"),
+  '<meta property="og:image" content="https://example.com/og/deep/nested.png">');
 assertFile(path.join(appDir, "dist", "docs", "interactive", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "deep", "nested", "index.html"));
 assertFile(path.join(appDir, "dist", "outside", "index.html"));
@@ -359,11 +378,11 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
-  '<meta property="og:image" content="https://example.com/social.png">',
+  '<meta property="og:image" content="https://example.com/og/index.png">',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
-  '<meta name="twitter:image" content="https://example.com/social.png">',
+  '<meta name="twitter:image" content="https://example.com/og/index.png">',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
@@ -537,19 +556,19 @@ assertIncludes(
 assertIncludes(path.join(appDir, "dist", "llms.txt"), "Consumer docs");
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Welcome](https://example.com/docs/)",
+  "- [Welcome](https://example.com/docs/index.md)",
 );
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Guide](https://example.com/docs/guide/)",
+  "- [Guide](https://example.com/docs/guide.md)",
 );
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Interactive](https://example.com/docs/interactive/)",
+  "- [Interactive](https://example.com/docs/interactive.md)",
 );
 assertIncludes(
   path.join(appDir, "dist", "llms.txt"),
-  "- [Nested](https://example.com/docs/deep/nested/)",
+  "- [Nested](https://example.com/docs/deep/nested.md)",
 );
 
 console.log("Consumer smoke test passed.");

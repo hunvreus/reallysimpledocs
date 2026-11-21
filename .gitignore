@@ -1,9 +1,9 @@
 .*
 !.gitignore
 !.gitkeep
+!.github
 
 dist/
 .astro/
 node_modules/
-tmp-*/
 .tmp/

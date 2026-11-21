@@ -17,7 +17,7 @@ export function GET({ site }) {
     const addSlug = (slug) => {
       const doc = bySlug.get(slug);
       if (!doc) return;
-      const url = `${siteUrl}${doc.path}`;
+      const url = `${siteUrl}${doc.markdownPath}`;
       lines.push(`- [${doc.title}](${url})`);
     };
 
