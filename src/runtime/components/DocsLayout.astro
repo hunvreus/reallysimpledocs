@@ -137,15 +137,15 @@ const actionItems = [
         <div class="mx-auto w-full max-w-2xl flex-1 space-y-10">
           <header class="space-y-2">
             <div
-              class="flex flex-col-reverse items-start gap-3 sm:flex-row sm:gap-x-2"
+              class="typeset flex flex-col-reverse items-start gap-3 sm:flex-row sm:gap-x-2"
             >
               <h1
-                class="mr-auto text-3xl font-semibold tracking-tight sm:text-4xl"
+                class="mr-auto"
               >
                 {page.title}
               </h1>
               <div
-                class="flex w-full items-center justify-end gap-x-2 sm:mt-1 sm:w-auto"
+                data-not-typeset class="flex w-full items-center justify-end gap-x-2 sm:mt-1 sm:w-auto"
               >
                 <div role="group" class="button-group">
                   <button
@@ -198,7 +198,7 @@ const actionItems = [
               </div>
             </div>
           </header>
-          <div class="prose">
+          <div class="typeset" data-doc-content>
             <slot />
           </div>
           <footer class="mt-12 flex items-center">

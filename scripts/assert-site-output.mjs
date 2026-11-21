@@ -42,4 +42,8 @@ assertIncludes("dist/pages/index.html", '<link rel="canonical" href="https://rea
 assertIncludes("dist/pages/index.html", '"@type":"BreadcrumbList"');
 assertIncludes("dist/pages/index.html", '"@type":"TechArticle"');
 
+assertIncludes("dist/pages/index.html", 'class="typeset" data-doc-content');
+assertIncludes("dist/components/index.html", 'class="card"');
+assertIncludes("dist/components/code/index.html", 'data-not-typeset');
+
 console.log("Site output assertions passed.");

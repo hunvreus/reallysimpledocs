@@ -102,7 +102,6 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       routeBase: "/docs",
-      style: "nova",
       bodyAttrs: {
         "data-smoke-body": "ok",
         "hx-target": "#content",

@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Default to Basecoat Nova and use Basecoat Typeset for document typography. Cards and callouts use native component styling; warnings use the neutral alert style.
+
 - Code blocks and tabs use standard Basecoat styling and behavior. Fenced examples use the same code blocks as `Code`, with optional titles and an actions slot.
 - Preview composes Tabs and Code and requires an explicit `code` string. Example scripts use normal MDX or imported components.
 - Replaced CodeGroup with Tabs containing Code or fenced examples. Removed the custom code and preview frame styles and their `css/styles/*` exports.

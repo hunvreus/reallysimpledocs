@@ -1,6 +1,5 @@
 ---
 import * as lucideIcons from "lucide-static";
-import { addSvgClass } from "../../lib/html.js";
 
 const { type, title = "Note", icon: iconName, action, class: className = "" } = Astro.props;
 const normalizedType = String(type || "").toLowerCase();
@@ -23,11 +22,11 @@ function resolveNamedIcon(name) {
 }
 
 const iconSource = typeof iconName === "string" ? resolveNamedIcon(iconName) : "";
-const icon = addSvgClass(iconSource, "size-4");
+const icon = iconSource;
 const heading = title;
 ---
 
-<div class:list={["alert", className]} data-variant={calloutType || undefined}>
+<div data-not-typeset class:list={["alert", className]} data-variant={calloutType || undefined}>
   {icon && <Fragment set:html={icon} />}
   <h3>{heading}</h3>
   <section>

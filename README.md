@@ -28,7 +28,7 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       routeBase: "/docs",
-      style: "vega",
+      style: "nova",
       site: {
         title: "Acme Docs",
         description: "Documentation for Acme.",

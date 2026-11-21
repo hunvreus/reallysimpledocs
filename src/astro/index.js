@@ -70,7 +70,7 @@ function collectMdxModules(docsDir) {
 }
 
 export default function reallySimpleDocs(options = {}) {
-  const style = options.style || "vega";
+  const style = options.style || "nova";
   if (!basecoatStyles.has(style)) {
     throw new Error(`Invalid ReallySimpleDocs style "${style}". Expected one of: ${Array.from(basecoatStyles).join(", ")}.`);
   }
@@ -123,6 +123,7 @@ export default function reallySimpleDocs(options = {}) {
           ? [
               '@import "tailwindcss";',
               '@import "basecoat-css/base";',
+              '@import "basecoat-css/typeset";',
               `@import "basecoat-css/styles/${style}";`,
               `@import ${JSON.stringify(cssPath("custom.css"))};`,
               ...normalizedOptions.customCss.map((css) => `@import ${JSON.stringify(resolveUserId(css))};`),

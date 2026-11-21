@@ -29,7 +29,7 @@ export default defineConfig({
 |--------|---------|-------|
 | `docsDir` | `"./docs"` | Folder containing Markdown or MDX pages and `docs.json`. |
 | `routeBase` | `"/docs"` | URL path where the docs are mounted. Use `"/"` for root docs. |
-| `style` | `"vega"` | Basecoat style: `vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, or `rhea`. |
+| `style` | `"nova"` | Basecoat style: `vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, or `rhea`. |
 | `customCss` | `[]` | CSS files imported after Basecoat and ReallySimpleDocs styles. |
 | `css` | `true` | Set to `false` when you provide the full CSS pipeline yourself. |
 | `bodyAttrs` | `{}` | Extra attributes added to `<body>`. |
@@ -391,3 +391,5 @@ import htmxUrl from "htmx.org/dist/htmx.min.js?url";
 </Tabs>
 
 Using a CDN is also fine; see the [htmx installation docs](https://htmx.org/docs/#installing) for options.
+
+Document typography uses Basecoat Typeset. Embedded UI components opt out of Typeset so their padding, fonts, and colors follow their Basecoat component defaults.

@@ -4,96 +4,10 @@
   --color-search-highlight: oklch(90.5% 0.182 98.111);
 }
 
-.prose {
-  @apply my-6;
-
-  > h2,
-  > h3,
-  > h4,
-  > h5,
-  > h6 {
-    @apply sm:text-lg my-6 scroll-m-18 font-semibold tracking-tight;
-
-    > a.header-anchor {
-      @apply no-underline;
-    }
-  }
-  > h2 {
-    @apply text-xl sm:text-2xl mt-8 lg:mt-12 first:mt-0;
-  }
-  > h3 {
-    @apply text-lg sm:text-xl lg:mt-8;
-  }
-  > h1:first-child {
-    @apply hidden;
-  }
-  > p a,
-  > li a,
-  > dl a,
-  > .table-container a,
-  [role="listitem"] > p > a,
-  [role="listitem"] > li > a {
-    @apply underline underline-offset-2 decoration-muted-foreground/50 hover:decoration-foreground/50 transition-all;
-  }
-  b,
-  strong {
-    @apply font-semibold;
-  }
-  code:not(pre > code) {
-    @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[13px];
-  }
-  > blockquote {
-    @apply border-l-4 border-border pl-4;
-  }
-  > ol {
-    @apply list-decimal ml-6;
-  }
-  > ul {
-    @apply list-disc ml-6;
-  }
-  > ol,
-  > ul {
-    li {
-      @apply mt-2;
-
-      ol,
-      ul {
-        @apply mt-0 mb-0;
-      }
-    }
-  }
-  > dl {
-    @apply border-b pb-3 my-6;
-    dt {
-      @apply border-t pt-3 mt-3 first:mt-0;
-    }
-    dd {
-      @apply mt-2;
-    }
-    dl {
-      @apply mt-4 border-b-0 pb-0 pl-8 my-0;
-    }
-  }
-  > p,
-  > blockquote,
-  > ul,
-  > ol,
-  > dl,
-  > pre {
-    @apply my-6;
-  }
-  > *:first-child {
-    @apply !mt-0;
-  }
-  > *:last-child {
-    @apply !mb-0;
-  }
-
-  > .table-container .table th,
-  > .table-container .table td {
-    @apply whitespace-normal;
-  }
-}
+/* Page anchors and component flow are documentation layout, not typography. */
+.typeset[data-doc-content] > h1:first-child { display: none; }
+.typeset :where(h2, h3, h4, h5, h6) { scroll-margin-top: 4.5rem; }
+.typeset a.header-anchor { text-decoration: none; }
 
 .shiki,
 .astro-code {
@@ -132,36 +46,14 @@ html.dark .astro-code span {
   @apply bg-search-highlight/50 text-foreground dark:bg-search-highlight/25;
 }
 
-.docs-card {
-  @apply block w-full rounded-lg border bg-card p-3 text-card-foreground no-underline;
-}
-
-.docs-card > h3 {
-  @apply font-medium;
-}
-
-.docs-card > p {
-  @apply mt-1 text-sm text-muted-foreground;
-}
-
-.docs-card-link {
-  @apply transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
-}
-
-.alert[data-variant="warning"] > svg,
-.alert[data-variant="warning"] > h3,
-.alert[data-variant="warning"] > section {
-  @apply text-amber-700 dark:text-amber-300;
-}
-
 /* Document spacing surrounds components; Basecoat owns their internal layout. */
-.prose > .code-block,
-.prose > .tabs {
+.typeset > .code-block,
+.typeset > .tabs {
   @apply my-6;
 }
 
-.prose .tabs > [role="tabpanel"] > :first-child { margin-top: 0; }
-.prose .tabs > [role="tabpanel"] > :last-child { margin-bottom: 0; }
+.typeset .tabs > [role="tabpanel"] > :first-child { margin-top: 0; }
+.typeset .tabs > [role="tabpanel"] > :last-child { margin-bottom: 0; }
 
 .steps {
   @apply mb-12 mt-6 md:ml-4 md:border-l md:pl-8;
@@ -177,7 +69,7 @@ html.dark .astro-code span {
 }
 
 .steps > section > h3 {
-  @apply relative mt-12 scroll-m-28 text-lg font-medium tracking-tight;
+  @apply relative mt-12 scroll-m-28;
 }
 
 .steps > section + section > h3 {
@@ -215,9 +107,6 @@ html.dark .astro-code span {
   @apply my-3;
 }
 
-.steps > section > * {
-  @apply leading-relaxed;
-}
 
 .steps > section > *:first-child {
   @apply mt-0;
@@ -227,11 +116,10 @@ html.dark .astro-code span {
   @apply mb-0;
 }
 
-.prose > .alert,
-.prose > .docs-card,
-.prose > .grid,
-.prose > .tabs,
-.prose > .tabs {
+.typeset > .alert,
+.typeset > .card,
+.typeset > .grid,
+.typeset > .tabs {
   @apply my-6;
 }
 

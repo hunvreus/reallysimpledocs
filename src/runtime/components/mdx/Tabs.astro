@@ -11,7 +11,7 @@ const defaultValue = normalizedTabs[0]?.value;
 ---
 
 <div class:list={["tabs", className]}>
-  <nav role="tablist" aria-orientation="horizontal" data-variant={variant}>
+  <nav data-not-typeset role="tablist" aria-orientation="horizontal" data-variant={variant}>
     {
       normalizedTabs.map((tab, index) => {
         const selected = tab.value === defaultValue;

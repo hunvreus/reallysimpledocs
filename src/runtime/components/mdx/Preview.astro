@@ -7,7 +7,7 @@ if (typeof code !== "string") throw new Error("Preview requires a code string fo
 ---
 
 <Tabs variant="line" tabs={[{ label: title, slot: "preview" }, { label: "Code", slot: "code" }]}>
-  <div slot="preview" class:list={["rounded-lg border p-4", className]}>
+  <div data-not-typeset slot="preview" class:list={["rounded-lg border p-4", className]}>
     <slot />
   </div>
   <Code slot="code" code={code} lang={lang} />
