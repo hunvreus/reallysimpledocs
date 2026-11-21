@@ -154,4 +154,6 @@ Go to [reallysimpledocs.com](https://reallysimpledocs.com).
 
 ## Releases
 
+See [CHANGELOG.md](CHANGELOG.md) for release notes and upgrade requirements.
+
 See [the release workflow in CONTRIBUTING.md](CONTRIBUTING.md#releases-and-the-docs-site) for staged npm publishing and docs deployment.
