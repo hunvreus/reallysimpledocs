@@ -87,7 +87,6 @@ writeJson(path.join(appDir, "package.json"), {
     "basecoat-css": devDependencies["basecoat-css"],
     reallysimpledocs: `file:${path.join(packDir, tarball)}`,
     tailwindcss: devDependencies.tailwindcss,
-
   },
 });
 
@@ -219,7 +218,10 @@ npm run build
 );
 fs.writeFileSync(
   path.join(appDir, "docs", "guide.md"),
-  `# Guide
+  `---
+description: "Use <account> safely."
+---
+# Guide
 
 This is a second page for navigation.
 `,
@@ -307,7 +309,7 @@ for (const asset of ["all.min.", "lunr.min."]) {
 
 const guideData = JSON.parse(guideHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
 const article = guideData["@graph"].find(item => item["@type"] === "TechArticle");
-if (article.headline !== "Guide" || article.url !== "https://example.com/docs/guide/") {
+if (article.headline !== "Guide" || article.url !== "https://example.com/docs/guide/" || article.description !== "Use <account> safely.") {
   throw new Error("Invalid article metadata in packaged consumer.");
 }
 const breadcrumbs = guideData["@graph"].find(item => item["@type"] === "BreadcrumbList");
