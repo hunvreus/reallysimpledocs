@@ -4,7 +4,7 @@ import Head from "virtual:reallysimpledocs/components/Head";
 import DefaultHead from "./DefaultHead.astro";
 import { getSite } from "../lib/site.js";
 
-const { title, description, pagePath = "/" } = Astro.props;
+const { title, description, pagePath = "/", slug, ogType = "website", structuredData = [] } = Astro.props;
 const site = getSite(config);
 const metaDescription = description || site.description || "";
 const metaTitle = pagePath === "/" ? `${site.title} | ${metaDescription}` : `${title || metaDescription} | ${site.title}`;
@@ -13,7 +13,8 @@ const absoluteUrl = `${siteUrl}${pagePath}`;
 const assetsBase = config.assetsBase || "/assets";
 const favicon = site.favicon || "";
 const appleTouchIcon = site.appleTouchIcon || "";
-const socialImage = site.socialImage || "";
+// `pageSocialImage` (e.g. "/og/{slug}.png") gives each doc page its own card; other pages use `socialImage`.
+const socialImage = (slug && site.pageSocialImage ? site.pageSocialImage.replaceAll("{slug}", slug) : site.socialImage) || "";
 const assetPath = (value) => {
   const path = String(value || "");
   if (!path || path.startsWith("http") || path.startsWith("/")) return path;
@@ -24,6 +25,9 @@ const absoluteAssetUrl = (value) => {
   return path.startsWith("http") ? path : `${siteUrl}${path}`;
 };
 const bodyAttrs = config.bodyAttrs || {};
+const jsonLd = structuredData.length
+  ? JSON.stringify({ "@context": "https://schema.org", "@graph": structuredData }).replace(/</g, "\\u003c")
+  : "";
 ---
 
 <!doctype html>
@@ -38,11 +42,13 @@ const bodyAttrs = config.bodyAttrs || {};
     {site.keywords && <meta name="keywords" content={site.keywords.join(",")} />}
     {favicon && <link rel="icon" type="image/svg+xml" href={assetPath(favicon)} />}
     {appleTouchIcon && <link rel="apple-touch-icon" sizes="180x180" href={assetPath(appleTouchIcon)} />}
-    <meta property="og:type" content="website" />
+    <link rel="canonical" href={absoluteUrl} />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={absoluteUrl} />
     <meta property="og:title" content={metaTitle} />
     <meta property="og:description" content={metaDescription} />
     {socialImage && <meta property="og:image" content={absoluteAssetUrl(socialImage)} />}
+    {socialImage && <meta property="og:image:alt" content={metaTitle} />}
     <meta property="og:site_name" content={site.title} />
     <meta property="og:locale" content="en_US" />
     {site.author?.name && <meta property="og:author" content={site.author.name} />}
@@ -52,6 +58,7 @@ const bodyAttrs = config.bodyAttrs || {};
     <meta name="twitter:description" content={metaDescription} />
     {socialImage && <meta name="twitter:image" content={absoluteAssetUrl(socialImage)} />}
     {site.author?.x && <meta name="twitter:creator" content={site.author.x} />}
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <DefaultHead
       config={config}
       site={site}

@@ -58,7 +58,7 @@ export function renderSidebarContent(items = [], parentIdPrefix = "content") {
       return `<li>
   <a${attrs({ href: item.url, "aria-current": item.current ? "page" : undefined, ...without(item.attrs, ["href", "aria-current"]) })}>
     ${item.icon || ""}
-    <span>${escapeHtml(item.label)}</span>
+    <span class="min-w-0 truncate">${escapeHtml(item.label)}</span>
     ${renderSidebarMeta(item)}
   </a>
 </li>`;
@@ -70,7 +70,7 @@ function renderSidebarMeta(item) {
   const badge = item.badge ? `<span class="badge" data-variant="outline">${escapeHtml(item.badge)}</span>` : "";
   const external = item.external ? addSvgClass(ArrowUpRight, "size-3 opacity-50") : "";
   if (!badge && !external) return "";
-  return `<span class="ml-auto inline-flex items-center gap-1">${badge}${external}</span>`;
+  return `<span class="ms-auto inline-flex shrink-0 items-center gap-1">${badge}${external}</span>`;
 }
 
 export function renderCommandDialog({

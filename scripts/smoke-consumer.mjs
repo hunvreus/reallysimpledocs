@@ -123,6 +123,7 @@ export default defineConfig({
         url: "https://example.com",
         favicon: "/favicon.svg",
         socialImage: "/social.png",
+        pageSocialImage: "/og/{slug}.png",
       },
     }),
   ],
@@ -217,7 +218,10 @@ npm run build
 );
 fs.writeFileSync(
   path.join(appDir, "docs", "guide.md"),
-  `# Guide
+  `---
+description: "Use <account> safely."
+---
+# Guide
 
 This is a second page for navigation.
 `,
@@ -295,6 +299,27 @@ run("npm", ["run", "build"], { cwd: appDir });
 
 assertFile(path.join(appDir, "dist", "docs", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "guide", "index.html"));
+const guideHtml = fs.readFileSync(path.join(appDir, "dist", "docs", "guide", "index.html"), "utf8");
+for (const asset of ["all.min.", "lunr.min."]) {
+  const script = Array.from(guideHtml.matchAll(/<script[^>]+src="([^"]+)"/g))
+    .find(([, src]) => path.basename(src).startsWith(asset));
+  if (!script) throw new Error(`Missing browser script: ${asset}`);
+  assertFile(path.join(appDir, "dist", script[1]));
+}
+
+const guideData = JSON.parse(guideHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+const article = guideData["@graph"].find(item => item["@type"] === "TechArticle");
+if (article.headline !== "Guide" || article.url !== "https://example.com/docs/guide/" || article.description !== "Use <account> safely.") {
+  throw new Error("Invalid article metadata in packaged consumer.");
+}
+const breadcrumbs = guideData["@graph"].find(item => item["@type"] === "BreadcrumbList");
+if (breadcrumbs.itemListElement.map(item => item.item).join(",") !== "https://example.com/docs/,https://example.com/docs/guide/") {
+  throw new Error("Invalid documentation breadcrumbs.");
+}
+assertIncludes(path.join(appDir, "dist", "docs", "guide", "index.html"),
+  '<meta property="og:image" content="https://example.com/og/guide.png">');
+assertIncludes(path.join(appDir, "dist", "docs", "deep", "nested", "index.html"),
+  '<meta property="og:image" content="https://example.com/og/deep/nested.png">');
 assertFile(path.join(appDir, "dist", "docs", "interactive", "index.html"));
 assertFile(path.join(appDir, "dist", "docs", "deep", "nested", "index.html"));
 assertFile(path.join(appDir, "dist", "outside", "index.html"));
@@ -355,11 +380,11 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
-  '<meta property="og:image" content="https://example.com/social.png">',
+  '<meta property="og:image" content="https://example.com/og/index.png">',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
-  '<meta name="twitter:image" content="https://example.com/social.png">',
+  '<meta name="twitter:image" content="https://example.com/og/index.png">',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
@@ -429,7 +454,7 @@ assertNotIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  '<footer> <a class="btn" data-variant="outline" data-size="sm" href="/docs/guide/"> More </a> </footer>',
+  '<footer><a class="btn" data-variant="outline" data-size="sm" href="/docs/guide/">More</a></footer>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
@@ -520,7 +545,11 @@ assertSearchBodyHasNoHtml(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "guide", "index.html"),
-  "Beta",
+  '<span class="min-w-0 truncate">Guide</span>',
+);
+assertIncludes(
+  path.join(appDir, "dist", "docs", "guide", "index.html"),
+  '<span class="ms-auto inline-flex shrink-0 items-center gap-1"><span class="badge" data-variant="outline">Beta</span>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "guide", "index.html"),

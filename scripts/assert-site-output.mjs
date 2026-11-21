@@ -36,4 +36,10 @@ assertIncludes(
   '<meta property="og:description" content="Learn how ReallySimpleDocs turns Markdown and MDX files into documentation pages.">',
 );
 
+assertIncludes("dist/pages/index.html", '<meta property="og:type" content="article">');
+assertIncludes("dist/index.html", '<meta property="og:type" content="website">');
+assertIncludes("dist/pages/index.html", '<link rel="canonical" href="https://reallysimpledocs.com/pages/">');
+assertIncludes("dist/pages/index.html", '"@type":"BreadcrumbList"');
+assertIncludes("dist/pages/index.html", '"@type":"TechArticle"');
+
 console.log("Site output assertions passed.");

@@ -8,6 +8,8 @@ ReallySimpleDocs keeps docs portable: content lives in `docs/`, navigation lives
 
 ## Install
 
+Requires Astro 7.4.13 or newer within version 7 and Node.js 22.23.4 or newer. Version 1.1 drops Astro 6 support.
+
 Add ReallySimpleDocs to an Astro site:
 
 ```bash
@@ -149,3 +151,9 @@ Go to [reallysimpledocs.com](https://reallysimpledocs.com).
 ## License
 
 [MIT](LICENSE.md)
+
+## Releases
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes and upgrade requirements.
+
+See [the release workflow in CONTRIBUTING.md](CONTRIBUTING.md#releases-and-the-docs-site) for staged npm publishing and docs deployment.

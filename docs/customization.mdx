@@ -64,6 +64,17 @@ reallySimpleDocs({
 
 Relative asset values resolve from `assetsBase`, which defaults to `/assets`. Favicon and social image tags are emitted only when configured.
 
+To give each page its own social card, set `pageSocialImage` with a `{slug}` placeholder. Doc pages use it; other pages keep `socialImage`. Generating the images is up to you, for example with a static Astro endpoint:
+
+```js title="astro.config.mjs"
+site: {
+  socialImage: "social.png",
+  pageSocialImage: "/og/{slug}.png", // "/og/index.png", "/og/guides/setup.png", ...
+},
+```
+
+Every page gets a canonical link and schema.org structured data (`TechArticle` plus a `BreadcrumbList` from the docs index to the page). Doc pages are emitted with `og:type` set to `article`; the docs index uses `website`. When a social image is set, its `og:image:alt` is the page title.
+
 Individual pages can override the metadata title and description with frontmatter:
 
 ```md title="docs/page.md"

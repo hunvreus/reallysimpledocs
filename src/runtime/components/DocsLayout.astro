@@ -19,6 +19,7 @@ import ThemeToggle from "./ThemeToggle.astro";
 import { buildMenus, getNavigation } from "../lib/docs.js";
 import { addSvgClass } from "../lib/html.js";
 import { getSite } from "../lib/site.js";
+import { routePath } from "../lib/paths.js";
 
 const { page, headings } = Astro.props;
 const site = getSite(config);
@@ -28,6 +29,18 @@ const panelLeftIcon = addSvgClass(PanelLeft, "size-4");
 const searchIcon = addSvgClass(Search, "size-4");
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") || site.url || "";
 const pageUrl = `${siteUrl}${page.path}`;
+const docsHome = routePath(config.routeBase, "index");
+// Breadcrumb list items need URLs, so navigation groups (which have none) are left out.
+const structuredData = [
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      [site.subtitle || site.title, docsHome],
+      ...(page.slug === "index" ? [] : [[page.title, page.path]]),
+    ].map(([name, path], index) => ({ "@type": "ListItem", position: index + 1, name, item: `${siteUrl}${path}` })),
+  },
+  { "@type": "TechArticle", headline: page.title, description: page.description || site.description, url: pageUrl },
+];
 const llmPrompt = `Read from ${pageUrl} so I can ask questions about it.`;
 const actionItems = [
   {
@@ -65,6 +78,9 @@ const actionItems = [
   title={page.title}
   description={page.description || site.description}
   pagePath={page.path}
+  slug={page.slug}
+  ogType={page.slug === "index" ? "website" : "article"}
+  {structuredData}
 >
   <CommandDialog />
   <Sidebar menu={sidebar} />

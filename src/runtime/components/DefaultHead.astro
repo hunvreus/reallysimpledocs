@@ -18,7 +18,7 @@ import basecoatJsUrl from "basecoat-css/all.min?url";
     } catch (_) {}
   })();
 </script>
-<script src={basecoatJsUrl}></script>
+<script is:inline src={basecoatJsUrl}></script>
 <script is:inline define:vars={{ copyIcon: Copy, checkIcon: Check }}>
   const copyText = async (text) => {
     if (window.isSecureContext && navigator.clipboard?.writeText) {

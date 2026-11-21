@@ -19,7 +19,7 @@ const { indexUrl = routeFilePath(config.routeBase, "search-index.json") } = Astr
   />
 </div>
 
-<script src={lunrUrl}></script>
+<script is:inline src={lunrUrl}></script>
 <script is:inline define:vars={{ loadingIcon: LoaderCircle }}>
   const root = document.querySelector("[data-search]");
   const indexUrl = root?.getAttribute("data-index-url");
