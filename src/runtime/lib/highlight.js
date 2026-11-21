@@ -2,8 +2,8 @@ import { codeToHtml } from "shiki";
 
 const defaultShikiConfig = {
   themes: {
-    light: "github-light",
-    dark: "github-dark",
+    light: "github-light-default",
+    dark: "vesper",
   },
   defaultColor: false,
 };
