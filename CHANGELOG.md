@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 — 2026-11-22
+
+### Added
+
+- GitHub-style Note, Tip, Important, Warning, and Caution alerts in Markdown and MDX, using Callout styling.
+
 ## 1.2.0 — 2026-11-22
 
 ### Upgrading

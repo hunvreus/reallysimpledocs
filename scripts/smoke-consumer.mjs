@@ -300,6 +300,24 @@ This nested page proves recursive navigation exports.
 `,
 );
 
+const alertFixture = [
+  "",
+  ...["NOTE", "TIP", "IMPORTANT", "WARNING", "CAUTION"].flatMap((type) => [
+    `> [!${type}]`,
+    `> Alert **${type.toLowerCase()}** body with [link](https://example.com).`,
+    ">",
+    "> - Nested list item",
+    "",
+  ]),
+  "> Normal quotation.", "",
+  "> [!UNKNOWN]", "> Unsupported alert.", "",
+  "> [!NOTE] **same line remains a quote**", "",
+  "```md", "> [!WARNING]", "> Literal code sample.", "```", "",
+].join("\n");
+for (const file of ["index.md", "interactive.mdx"]) {
+  fs.appendFileSync(path.join(appDir, "docs", file), alertFixture);
+}
+
 run("npm", ["install"], { cwd: appDir });
 run("npm", ["run", "build"], { cwd: appDir });
 
@@ -585,4 +603,19 @@ assertNotIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html")
 assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Tabs>");
 assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Tab title=");
 assertIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "```bash Command\nnpm run build\n```");
+
+for (const slug of ["index", "interactive/index"]) {
+  const html = fs.readFileSync(path.join(appDir, "dist", "docs", `${slug}.html`), "utf8");
+  if ((html.match(/<div[^>]*class="alert"/g) || []).length < 5) throw new Error(`Missing alerts in ${slug}`);
+  for (const title of ["Note", "Tip", "Important", "Warning", "Caution"]) {
+    if (!html.includes(`<h3>${title}</h3>`)) throw new Error(`Missing ${title} alert in ${slug}`);
+  }
+  if (!html.includes('data-variant="destructive"')) throw new Error(`Missing caution severity in ${slug}`);
+  for (const text of ["Normal quotation.", "[!UNKNOWN]", "same line remains a quote", "Literal code sample.", "<strong>note</strong>", "<li>Nested list item</li>"]) {
+    if (!html.includes(text)) throw new Error(`Lost alert content ${text} in ${slug}`);
+  }
+  const exported = fs.readFileSync(path.join(appDir, "dist", "docs", slug === "index" ? "index.md" : "interactive.md"), "utf8");
+  if (!exported.includes("> [!WARNING]")) throw new Error(`Lost alert syntax in ${slug} export`);
+}
+
 console.log("Consumer smoke test passed.");

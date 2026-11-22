@@ -1,3 +1,5 @@
+import { parseAlert } from "./alerts.js";
+import { Info, Lightbulb, CircleAlert, TriangleAlert, OctagonAlert } from "lucide-static";
 import { renderCodeBlock } from "./code-block.js";
 import fs from "node:fs";
 import path from "node:path";
@@ -106,6 +108,16 @@ export async function renderDoc(config, page) {
     if (depth > 1 && depth < 4) headings.push({ depth, id, text: headingText });
     const content = hasTokenType(tokens, "link") ? text : `<a class="header-anchor" href="#${id}">${text}</a>`;
     return `<h${depth} id="${id}" tabindex="-1">${content}</h${depth}>`;
+  };
+
+  renderer.blockquote = (token) => {
+    const first = token.tokens[0];
+    const alert = first?.type === "paragraph" ? parseAlert(first.text) : null;
+    if (!alert) return `<blockquote>\n${renderer.parser.parse(token.tokens)}</blockquote>\n`;
+    const icons = { Info, Lightbulb, CircleAlert, TriangleAlert, OctagonAlert };
+    const tokens = [...marked.lexer(alert.content), ...token.tokens.slice(1)];
+    const variant = alert.type ? ` data-variant="${alert.type}"` : "";
+    return `<div data-not-typeset class="alert"${variant}>${icons[alert.icon]}<h3>${alert.title}</h3><section>${renderer.parser.parse(tokens)}</section></div>\n`;
   };
 
   const tokens = marked.lexer(content);
