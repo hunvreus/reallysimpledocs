@@ -1,3 +1,4 @@
+import { parseAlert } from "../runtime/lib/alerts.js";
 import { parseCodeMeta } from "../runtime/lib/code-meta.js";
 
 export function remarkDocComponents({ docsDir } = {}) {
@@ -7,11 +8,35 @@ export function remarkDocComponents({ docsDir } = {}) {
     if (normalizedDocsDir && !isDocsFile(file?.path, normalizedDocsDir)) return;
 
     visit(tree, (node, parent, index) => {
+      if (node?.type === "blockquote") return alertToMdx(node);
       if (node?.type === "code") return codeToMdx(node, parent, index);
       if (node?.type !== "mdxJsxFlowElement") return null;
       if (node.name === "Tabs") addTabsMetadata(node);
       return null;
     });
+  };
+}
+
+function alertToMdx(node) {
+  const paragraph = node.children?.[0];
+  const text = paragraph?.children?.[0];
+  if (paragraph?.type !== "paragraph" || text?.type !== "text") return null;
+  if (!text.value.includes("\n") && paragraph.children.length > 1 && paragraph.children[1].type !== "break") return null;
+  const alert = parseAlert(text.value);
+  if (!alert) return null;
+  text.value = alert.content;
+  if (!text.value) {
+    paragraph.children.shift();
+    if (paragraph.children[0]?.type === "break") paragraph.children.shift();
+  }
+  if (!paragraph.children.length) node.children.shift();
+  return {
+    type: "mdxJsxFlowElement",
+    name: "Callout",
+    attributes: Object.entries({ title: alert.title, icon: alert.icon, type: alert.type })
+      .filter(([, value]) => value)
+      .map(([name, value]) => ({ type: "mdxJsxAttribute", name, value })),
+    children: node.children,
   };
 }
 

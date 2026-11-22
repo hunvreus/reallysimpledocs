@@ -22,6 +22,34 @@ export const previewSource5 = `<Callout type="destructive" title="Destructive">
 
 Use `Callout` for notes, warnings, and destructive or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Destructive callouts use Basecoat’s destructive variant. Warning callouts use the standard neutral alert styling.
 
+## Markdown alerts
+
+Use GitHub-style alerts in Markdown or MDX without importing a component:
+
+```md
+> [!WARNING]
+> This action permanently deletes your data.
+```
+
+Supported markers are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]`. Put the marker on its own first line inside a blockquote. Each alert gets a title and icon; its body supports normal Markdown. Caution uses the destructive variant. Other types use the standard Callout appearance, including neutral warnings.
+
+> [!NOTE]
+> Use alerts for information readers should notice.
+
+> [!TIP]
+> Keep the message short and actionable.
+
+> [!IMPORTANT]
+> Include required setup before readers continue.
+
+> [!WARNING]
+> Review your changes before applying them.
+
+> [!CAUTION]
+> Deleting data cannot be undone.
+
+Use `Callout` when you need a custom title, icon, or action. Ordinary blockquotes and unsupported markers keep their normal appearance. Code examples are never converted to alerts.
+
 ## Usage
 
 Use the component directly in MDX. ReallySimpleDocs components are available by default, so no import is required.

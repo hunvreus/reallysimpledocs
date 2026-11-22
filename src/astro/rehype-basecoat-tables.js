@@ -48,6 +48,7 @@ function transformHeadings(parent, slugger = new GithubSlugger()) {
 
   for (const child of parent.children) {
     if (isHeading(child)) {
+      if (classList(parent).includes("alert")) continue;
       addHeadingAnchor(child, slugger);
       continue;
     }
