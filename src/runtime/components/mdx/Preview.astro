@@ -1,63 +1,14 @@
 ---
-import config from "virtual:reallysimpledocs/config";
-import { highlightCode } from "../../lib/highlight.js";
+import Tabs from "./Tabs.astro";
+import Code from "./Code.astro";
 
-const { code = "", lang = "html", title = "Preview", class: className = "" } = Astro.props;
-const id = `preview-${Math.random().toString(36).slice(2)}`;
-const html = await highlightCode(code, lang, config.shiki);
-const previewClassName = className || "w-fit";
+const { code, lang = "html", title = "Preview", class: className = "" } = Astro.props;
+if (typeof code !== "string") throw new Error("Preview requires a code string for its source tab.");
 ---
 
-<section class="tabs-frame">
-  <header>
-    <div class="tabs">
-      <nav role="tablist" aria-orientation="horizontal" data-variant="line">
-        <button
-          type="button"
-          role="tab"
-          id={`${id}-preview-tab`}
-          aria-controls={`${id}-preview-panel`}
-          aria-selected="true"
-          tabindex="0"
-        >
-          {title}
-        </button>
-        <button
-          type="button"
-          role="tab"
-          id={`${id}-code-tab`}
-          aria-controls={`${id}-code-panel`}
-          aria-selected="false"
-          tabindex="-1"
-        >
-          Code
-        </button>
-      </nav>
-    </div>
-  </header>
-  <section
-    role="tabpanel"
-    data-preview-panel
-    id={`${id}-preview-panel`}
-    aria-labelledby={`${id}-preview-tab`}
-    tabindex="-1"
-    aria-selected="true"
-  >
-    <div class={previewClassName}>
-      <slot />
-    </div>
-  </section>
-  <section
-    role="tabpanel"
-    data-code-panel
-    id={`${id}-code-panel`}
-    aria-labelledby={`${id}-code-tab`}
-    tabindex="-1"
-    aria-selected="false"
-    hidden
-  >
-    <div class="code-block">
-      <Fragment set:html={html} />
-    </div>
-  </section>
-</section>
+<Tabs variant="line" tabs={[{ label: title, slot: "preview" }, { label: "Code", slot: "code" }]}>
+  <div data-not-typeset slot="preview" class:list={["rounded-lg border p-4", className]}>
+    <slot />
+  </div>
+  <Code slot="code" code={code} lang={lang} />
+</Tabs>

@@ -1,6 +1,13 @@
+export const previewSource1 = `<CardGrid>
+  <Card title="Markdown" description="Write regular docs pages." href="/pages/" />
+  <Card title="MDX" description="Use components for richer examples." href="/components/" />
+</CardGrid>`;
+
+export const previewSource2 = `<Card title="Custom width" description="Use class overrides when the layout needs it." class="w-full" />`;
+
 # Card
 
-Use `Card` and `CardGrid` for small groups of related links, concepts, or next actions. Cards are intentionally simple: title, description, and an optional link.
+Use `Card` and `CardGrid` for small groups of related links, concepts, or next actions. Cards are intentionally simple: title, description, and an optional link. Linked cards have a subtle hover background and a visible keyboard focus ring.
 
 ## Usage
 
@@ -32,7 +39,7 @@ Use `Card` and `CardGrid` for small groups of related links, concepts, or next a
 
 ### Card grid
 
-<Preview lang="mdx">
+<Preview code={previewSource1} lang="mdx">
 <CardGrid>
   <Card title="Markdown" description="Write regular docs pages." href="/pages/" />
   <Card title="MDX" description="Use components for richer examples." href="/components/" />
@@ -41,6 +48,6 @@ Use `Card` and `CardGrid` for small groups of related links, concepts, or next a
 
 ### Custom width
 
-<Preview lang="mdx">
+<Preview code={previewSource2} lang="mdx">
 <Card title="Custom width" description="Use class overrides when the layout needs it." class="w-full" />
 </Preview>

@@ -5,8 +5,7 @@ import mdx from "@astrojs/mdx";
 import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
 import { rehypeBasecoatTables } from "./rehype-basecoat-tables.js";
-import { remarkPreviewSource } from "./preview-source.js";
-import { transformPreviewScripts } from "./preview-scripts.js";
+import { remarkDocComponents } from "./mdx-components.js";
 
 const basecoatStyles = new Set(["vega", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea"]);
 
@@ -71,7 +70,7 @@ function collectMdxModules(docsDir) {
 }
 
 export default function reallySimpleDocs(options = {}) {
-  const style = options.style || "vega";
+  const style = options.style || "nova";
   if (!basecoatStyles.has(style)) {
     throw new Error(`Invalid ReallySimpleDocs style "${style}". Expected one of: ${Array.from(basecoatStyles).join(", ")}.`);
   }
@@ -124,9 +123,9 @@ export default function reallySimpleDocs(options = {}) {
           ? [
               '@import "tailwindcss";',
               '@import "basecoat-css/base";',
+              '@import "basecoat-css/typeset";',
               `@import "basecoat-css/styles/${style}";`,
               `@import ${JSON.stringify(cssPath("custom.css"))};`,
-              `@import ${JSON.stringify(cssPath(`styles/${style}.css`))};`,
               ...normalizedOptions.customCss.map((css) => `@import ${JSON.stringify(resolveUserId(css))};`),
               `@source ${JSON.stringify(path.join(root, "src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"))};`,
               `@source ${JSON.stringify(runtimePath("**/*.{astro,js,ts}"))};`,
@@ -169,7 +168,7 @@ export default function reallySimpleDocs(options = {}) {
           ],
           markdown: {
             processor: unified({
-              remarkPlugins: [[remarkPreviewSource, { docsDir }]],
+              remarkPlugins: [[remarkDocComponents, { docsDir }]],
               rehypePlugins: [rehypeBasecoatTables],
             }),
             shikiConfig: normalizedOptions.shiki,
@@ -180,15 +179,6 @@ export default function reallySimpleDocs(options = {}) {
             },
             plugins: [
               tailwindcss(),
-              {
-                name: "reallysimpledocs-preview-scripts",
-                enforce: "pre",
-                transform(code, id) {
-                  if (!id.endsWith(".mdx") || !isInsideDir(id, docsDir)) return null;
-                  const transformed = transformPreviewScripts(code);
-                  return transformed === code ? null : { code: transformed, map: null };
-                },
-              },
               {
                 name: "reallysimpledocs-virtual-modules",
                 resolveId(id) {
@@ -234,9 +224,4 @@ export async function getMdxPage(slug) {
       },
     },
   };
-}
-
-function isInsideDir(filePath, dir) {
-  const relative = path.relative(dir, filePath);
-  return relative && !relative.startsWith("..") && !path.isAbsolute(relative);
 }

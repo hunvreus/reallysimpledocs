@@ -78,7 +78,6 @@ Common ReallySimpleDocs components are available by default:
 - `Callout`
 - `Tabs`
 - `Code`
-- `CodeGroup`
 - `Preview`
 - `Steps`
 - `Card` and `CardGrid`

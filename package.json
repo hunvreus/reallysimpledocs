@@ -1,6 +1,6 @@
 {
   "name": "reallysimpledocs",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A simple documentation system for Astro, built with Basecoat and Tailwind CSS.",
   "author": {
     "name": "hunvreus",
@@ -33,9 +33,7 @@
     ".": "./src/index.js",
     "./astro": "./src/astro/index.js",
     "./components": "./src/components/index.js",
-    "./css": "./src/css/custom.css",
-    "./css/styles/*": "./src/css/styles/*.css",
-    "./css/styles/*.css": "./src/css/styles/*.css"
+    "./css": "./src/css/custom.css"
   },
   "files": [
     "src",

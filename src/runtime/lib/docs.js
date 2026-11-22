@@ -1,3 +1,4 @@
+import { renderCodeBlock } from "./code-block.js";
 import fs from "node:fs";
 import path from "node:path";
 import { marked } from "marked";
@@ -400,8 +401,7 @@ async function highlightCode(tokens, shiki) {
 
 function codeBlockHtml(token, html) {
   const title = parseCodeMeta(token.lang).title;
-  if (!title) return html;
-  return `<div class="code-frame" data-code-title="${escapeHtml(title)}"><header><span>${escapeHtml(title)}</span></header><div class="code-block">${html}</div></div>`;
+  return renderCodeBlock(html, { title });
 }
 
 async function highlightToken(token, shiki = {}) {

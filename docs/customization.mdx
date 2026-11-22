@@ -29,7 +29,7 @@ export default defineConfig({
 |--------|---------|-------|
 | `docsDir` | `"./docs"` | Folder containing Markdown or MDX pages and `docs.json`. |
 | `routeBase` | `"/docs"` | URL path where the docs are mounted. Use `"/"` for root docs. |
-| `style` | `"vega"` | Basecoat style: `vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, or `rhea`. |
+| `style` | `"nova"` | Basecoat style: `vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, or `rhea`. |
 | `customCss` | `[]` | CSS files imported after Basecoat and ReallySimpleDocs styles. |
 | `css` | `true` | Set to `false` when you provide the full CSS pipeline yourself. |
 | `bodyAttrs` | `{}` | Extra attributes added to `<body>`. |
@@ -90,7 +90,7 @@ description: Custom metadata description.
 
 ## Syntax highlighting
 
-ReallySimpleDocs uses Shiki for fenced code blocks, `Code`, `CodeGroup`, and `Preview`.
+ReallySimpleDocs uses Shiki for fenced code blocks, `Code`, and `Preview`.
 
 ```js title="astro.config.mjs"
 reallySimpleDocs({
@@ -269,21 +269,17 @@ When managed CSS is disabled, import RSD's own docs CSS from the public package 
 
 ```css title="src/docs.css"
 @import "reallysimpledocs/css";
-@import "reallysimpledocs/css/styles/vega";
 ```
 
-Use the `reallysimpledocs/css/styles/{style}` import that matches your Basecoat style.
-
-ReallySimpleDocs always inserts its managed JavaScript: theme initialization, Basecoat JavaScript, copy-code behavior, and command search behavior.
+ReallySimpleDocs always inserts its managed JavaScript: theme initialization, Basecoat JavaScript (including code copying), and command search behavior.
 
 When you disable managed CSS, use these source files as references for what you may need to reproduce:
 
-- [DefaultHead.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/DefaultHead.astro): theme initialization, Basecoat JavaScript, and copy-code behavior.
+- [DefaultHead.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/DefaultHead.astro): theme initialization and Basecoat JavaScript (including code copying).
 - [ThemeToggle.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/ThemeToggle.astro): built-in dark-mode button.
 - [CommandDialog.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/CommandDialog.astro): search dialog behavior.
 - [Sidebar.astro](https://github.com/hunvreus/reallysimpledocs/blob/main/src/runtime/components/Sidebar.astro): sidebar shell and toggle target.
 - [reallysimpledocs/css](https://github.com/hunvreus/reallysimpledocs/blob/main/src/css/custom.css): shared RSD-specific CSS layered on top of Basecoat.
-- [reallysimpledocs/css/styles/*](https://github.com/hunvreus/reallysimpledocs/tree/main/src/css/styles): style-specific RSD CSS for code and tabbed surfaces.
 
 Prefer `style` and `customCss` for normal styling changes, and `Head` or `ContentHeader` for additive UI. Use `css: false` only when you are replacing RSD's stylesheet pipeline.
 
@@ -334,8 +330,10 @@ npm install htmx.org
 Use `bodyAttrs` to boost links into the docs content container.
 Because the sidebar is outside `#content`, update its current-page state from `Head` after htmx swaps:
 
-<CodeGroup>
-```js title="astro.config.mjs"
+<Tabs>
+<Tab title="astro.config.mjs">
+
+```js
 reallySimpleDocs({
   bodyAttrs: {
     "hx-boost": "true",
@@ -350,7 +348,10 @@ reallySimpleDocs({
 });
 ```
 
-```astro title="src/docs/Head.astro"
+</Tab>
+<Tab title="src/docs/Head.astro">
+
+```astro
 ---
 import htmxUrl from "htmx.org/dist/htmx.min.js?url";
 ---
@@ -386,6 +387,9 @@ import htmxUrl from "htmx.org/dist/htmx.min.js?url";
 <script src={htmxUrl} defer></script>
 ```
 
-</CodeGroup>
+</Tab>
+</Tabs>
 
 Using a CDN is also fine; see the [htmx installation docs](https://htmx.org/docs/#installing) for options.
+
+Document typography uses Basecoat Typeset. Embedded UI components opt out of Typeset so their padding, fonts, and colors follow their Basecoat component defaults.

@@ -1,11 +1,12 @@
 ---
+import { renderCodeBlock } from "../../lib/code-block.js";
 import config from "virtual:reallysimpledocs/config";
 import { highlightCode } from "../../lib/highlight.js";
 import { decodeHtml } from "../../lib/html.js";
 
-const { lang = "text", title, code, class: className = "" } = Astro.props;
+const { lang = "text", title, code, copy = true, class: className = "" } = Astro.props;
 const slotHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const rawCode = typeof code === "string" ? code.trim() : decodeSlotText(slotHtml);
+const rawCode = typeof code === "string" ? code : decodeSlotText(slotHtml);
 const html = await highlightCode(rawCode, lang, config.shiki);
 
 function decodeSlotText(value) {
@@ -16,19 +17,4 @@ function decodeSlotText(value) {
 }
 ---
 
-{
-  title ? (
-    <div class:list={["code-frame", className]} data-code-title={title}>
-      <header>
-        <span>{title}</span>
-      </header>
-      <div class="code-block">
-        <Fragment set:html={html} />
-      </div>
-    </div>
-  ) : (
-    <div class:list={["code-block", className]}>
-      <Fragment set:html={html} />
-    </div>
-  )
-}
+<Fragment set:html={renderCodeBlock(html, { title, copy, className, actions: await Astro.slots.render("actions") })} />

@@ -1,77 +1,82 @@
+export const defaultSource = "```bash\nnpm install reallysimpledocs\n```";
+
+export const actionsSource = `<Code title="Terminal" lang="bash" code="npm run build">
+  <a slot="actions" href="/quickstart/" class="btn" data-variant="ghost" data-size="xs">Quickstart</a>
+</Code>`;
+
+export const tabsSource = '<Tabs>\n<Tab title="npm">\n\n```bash\nnpm install reallysimpledocs\n```\n\n</Tab>\n<Tab title="pnpm">\n\n```bash\npnpm add reallysimpledocs\n```\n\n</Tab>\n</Tabs>';
+
 # Code
 
-Use fenced code blocks for single syntax-highlighted examples. Use `CodeGroup` when the same example has package-manager, framework, or platform variants.
+Use fenced code blocks or `Code` for syntax-highlighted examples. Both render the standard Basecoat Code Block, with an optional title and copy action.
 
 ## Usage
 
 ````md
-```bash title="Install"
+```bash title="Terminal"
 npm install reallysimpledocs
 ```
 ````
 
-Add `title="..."` after the language to render a titled code block.
+In MDX, use `Code` when the source comes from a string or the header needs custom actions:
+
+```mdx
+<Code title="Terminal" lang="bash" code="npm run build">
+  <a slot="actions" href="/quickstart/" class="btn" data-variant="ghost" data-size="xs">Quickstart</a>
+</Code>
+```
 
 ## Options
 
-### Fenced code
-
-| Metadata | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `language` | `string` | `"text"` | Language passed to Shiki. |
-| `title` | `string` | `undefined` | Optional header label, written as `title="..."` after the language. |
-
-### CodeGroup
-
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `class` | `string` | `""` | Extra classes applied to the wrapper. |
+| `code` | `string` | Slot text | Source to highlight. |
+| `lang` | `string` | `"text"` | Language passed to Shiki. |
+| `title` | `string` | `undefined` | Optional header label. Fences accept `title="..."`. |
+| `copy` | `boolean` | `true` | Show the Basecoat copy action. |
+| `class` | `string` | `""` | Extra classes on the code block. |
 
-`CodeGroup` expects titled fenced code blocks as children. Untitled code blocks are ignored because there is no tab label. Keep the `CodeGroup` name for tabbed code; use `Tabs` for generic grouped content.
+The `actions` slot accepts buttons or links. With a title, actions appear in the header. Otherwise, they float above the code. Custom actions supply their own behavior.
 
 ## Examples
 
 ### Default
 
+<Preview code={defaultSource} lang="md">
+
 ```bash
 npm install reallysimpledocs
 ```
 
-### With title
+</Preview>
 
-```js title="astro.config.mjs"
-import { defineConfig } from "astro/config";
-import reallySimpleDocs from "reallysimpledocs/astro";
+### With title and actions
 
-export default defineConfig({
-  integrations: [
-    reallySimpleDocs({
-      site: {
-        title: "Acme Docs",
-      },
-    }),
-  ],
-});
+<Preview code={actionsSource} lang="mdx">
+  <Code title="Terminal" lang="bash" code="npm run build">
+    <a slot="actions" href="/quickstart/" class="btn" data-variant="ghost" data-size="xs">Quickstart</a>
+  </Code>
+</Preview>
+
+### Multiple examples
+
+Compose ordinary tabs with code blocks:
+
+<Preview code={tabsSource} lang="mdx">
+<Tabs>
+<Tab title="npm">
+
+```bash
+npm install reallysimpledocs
 ```
 
-### Tabbed group
+</Tab>
+<Tab title="pnpm">
 
-<Preview lang="mdx" class="block w-full">
-<CodeGroup>
-```bash title="npm"
-npm install reallysimpledocs basecoat-css tailwindcss
+```bash
+pnpm add reallysimpledocs
 ```
 
-```bash title="pnpm"
-pnpm add reallysimpledocs basecoat-css tailwindcss
-```
-
-```bash title="yarn"
-yarn add reallysimpledocs basecoat-css tailwindcss
-```
-
-```bash title="bun"
-bun add reallysimpledocs basecoat-css tailwindcss
-```
-</CodeGroup>
+</Tab>
+</Tabs>
 </Preview>

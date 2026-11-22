@@ -4,114 +4,14 @@
   --color-search-highlight: oklch(90.5% 0.182 98.111);
 }
 
-.prose {
-  @apply my-6;
-
-  > h2,
-  > h3,
-  > h4,
-  > h5,
-  > h6 {
-    @apply sm:text-lg my-6 scroll-m-18 font-semibold tracking-tight;
-
-    > a.header-anchor {
-      @apply no-underline;
-    }
-  }
-  > h2 {
-    @apply text-xl sm:text-2xl mt-8 lg:mt-12 first:mt-0;
-  }
-  > h3 {
-    @apply text-lg sm:text-xl lg:mt-8;
-  }
-  > h1:first-child {
-    @apply hidden;
-  }
-  > p a,
-  > li a,
-  > dl a,
-  > .table-container a,
-  [role="listitem"] > p > a,
-  [role="listitem"] > li > a {
-    @apply underline underline-offset-2 decoration-muted-foreground/50 hover:decoration-foreground/50 transition-all;
-  }
-  b,
-  strong {
-    @apply font-semibold;
-  }
-  code:not(pre > code) {
-    @apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[13px];
-  }
-  pre {
-    @apply rounded-lg;
-  }
-  pre > code {
-    @apply block min-w-full w-max px-4 py-3 text-[13px];
-  }
-  pre:has(> code) {
-    @apply max-w-full overflow-x-auto;
-  }
-  > blockquote {
-    @apply border-l-4 border-border pl-4;
-  }
-  > ol {
-    @apply list-decimal ml-6;
-  }
-  > ul {
-    @apply list-disc ml-6;
-  }
-  > ol,
-  > ul {
-    li {
-      @apply mt-2;
-
-      ol,
-      ul {
-        @apply mt-0 mb-0;
-      }
-    }
-  }
-  > dl {
-    @apply border-b pb-3 my-6;
-    dt {
-      @apply border-t pt-3 mt-3 first:mt-0;
-    }
-    dd {
-      @apply mt-2;
-    }
-    dl {
-      @apply mt-4 border-b-0 pb-0 pl-8 my-0;
-    }
-  }
-  > p,
-  > blockquote,
-  > ul,
-  > ol,
-  > dl,
-  > pre {
-    @apply my-6;
-  }
-  > *:first-child {
-    @apply !mt-0;
-  }
-  > *:last-child {
-    @apply !mb-0;
-  }
-
-  > .table-container .table th,
-  > .table-container .table td {
-    @apply whitespace-normal;
-  }
-}
+/* Page anchors and component flow are documentation layout, not typography. */
+.typeset[data-doc-content] > h1:first-child { display: none; }
+.typeset :where(h2, h3, h4, h5, h6) { scroll-margin-top: 4.5rem; }
+.typeset a.header-anchor { text-decoration: none; }
 
 .shiki,
 .astro-code {
-  @apply bg-muted/50;
-  background-color: color-mix(
-    in oklab,
-    var(--color-muted) 50%,
-    transparent
-  ) !important;
+  background-color: transparent !important;
   color: var(--shiki-light);
 }
 
@@ -146,88 +46,14 @@ html.dark .astro-code span {
   @apply bg-search-highlight/50 text-foreground dark:bg-search-highlight/25;
 }
 
-.docs-card {
-  @apply block w-full rounded-lg border bg-card p-3 text-card-foreground no-underline;
+/* Document spacing surrounds components; Basecoat owns their internal layout. */
+.typeset > .code-block,
+.typeset > .tabs {
+  @apply my-6;
 }
 
-.docs-card > h3 {
-  @apply font-medium;
-}
-
-.docs-card > p {
-  @apply mt-1 text-sm text-muted-foreground;
-}
-
-.docs-card-link {
-  @apply transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
-}
-
-.alert[data-variant="warning"] > svg,
-.alert[data-variant="warning"] > h3,
-.alert[data-variant="warning"] > section {
-  @apply text-amber-700 dark:text-amber-300;
-}
-
-.code-frame,
-.tabs-frame {
-  @apply relative my-6 w-full max-w-full rounded-lg;
-}
-
-.code-frame > header {
-  @apply flex h-10 items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
-  scrollbar-width: none;
-}
-
-.tabs-frame > header {
-  @apply flex items-center gap-2 overflow-x-auto rounded-t-[inherit] border-b border-border/50 bg-muted px-3 text-sm font-medium dark:bg-muted/50;
-  scrollbar-width: none;
-}
-
-.code-frame > header::-webkit-scrollbar,
-.tabs-frame > header::-webkit-scrollbar {
-  display: none;
-}
-
-.code-block {
-  @apply relative my-6 w-full max-w-full overflow-hidden rounded-lg;
-}
-
-.code-block > pre {
-  @apply my-0 max-w-full overflow-x-auto rounded-none border-0;
-}
-
-.code-block > pre > code {
-  @apply block min-w-full w-max px-4 py-3 text-[13px];
-}
-
-.code-block > .shiki {
-  @apply my-0 rounded-none border-0;
-}
-
-.code-block > button {
-  @apply absolute right-2.5 top-2.5 z-10 [&_svg]:size-4 flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none bg-muted/50 dark:bg-muted/25 backdrop-blur-sm hover:text-foreground transition-colors;
-}
-
-.code-frame > .code-block,
-.tabs-frame > [data-code-panel] .code-block {
-  @apply my-0 min-w-0 rounded-none rounded-b-[inherit];
-}
-
-.tabs-frame {
-  @apply overflow-visible;
-}
-
-.code-frame {
-  @apply overflow-hidden;
-}
-
-.tabs-frame > [role="tabpanel"] {
-  @apply rounded-b-[inherit];
-}
-
-.tabs-frame > [data-preview-panel] {
-  @apply flex min-h-64 items-center justify-center p-6 bg-muted/50 dark:bg-muted/25;
-}
+.typeset .tabs > [role="tabpanel"] > :first-child { margin-top: 0; }
+.typeset .tabs > [role="tabpanel"] > :last-child { margin-bottom: 0; }
 
 .steps {
   @apply mb-12 mt-6 md:ml-4 md:border-l md:pl-8;
@@ -243,7 +69,7 @@ html.dark .astro-code span {
 }
 
 .steps > section > h3 {
-  @apply relative mt-12 scroll-m-28 text-lg font-medium tracking-tight;
+  @apply relative mt-12 scroll-m-28;
 }
 
 .steps > section + section > h3 {
@@ -277,13 +103,10 @@ html.dark .astro-code span {
   @apply mt-2;
 }
 
-.steps > section > :where(.code-frame, .code-block, .tabs-frame) {
+.steps > section > :where(.code-block, .tabs) {
   @apply my-3;
 }
 
-.steps > section > * {
-  @apply leading-relaxed;
-}
 
 .steps > section > *:first-child {
   @apply mt-0;
@@ -293,11 +116,10 @@ html.dark .astro-code span {
   @apply mb-0;
 }
 
-.prose > .alert,
-.prose > .docs-card,
-.prose > .grid,
-.prose > .tabs,
-.prose > .tabs-frame {
+.typeset > .alert,
+.typeset > .card,
+.typeset > .grid,
+.typeset > .tabs {
   @apply my-6;
 }
 

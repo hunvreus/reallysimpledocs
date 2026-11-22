@@ -1,3 +1,54 @@
+export const previewSource1 = `<Steps>
+  <Step title="Install packages">
+    Add ReallySimpleDocs, Basecoat, and Tailwind CSS to your Astro app.
+
+    <Tabs>
+<Tab title="npm">
+
+\`\`\`bash
+npm install reallysimpledocs basecoat-css tailwindcss
+\`\`\`
+
+</Tab>
+<Tab title="pnpm">
+
+\`\`\`bash
+pnpm add reallysimpledocs basecoat-css tailwindcss
+\`\`\`
+
+</Tab>
+<Tab title="yarn">
+
+\`\`\`bash
+yarn add reallysimpledocs basecoat-css tailwindcss
+\`\`\`
+
+</Tab>
+<Tab title="bun">
+
+\`\`\`bash
+bun add reallysimpledocs basecoat-css tailwindcss
+\`\`\`
+
+</Tab>
+</Tabs>
+  </Step>
+
+  <Step title="Create docs">
+    Add \`docs/docs.json\` and one or more Markdown or MDX pages.
+  </Step>
+
+  <Step title="Run Astro">
+    Start the dev server and open the URL printed by Astro.
+
+    <div>
+      <a href="/quickstart/" class="btn" data-variant="secondary">
+        Read Quickstart
+      </a>
+    </div>
+  </Step>
+</Steps>`;
+
 # Steps
 
 Use `Steps` for ordered setup and installation flows. It renders a numbered rail, with each step title and body aligned like common install guides.
@@ -34,28 +85,41 @@ Use `Steps` for ordered setup and installation flows. It renders a numbered rail
 
 ### Installation flow
 
-<Preview class="w-full">
+<Preview code={previewSource1} class="w-full">
 <Steps>
   <Step title="Install packages">
     Add ReallySimpleDocs, Basecoat, and Tailwind CSS to your Astro app.
 
-    <CodeGroup>
-      ```bash title="npm"
-      npm install reallysimpledocs basecoat-css tailwindcss
-      ```
+    <Tabs>
+<Tab title="npm">
 
-      ```bash title="pnpm"
-      pnpm add reallysimpledocs basecoat-css tailwindcss
-      ```
+```bash
+npm install reallysimpledocs basecoat-css tailwindcss
+```
 
-      ```bash title="yarn"
-      yarn add reallysimpledocs basecoat-css tailwindcss
-      ```
+</Tab>
+<Tab title="pnpm">
 
-      ```bash title="bun"
-      bun add reallysimpledocs basecoat-css tailwindcss
-      ```
-    </CodeGroup>
+```bash
+pnpm add reallysimpledocs basecoat-css tailwindcss
+```
+
+</Tab>
+<Tab title="yarn">
+
+```bash
+yarn add reallysimpledocs basecoat-css tailwindcss
+```
+
+</Tab>
+<Tab title="bun">
+
+```bash
+bun add reallysimpledocs basecoat-css tailwindcss
+```
+
+</Tab>
+</Tabs>
   </Step>
 
   <Step title="Create docs">

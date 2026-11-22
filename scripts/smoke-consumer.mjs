@@ -102,7 +102,6 @@ export default defineConfig({
     reallySimpleDocs({
       docsDir: "./docs",
       routeBase: "/docs",
-      style: "nova",
       bodyAttrs: {
         "data-smoke-body": "ok",
         "hx-target": "#content",
@@ -229,6 +228,8 @@ This is a second page for navigation.
 fs.writeFileSync(
   path.join(appDir, "docs", "interactive.mdx"),
   `export const demoSource = \`<button type="button" class="btn">Smoke action</button>\`;
+export const scriptSource = \`window.__rsdScriptPreview = "</Preview>";\`;
+export const labelSource = \`<label for="smoke-input" class="flex w-full items-center gap-2">Email</label>\`;
 
 # Interactive
 
@@ -246,27 +247,30 @@ This page proves packaged MDX docs can render default ReallySimpleDocs component
   <button type="button" class="btn">Smoke action</button>
 </Preview>
 
-<Preview>
+<Preview code={scriptSource} lang="js">
   <div>Script preview smoke</div>
-  <script>window.__rsdScriptPreview = "</Preview>";</script>
+  <script is:inline>{scriptSource}</script>
 </Preview>
 
-<Preview class="w-full max-w-xs">
-  <label for="smoke-input" class="flex w-full items-center gap-2">
-    Email
-    <span class="badge ml-auto" data-variant="secondary">Recommended</span>
-  </label>
+<Preview code={labelSource} class="w-full max-w-xs">
+  <label for="smoke-input" class="flex w-full items-center gap-2">Email <span class="badge ml-auto" data-variant="secondary">Recommended</span></label>
 </Preview>
 
-<CodeGroup>
-  \`\`\`bash title='npm "quoted"'
+<Tabs>
+<Tab title='npm "quoted"'>
+
+  \`\`\`bash
   npm run build
   \`\`\`
 
-  \`\`\`bash title="pnpm &amp; friends"
+</Tab>
+<Tab title="pnpm &amp; friends">
+
+  \`\`\`bash
   pnpm build
   \`\`\`
-</CodeGroup>
+</Tab>
+</Tabs>
 
 \`\`\`json title="smoke.json"
 {
@@ -282,7 +286,9 @@ npm run dev
 | --- | --- |
 | MDX table | Basecoat |
 
-<Code title="Command" lang="bash" code={\`npm run build\`} />
+<Code title="Command" lang="bash" code={\`npm run build\`}>
+  <a slot="actions" href="/docs/guide/" class="btn" data-size="xs" data-variant="ghost">Read guide</a>
+</Code>
 `,
 );
 fs.mkdirSync(path.join(appDir, "docs", "deep"), { recursive: true });
@@ -396,7 +402,7 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
-  'data-code-title="index.sh"',
+  '<header><span>index.sh</span>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
@@ -478,11 +484,11 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  'data-code-title="smoke.json"',
+  '<header><span>smoke.json</span>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  '<pre class="scrollbar shiki" style="--shiki-light:#FFF;--shiki-dark:#FFF;--shiki-light-bg:#101010;--shiki-dark-bg:#101010;overflow-x:auto" tabindex="0" data-language="bash">',
+  'data-copy aria-label="Copy code"',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
@@ -490,7 +496,7 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  'data-code-title="Command"><header><span>Command</span></header><div class="code-block"><pre class="shiki shiki-themes vesper scrollbar"',
+  '<header><span>Command</span>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
@@ -573,4 +579,10 @@ assertIncludes(
   "- [Nested](https://example.com/docs/deep/nested.md)",
 );
 
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), 'data-size="xs" data-variant="ghost">Read guide</a>');
+assertNotIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), 'class="tabs-frame"');
+assertNotIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), 'class="code-frame"');
+assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Tabs>");
+assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Tab title=");
+assertIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "```bash Command\nnpm run build\n```");
 console.log("Consumer smoke test passed.");
