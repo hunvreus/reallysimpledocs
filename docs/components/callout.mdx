@@ -18,9 +18,15 @@ export const previewSource5 = `<Callout type="destructive" title="Destructive">
   This variant is for irreversible actions, security risks, or migration warnings.
 </Callout>`;
 
+export const importantSource = `<Callout type="important" title="Important" icon="circle-alert">
+  Complete the required setup before continuing.
+</Callout>`;
+
 # Callout
 
-Use `Callout` for notes, warnings, and destructive or irreversible actions. The default callout uses regular Basecoat alert styling and has no icon. Destructive callouts use Basecoat’s destructive variant. Warning callouts use the standard neutral alert styling.
+Add callouts in two ways: GitHub-style blockquotes in Markdown or MDX, or the `Callout` component in MDX when you need a custom title, icon, or action.
+
+Both use the same styling: neutral for Note and Tip, purple for Important, amber for Warning, and destructive red for Caution.
 
 ## Markdown alerts
 
@@ -31,7 +37,7 @@ Use GitHub-style alerts in Markdown or MDX without importing a component:
 > This action permanently deletes your data.
 ```
 
-Supported markers are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]`. Put the marker on its own first line inside a blockquote. Each alert gets a title and icon; its body supports normal Markdown. Caution uses the destructive variant. Other types use the standard Callout appearance, including neutral warnings.
+Supported markers are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]`. Put the marker on its own first line inside a blockquote. Each alert gets a title and icon; its body supports normal Markdown. Important uses purple, Warning uses amber, and Caution uses the destructive red variant. Note and Tip use the neutral appearance.
 
 > [!NOTE]
 > Use alerts for information readers should notice.
@@ -50,7 +56,9 @@ Supported markers are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!
 
 Use `Callout` when you need a custom title, icon, or action. Ordinary blockquotes and unsupported markers keep their normal appearance. Code examples are never converted to alerts.
 
-## Usage
+## MDX component
+
+### Usage
 
 Use the component directly in MDX. ReallySimpleDocs components are available by default, so no import is required.
 
@@ -68,19 +76,19 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 ```
 
-## Options
+### Options
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `type` | `"warning"` \| `"destructive"` | `undefined` | Optional severity variant. |
+| `type` | `"warning"` \| `"important"` \| `"destructive"` | `undefined` | Optional severity variant. |
 | `title` | `string` | `"Note"` | Heading displayed in the alert. |
 | `icon` | `string` | `undefined` | Optional Lucide icon name or custom SVG. |
 | `action` | `{ label: string; href: string }` | `undefined` | Optional callout action link. |
 | `class` | `string` | `""` | Extra classes applied to the alert root. |
 
-## Examples
+### Examples
 
-### Neutral
+#### Neutral
 
 <Preview code={previewSource1} lang="mdx" class="block w-full">
 <Callout title="Neutral">
@@ -88,7 +96,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 </Preview>
 
-### Custom icon
+#### Custom icon
 
 <Preview code={previewSource2} lang="mdx" class="block w-full">
 <Callout icon="lightbulb" title="Custom icon">
@@ -96,7 +104,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 </Preview>
 
-### Action
+#### Action
 
 <Preview code={previewSource3} lang="mdx" class="block w-full">
 <Callout title="Template macros available" icon="code" action={{ label: "More", href: "#" }}>
@@ -104,7 +112,15 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 </Preview>
 
-### Warning
+#### Important
+
+<Preview code={importantSource} lang="mdx" class="block w-full">
+<Callout type="important" title="Important" icon="circle-alert">
+  Complete the required setup before continuing.
+</Callout>
+</Preview>
+
+#### Warning
 
 <Preview code={previewSource4} lang="mdx" class="block w-full">
 <Callout type="warning" title="Warning">
@@ -112,7 +128,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 </Preview>
 
-### Destructive
+#### Destructive
 
 <Preview code={previewSource5} lang="mdx" class="block w-full">
 <Callout type="destructive" title="Destructive">

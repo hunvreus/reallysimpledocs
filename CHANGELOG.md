@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Warning callouts use amber and Important callouts use purple, with matching styling for Markdown alerts and the MDX component.
+- Organize Callout documentation around Markdown alerts and the MDX component.
+
 ## 1.3.0 — 2026-11-22
 
 ### Added

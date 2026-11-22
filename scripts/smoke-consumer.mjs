@@ -610,7 +610,9 @@ for (const slug of ["index", "interactive/index"]) {
   for (const title of ["Note", "Tip", "Important", "Warning", "Caution"]) {
     if (!html.includes(`<h3>${title}</h3>`)) throw new Error(`Missing ${title} alert in ${slug}`);
   }
-  if (!html.includes('data-variant="destructive"')) throw new Error(`Missing caution severity in ${slug}`);
+  for (const variant of ["warning", "important", "destructive"]) {
+    if (!html.includes(`data-variant="${variant}"`)) throw new Error(`Missing ${variant} severity in ${slug}`);
+  }
   for (const text of ["Normal quotation.", "[!UNKNOWN]", "same line remains a quote", "Literal code sample.", "<strong>note</strong>", "<li>Nested list item</li>"]) {
     if (!html.includes(text)) throw new Error(`Lost alert content ${text} in ${slug}`);
   }

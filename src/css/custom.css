@@ -4,6 +4,20 @@
   --color-search-highlight: oklch(90.5% 0.182 98.111);
 }
 
+/* Extra Callout severities follow Basecoat's destructive foreground treatment. */
+.alert[data-variant="warning"] {
+  @apply text-amber-700 dark:text-amber-400 [&>svg]:text-current;
+}
+.alert[data-variant="warning"] > section {
+  @apply text-amber-700/90 dark:text-amber-400/90;
+}
+.alert[data-variant="important"] {
+  @apply text-purple-600 dark:text-purple-400 [&>svg]:text-current;
+}
+.alert[data-variant="important"] > section {
+  @apply text-purple-600/90 dark:text-purple-400/90;
+}
+
 /* Page anchors and component flow are documentation layout, not typography. */
 .typeset[data-doc-content] > h1:first-child { display: none; }
 .typeset :where(h2, h3, h4, h5, h6) { scroll-margin-top: 4.5rem; }
