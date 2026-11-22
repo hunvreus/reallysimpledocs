@@ -1,12 +1,19 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 2026-11-22
+
+### Upgrading
+
+- Replace `CodeGroup` with `Tabs` and `Tab` containing ordinary fenced code or `Code` components.
+- Pass an explicit `code` string to `Preview`. Preview scripts now follow normal MDX and imported-component behavior.
+- Remove imports of `reallysimpledocs/css/styles/*`; Basecoat supplies component styles directly.
+- Nova is now the default style. Set `style: "vega"` explicitly to keep Vega.
 
 ### Changed
 
 - Default to Basecoat Nova and use Basecoat Typeset for document typography. Cards and callouts use native component styling; warnings use the neutral alert style.
-
 - Code blocks and tabs use standard Basecoat styling and behavior. Fenced examples use the same code blocks as `Code`, with optional titles and an actions slot.
+- Linked cards use a muted hover background and keyboard focus ring. Code component examples now include Preview blocks.
 - Preview composes Tabs and Code and requires an explicit `code` string. Example scripts use normal MDX or imported components.
 - Replaced CodeGroup with Tabs containing Code or fenced examples. Removed the custom code and preview frame styles and their `css/styles/*` exports.
 

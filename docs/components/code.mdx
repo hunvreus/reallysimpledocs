@@ -1,3 +1,11 @@
+export const defaultSource = "```bash\nnpm install reallysimpledocs\n```";
+
+export const actionsSource = `<Code title="Terminal" lang="bash" code="npm run build">
+  <a slot="actions" href="/quickstart/" class="btn" data-variant="ghost" data-size="xs">Quickstart</a>
+</Code>`;
+
+export const tabsSource = '<Tabs>\n<Tab title="npm">\n\n```bash\nnpm install reallysimpledocs\n```\n\n</Tab>\n<Tab title="pnpm">\n\n```bash\npnpm add reallysimpledocs\n```\n\n</Tab>\n</Tabs>';
+
 # Code
 
 Use fenced code blocks or `Code` for syntax-highlighted examples. Both render the standard Basecoat Code Block, with an optional title and copy action.
@@ -34,20 +42,27 @@ The `actions` slot accepts buttons or links. With a title, actions appear in the
 
 ### Default
 
+<Preview code={defaultSource} lang="md">
+
 ```bash
 npm install reallysimpledocs
 ```
 
+</Preview>
+
 ### With title and actions
 
-<Code title="Terminal" lang="bash" code="npm run build">
-  <a slot="actions" href="/quickstart/" class="btn" data-variant="ghost" data-size="xs">Quickstart</a>
-</Code>
+<Preview code={actionsSource} lang="mdx">
+  <Code title="Terminal" lang="bash" code="npm run build">
+    <a slot="actions" href="/quickstart/" class="btn" data-variant="ghost" data-size="xs">Quickstart</a>
+  </Code>
+</Preview>
 
 ### Multiple examples
 
 Compose ordinary tabs with code blocks:
 
+<Preview code={tabsSource} lang="mdx">
 <Tabs>
 <Tab title="npm">
 
@@ -64,3 +79,4 @@ pnpm add reallysimpledocs
 
 </Tab>
 </Tabs>
+</Preview>

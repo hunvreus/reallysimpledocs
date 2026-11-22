@@ -3,7 +3,7 @@ const { title, description, href, class: className = "" } = Astro.props;
 const Tag = href ? "a" : "article";
 ---
 
-<Tag href={href} data-not-typeset class:list={["card", className]}>
+<Tag href={href} data-not-typeset class:list={["card", href && "transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50", className]}>
   <header>
     {title && <h3>{title}</h3>}
     {description && <p>{description}</p>}
