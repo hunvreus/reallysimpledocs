@@ -2,7 +2,7 @@ export const previewSource1 = `<Callout title="Neutral">
   Use a callout when the surrounding paragraph is not enough.
 </Callout>`;
 
-export const previewSource2 = `<Callout icon="lightbulb" title="Custom icon">
+export const previewSource2 = `<Callout icon="lightbulb" color="violet" title="Custom icon">
   Add a Lucide icon when it helps explain the message.
 </Callout>`;
 
@@ -18,49 +18,22 @@ export const previewSource5 = `<Callout type="destructive" title="Destructive">
   This variant is for irreversible actions, security risks, or migration warnings.
 </Callout>`;
 
-export const importantSource = `<Callout type="important" title="Important" icon="circle-alert">
-  Complete the required setup before continuing.
-</Callout>`;
-
 # Callout
 
-Add callouts in two ways: GitHub-style blockquotes in Markdown or MDX, or the `Callout` component in MDX when you need a custom title, icon, or action.
+Use Markdown alerts or the `Callout` component to draw attention to a message.
 
-Both use the same styling: neutral for Note and Tip, purple for Important, amber for Warning, and destructive red for Caution.
+## Usage
 
-## Markdown alerts
-
-Use GitHub-style alerts in Markdown or MDX without importing a component:
+Use GitHub-style alerts in Markdown or MDX:
 
 ```md
 > [!WARNING]
-> This action permanently deletes your data.
+> Review your changes before applying them.
 ```
 
-Supported markers are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]`. Put the marker on its own first line inside a blockquote. Each alert gets a title and icon; its body supports normal Markdown. Important uses purple, Warning uses amber, and Caution uses the destructive red variant. Note and Tip use the neutral appearance.
+Supported markers are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]`. Place the marker on its own first line.
 
-> [!NOTE]
-> Use alerts for information readers should notice.
-
-> [!TIP]
-> Keep the message short and actionable.
-
-> [!IMPORTANT]
-> Include required setup before readers continue.
-
-> [!WARNING]
-> Review your changes before applying them.
-
-> [!CAUTION]
-> Deleting data cannot be undone.
-
-Use `Callout` when you need a custom title, icon, or action. Ordinary blockquotes and unsupported markers keep their normal appearance. Code examples are never converted to alerts.
-
-## MDX component
-
-### Usage
-
-Use the component directly in MDX. ReallySimpleDocs components are available by default, so no import is required.
+In MDX, use `Callout` for a custom title, icon, color, or action:
 
 ```tsx
 <Callout title="Good to know">
@@ -71,24 +44,25 @@ Use the component directly in MDX. ReallySimpleDocs components are available by 
 Set a custom Lucide icon with `icon` when the message benefits from one:
 
 ```tsx
-<Callout icon="sparkles" title="Custom icon">
-  Use any Lucide icon name in camelCase or kebab-case.
+<Callout icon="sparkles" color="violet" title="Custom icon">
+  Use a Tailwind color family and a Lucide icon name.
 </Callout>
 ```
 
-### Options
+## Options
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `type` | `"warning"` \| `"important"` \| `"destructive"` | `undefined` | Optional severity variant. |
+| `color` | `string` | `undefined` | Tailwind color family, such as `blue` or `purple`. Uses shade 700 in light mode and 400 in dark mode. Overrides `type` color. |
 | `title` | `string` | `"Note"` | Heading displayed in the alert. |
 | `icon` | `string` | `undefined` | Optional Lucide icon name or custom SVG. |
 | `action` | `{ label: string; href: string }` | `undefined` | Optional callout action link. |
 | `class` | `string` | `""` | Extra classes applied to the alert root. |
 
-### Examples
+## Examples
 
-#### Neutral
+### Neutral
 
 <Preview code={previewSource1} lang="mdx" class="block w-full">
 <Callout title="Neutral">
@@ -96,15 +70,15 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 </Preview>
 
-#### Custom icon
+### Custom icon
 
 <Preview code={previewSource2} lang="mdx" class="block w-full">
-<Callout icon="lightbulb" title="Custom icon">
+<Callout icon="lightbulb" color="violet" title="Custom icon">
   Add a Lucide icon when it helps explain the message.
 </Callout>
 </Preview>
 
-#### Action
+### Action
 
 <Preview code={previewSource3} lang="mdx" class="block w-full">
 <Callout title="Template macros available" icon="code" action={{ label: "More", href: "#" }}>
@@ -112,15 +86,7 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 </Preview>
 
-#### Important
-
-<Preview code={importantSource} lang="mdx" class="block w-full">
-<Callout type="important" title="Important" icon="circle-alert">
-  Complete the required setup before continuing.
-</Callout>
-</Preview>
-
-#### Warning
+### Warning
 
 <Preview code={previewSource4} lang="mdx" class="block w-full">
 <Callout type="warning" title="Warning">
@@ -128,10 +94,27 @@ Set a custom Lucide icon with `icon` when the message benefits from one:
 </Callout>
 </Preview>
 
-#### Destructive
+### Destructive
 
 <Preview code={previewSource5} lang="mdx" class="block w-full">
 <Callout type="destructive" title="Destructive">
   This variant is for irreversible actions, security risks, or migration warnings.
 </Callout>
 </Preview>
+
+### Markdown alerts
+
+> [!NOTE]
+> Use alerts for information readers should notice.
+
+> [!TIP]
+> Keep the message short and actionable.
+
+> [!IMPORTANT]
+> Complete the required setup before continuing.
+
+> [!WARNING]
+> Review your changes before applying them.
+
+> [!CAUTION]
+> Deleting data cannot be undone.

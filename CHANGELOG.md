@@ -1,11 +1,15 @@
 # Changelog
 
-## Unreleased
+## 1.4.0 — 2026-11-23
+
+### Added
+
+- Add a `color` prop to MDX callouts using Tailwind color families.
 
 ### Changed
 
-- Warning callouts use amber and Important callouts use purple, with matching styling for Markdown alerts and the MDX component.
-- Organize Callout documentation around Markdown alerts and the MDX component.
+- Render warning callouts and Markdown warnings in amber, with matching Sera accents.
+- Document Markdown alerts and the MDX component together in Callout usage.
 
 ## 1.3.0 — 2026-11-22
 

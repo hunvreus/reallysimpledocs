@@ -1,8 +1,8 @@
 const alerts = {
   NOTE: { title: "Note", icon: "Info" },
   TIP: { title: "Tip", icon: "Lightbulb" },
-  IMPORTANT: { title: "Important", icon: "CircleAlert", type: "important" },
-  WARNING: { title: "Warning", icon: "TriangleAlert", type: "warning" },
+  IMPORTANT: { title: "Important", icon: "CircleAlert" },
+  WARNING: { title: "Warning", icon: "TriangleAlert", color: "amber" },
   CAUTION: { title: "Caution", icon: "OctagonAlert", type: "destructive" },
 };
 
