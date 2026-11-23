@@ -1,3 +1,4 @@
+import { calloutColors } from "./callout-colors.js";
 import { parseAlert } from "./alerts.js";
 import { Info, Lightbulb, CircleAlert, TriangleAlert, OctagonAlert } from "lucide-static";
 import { renderCodeBlock } from "./code-block.js";
@@ -117,7 +118,7 @@ export async function renderDoc(config, page) {
     const icons = { Info, Lightbulb, CircleAlert, TriangleAlert, OctagonAlert };
     const tokens = [...marked.lexer(alert.content), ...token.tokens.slice(1)];
     const variant = alert.type ? ` data-variant="${alert.type}"` : "";
-    return `<div data-not-typeset class="alert"${variant}>${icons[alert.icon]}<h3>${alert.title}</h3><section>${renderer.parser.parse(tokens)}</section></div>\n`;
+    return `<div data-not-typeset class="alert${alert.color ? ` ${calloutColors[alert.color]}` : ""}"${variant}>${icons[alert.icon]}<h3>${alert.title}</h3><section>${renderer.parser.parse(tokens)}</section></div>\n`;
   };
 
   const tokens = marked.lexer(content);

@@ -1,9 +1,11 @@
 ---
+import { calloutColors } from "../../lib/callout-colors.js";
 import * as lucideIcons from "lucide-static";
 
-const { type, title = "Note", icon: iconName, action, class: className = "" } = Astro.props;
+const { type, color, title = "Note", icon: iconName, action, class: className = "" } = Astro.props;
+const colorClass = typeof color === "string" && Object.hasOwn(calloutColors, color) ? calloutColors[color] : "";
 const normalizedType = String(type || "").toLowerCase();
-const calloutType = normalizedType === "warning" || normalizedType === "destructive" ? normalizedType : "";
+const calloutType = ["warning", "important", "destructive"].includes(normalizedType) ? normalizedType : "";
 const actionLabel = typeof action?.label === "string" ? action.label.trim() : "";
 const actionHref = typeof action?.href === "string" ? action.href.trim() : "";
 
@@ -26,7 +28,7 @@ const icon = iconSource;
 const heading = title;
 ---
 
-<div data-not-typeset class:list={["alert", className]} data-variant={calloutType || undefined}>
+<div data-not-typeset class:list={["alert", colorClass, className]} data-variant={colorClass ? undefined : calloutType || undefined}>
   {icon && <Fragment set:html={icon} />}
   <h3>{heading}</h3>
   <section>

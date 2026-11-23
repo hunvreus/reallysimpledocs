@@ -239,7 +239,7 @@ This page proves packaged MDX docs can render default ReallySimpleDocs component
 
 ## Linked [MDX reference](https://example.com/mdx-reference)
 
-<Callout title="MDX works" icon="sparkles" action={{ label: "More", href: "/docs/guide/" }}>
+<Callout title="MDX works" icon="sparkles" color="rose" action={{ label: "More", href: "/docs/guide/" }}>
   Consumer-only keyword: mdx-orbit-smoke.
 </Callout>
 
@@ -604,13 +604,19 @@ assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Tabs>")
 assertNotIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "<Tab title=");
 assertIncludes(path.join(appDir, "dist", "docs", "interactive.md"), "```bash Command\nnpm run build\n```");
 
+assertIncludes(path.join(appDir, "dist", "docs", "interactive", "index.html"), "text-rose-700");
+
 for (const slug of ["index", "interactive/index"]) {
   const html = fs.readFileSync(path.join(appDir, "dist", "docs", `${slug}.html`), "utf8");
-  if ((html.match(/<div[^>]*class="alert"/g) || []).length < 5) throw new Error(`Missing alerts in ${slug}`);
+  for (const color of ["amber"]) {
+    if (!html.includes(`text-${color}-700`) && !html.includes(`text-${color}-600`)) throw new Error(`Missing ${color} alert in ${slug}`);
+  }
   for (const title of ["Note", "Tip", "Important", "Warning", "Caution"]) {
     if (!html.includes(`<h3>${title}</h3>`)) throw new Error(`Missing ${title} alert in ${slug}`);
   }
-  if (!html.includes('data-variant="destructive"')) throw new Error(`Missing caution severity in ${slug}`);
+  for (const variant of ["destructive"]) {
+    if (!html.includes(`data-variant="${variant}"`)) throw new Error(`Missing ${variant} severity in ${slug}`);
+  }
   for (const text of ["Normal quotation.", "[!UNKNOWN]", "same line remains a quote", "Literal code sample.", "<strong>note</strong>", "<li>Nested list item</li>"]) {
     if (!html.includes(text)) throw new Error(`Lost alert content ${text} in ${slug}`);
   }

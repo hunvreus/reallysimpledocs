@@ -33,7 +33,7 @@ function alertToMdx(node) {
   return {
     type: "mdxJsxFlowElement",
     name: "Callout",
-    attributes: Object.entries({ title: alert.title, icon: alert.icon, type: alert.type })
+    attributes: Object.entries({ title: alert.title, icon: alert.icon, type: alert.type, color: alert.color })
       .filter(([, value]) => value)
       .map(([name, value]) => ({ type: "mdxJsxAttribute", name, value })),
     children: node.children,
