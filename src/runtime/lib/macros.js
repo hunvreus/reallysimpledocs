@@ -2,31 +2,6 @@ import Search from "lucide-static/icons/search.svg?raw";
 import ArrowUpRight from "lucide-static/icons/arrow-up-right.svg?raw";
 import { addSvgClass, attrs, escapeHtml } from "./html.js";
 
-export function renderSidebar({
-  id = "sidebar",
-  label = "Sidebar navigation",
-  open = true,
-  side = "left",
-  header = "",
-  footer = "",
-  menu = [],
-  contentAttrs = { class: "scrollbar" },
-} = {}) {
-  return `<aside${attrs({
-    id,
-    class: "sidebar",
-    "data-side": side,
-    "aria-hidden": open ? "false" : "true",
-    inert: open ? undefined : true,
-  })}>
-  <nav aria-label="${escapeHtml(label)}">
-    ${header ? `<header>${header}</header>` : ""}
-    <section${attrs(contentAttrs)}>${renderSidebarContent(menu, `${id}-content`)}</section>
-    ${footer ? `<footer>${footer}</footer>` : ""}
-  </nav>
-</aside>`;
-}
-
 export function renderSidebarContent(items = [], parentIdPrefix = "content") {
   return items
     .map((item, index) => {
@@ -115,7 +90,7 @@ export function renderCommandDialog({
 </dialog>`;
 }
 
-export function renderCommandItems(items = [], parentIdPrefix = "items") {
+function renderCommandItems(items = [], parentIdPrefix = "items") {
   return items
     .map((item, index) => {
       const itemId = `${parentIdPrefix}-${index + 1}`;
@@ -164,7 +139,7 @@ export function renderDropdownMenu({ id = "dropdown-menu", trigger = "", items =
 </div>`;
 }
 
-export function renderDropdownItems(items = [], parentIdPrefix = "items") {
+function renderDropdownItems(items = [], parentIdPrefix = "items") {
   return items
     .map((item, index) => {
       const itemId = `${parentIdPrefix}-${index + 1}`;

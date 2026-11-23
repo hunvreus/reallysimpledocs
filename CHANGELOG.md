@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1 — 2026-11-23
+
+### Changed
+
+- Style Markdown and MDX tables with Typeset and provide horizontal scrolling for wide tables.
+
 ## 1.4.0 — 2026-11-23
 
 ### Added

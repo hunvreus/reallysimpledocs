@@ -3,10 +3,9 @@ import rehypeStringify from "rehype-stringify";
 import { unified } from "unified";
 import GithubSlugger from "github-slugger";
 
-const containerClass = ["table-container", "scrollbar", "my-6"];
-const tableClass = ["table"];
+const containerClass = ["typeset-scroll", "scrollbar"];
 
-export function rehypeBasecoatTables() {
+export function rehypeDocContent() {
   return (tree) => {
     transformHeadings(tree);
     transformTables(tree);
@@ -14,10 +13,10 @@ export function rehypeBasecoatTables() {
   };
 }
 
-export async function transformBasecoatTablesHtml(html) {
+export async function transformDocHtml(html) {
   const file = await unified()
     .use(rehypeParse, { fragment: true })
-    .use(rehypeBasecoatTables)
+    .use(rehypeDocContent)
     .use(rehypeStringify)
     .process(html);
   return String(file);
@@ -25,12 +24,12 @@ export async function transformBasecoatTablesHtml(html) {
 
 function transformTables(parent) {
   if (!Array.isArray(parent?.children)) return;
+  if (classList(parent).includes("not-typeset") || parent.properties?.dataNotTypeset !== undefined || parent.properties?.["data-not-typeset"] !== undefined) return;
 
   for (let index = 0; index < parent.children.length; index += 1) {
     const child = parent.children[index];
     if (isElement(child, "table")) {
-      addClass(child, tableClass);
-      if (isTableContainer(parent)) continue;
+      if (isTableContainer(parent) || classList(child).includes("table")) continue;
       parent.children[index] = {
         type: "element",
         tagName: "div",
@@ -114,7 +113,7 @@ function isElement(node, tagName) {
 }
 
 function isTableContainer(node) {
-  return isElement(node, "div") && classList(node).includes("table-container");
+  return isElement(node, "div") && classList(node).some((name) => name === "typeset-scroll" || name === "table-container");
 }
 
 function addClass(node, classes) {

@@ -284,7 +284,11 @@ npm run dev
 
 | Prop | Value |
 | --- | --- |
-| MDX table | Basecoat |
+| MDX table | Typeset |
+
+<div className="typeset-scroll"><table><tbody><tr><td>Already wrapped</td></tr></tbody></table></div>
+
+<div data-not-typeset><table className="table"><tbody><tr><td>Custom component table</td></tr></tbody></table></div>
 
 <Code title="Command" lang="bash" code={\`npm run build\`}>
   <a slot="actions" href="/docs/guide/" class="btn" data-size="xs" data-variant="ghost">Read guide</a>
@@ -412,11 +416,11 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
-  '<div class="table-container scrollbar my-6">',
+  '<div class="typeset-scroll scrollbar">',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
-  '<table class="table">',
+  '<table>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "index.html"),
@@ -518,11 +522,19 @@ assertIncludes(
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  '<div class="table-container scrollbar my-6">',
+  '<div class="typeset-scroll scrollbar">',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
-  '<table class="table">',
+  '<table>',
+);
+assertIncludes(
+  path.join(appDir, "dist", "docs", "interactive", "index.html"),
+  '<div class="typeset-scroll"><table><tbody><tr><td>Already wrapped</td></tr></tbody></table></div>',
+);
+assertIncludes(
+  path.join(appDir, "dist", "docs", "interactive", "index.html"),
+  '<div data-not-typeset="true"><table class="table"><tbody><tr><td>Custom component table</td></tr></tbody></table></div>',
 );
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),

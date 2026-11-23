@@ -259,13 +259,14 @@ reallySimpleDocs({
 With managed CSS enabled, ReallySimpleDocs inserts:
 
 - Tailwind
+- Basecoat base styles and Typeset
 - the selected Basecoat style
 - RSD layout/component CSS
 - each `customCss` file
 
 Use `css: false` when you bring your own Tailwind/Basecoat/RSD stylesheet.
 
-When managed CSS is disabled, import RSD's own docs CSS from the public package entry:
+When managed CSS is disabled, include `basecoat-css/typeset` for document typography and tables, along with Tailwind and your chosen Basecoat style. Import RSD's docs CSS from the public package entry:
 
 ```css title="src/docs.css"
 @import "reallysimpledocs/css";

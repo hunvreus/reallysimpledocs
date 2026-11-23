@@ -33,7 +33,7 @@ description: Metadata description for this page.
 
 ## Write Markdown
 
-Use normal Markdown for headings, lists, tables, links, and fenced code blocks. H2 and H3 headings appear in the “On this page” table of contents.
+Use normal Markdown for headings, lists, tables, links, and fenced code blocks. Wide tables scroll horizontally. H2 and H3 headings appear in the “On this page” table of contents.
 
 ```md
 # Page title

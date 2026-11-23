@@ -8,7 +8,7 @@ import { marked } from "marked";
 import GithubSlugger from "github-slugger";
 import { codeToHtml } from "shiki";
 import * as lucideIcons from "lucide-static";
-import { transformBasecoatTablesHtml } from "../../astro/rehype-basecoat-tables.js";
+import { transformDocHtml } from "../../astro/rehype-doc-content.js";
 import { parseCodeMeta } from "./code-meta.js";
 import { escapeHtml } from "./html.js";
 import { normalizeDocMarkdown } from "./markdown-export.js";
@@ -124,7 +124,7 @@ export async function renderDoc(config, page) {
   const tokens = marked.lexer(content);
   await highlightCode(tokens, config.shiki);
   const html = marked.parser(tokens, { renderer });
-  return { page, html: await transformBasecoatTablesHtml(html), headings };
+  return { page, html: await transformDocHtml(html), headings };
 }
 
 export function getDocHeadings(config, page) {

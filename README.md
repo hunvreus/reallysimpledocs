@@ -74,7 +74,7 @@ Welcome to the docs.
 - Lunr search with a built-in command dialog.
 - Syntax-highlighted code blocks with copy buttons.
 - `llms.txt`, `llms-full.txt`, and per-page Markdown exports.
-- Basecoat styling with style-specific RSD CSS for docs surfaces.
+- Basecoat styles and shared RSD CSS for docs surfaces.
 - Component slots for additive head content, sidebar chrome, and header controls.
 
 ## Customization
