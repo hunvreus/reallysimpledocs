@@ -21,8 +21,8 @@ const site = getSite(config);
       <SidebarFooter site={site} />
     </footer>
   </nav>
-</aside>
 
+{/* Keep Astro’s emitted dev script inside the sidebar so main remains its adjacent sibling. */}
 <script>
   const sidebar = document.getElementById("sidebar");
   const viewport = sidebar?.querySelector("nav > section");
@@ -56,3 +56,4 @@ const site = getSite(config);
     scheduleScroll();
   }
 </script>
+</aside>

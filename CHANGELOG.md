@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.3 — 2026-11-23
+
+### Fixed
+
+- Keep the main content correctly positioned beside the sidebar in Astro development mode.
+
 ## 1.4.2 — 2026-11-23
 
 ### Fixed
