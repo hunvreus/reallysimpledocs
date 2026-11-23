@@ -22,3 +22,37 @@ const site = getSite(config);
     </footer>
   </nav>
 </aside>
+
+<script>
+  const sidebar = document.getElementById("sidebar");
+  const viewport = sidebar?.querySelector("nav > section");
+  let pending = false;
+
+  function showCurrentPage() {
+    pending = false;
+    if (!sidebar || !viewport || sidebar.getAttribute("aria-hidden") === "true") return;
+    const current = viewport.querySelector('a[aria-current="page"]');
+    if (!current || !current.getClientRects().length) return;
+
+    const item = current.getBoundingClientRect();
+    const bounds = viewport.getBoundingClientRect();
+    if (item.top < bounds.top) viewport.scrollBy(0, item.top - bounds.top);
+    else if (item.bottom > bounds.bottom) viewport.scrollBy(0, item.bottom - bounds.bottom);
+  }
+
+  function scheduleScroll() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(showCurrentPage);
+  }
+
+  if (sidebar && viewport) {
+    const observer = new MutationObserver(scheduleScroll);
+    observer.observe(sidebar, {
+      attributes: true,
+      attributeFilter: ["aria-current", "aria-hidden", "open"],
+      subtree: true,
+    });
+    scheduleScroll();
+  }
+</script>

@@ -11,10 +11,25 @@ export function remarkDocComponents({ docsDir } = {}) {
       if (node?.type === "blockquote") return alertToMdx(node);
       if (node?.type === "code") return codeToMdx(node, parent, index);
       if (node?.type !== "mdxJsxFlowElement") return null;
+      if (node.name === "Preview") addPreviewSource(node, file);
       if (node.name === "Tabs") addTabsMetadata(node);
       return null;
     });
   };
+}
+
+function addPreviewSource(node, file) {
+  if (hasAttr(node, "code")) return;
+
+  const children = node.children || [];
+  const start = children[0]?.position?.start?.offset;
+  const end = children.at(-1)?.position?.end?.offset;
+  if (children.length && (!Number.isInteger(start) || !Number.isInteger(end))) {
+    throw new Error("Cannot extract Preview source. Provide a code prop instead.");
+  }
+  const source = children.length ? String(file.value).slice(start, end).trim() : "";
+  node.attributes ||= [];
+  node.attributes.push({ type: "mdxJsxAttribute", name: "code", value: source });
 }
 
 function alertToMdx(node) {

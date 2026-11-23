@@ -243,6 +243,15 @@ This page proves packaged MDX docs can render default ReallySimpleDocs component
   Consumer-only keyword: mdx-orbit-smoke.
 </Callout>
 
+<Preview lang="text" class={1 > 0 ? "block" : ""}>
+  <div><strong>Automatic preview text</strong></div>
+  <p>Second automatic element</p>
+</Preview>
+
+<Preview lang="text" code="Explicit override source">
+  <div>Override preview content</div>
+</Preview>
+
 <Preview code={demoSource} lang="html">
   <button type="button" class="btn">Smoke action</button>
 </Preview>
@@ -484,6 +493,14 @@ assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
   '<footer><a class="btn" data-variant="outline" data-size="sm" href="/docs/guide/">More</a></footer>',
 );
+{
+  const html = fs.readFileSync(path.join(appDir, "dist", "docs", "interactive", "index.html"), "utf8");
+  for (const value of ["Automatic preview text", "Second automatic element"]) {
+    if (html.split(value).length !== 3) throw new Error(`Expected live and source preview content: ${value}`);
+  }
+  if (!html.includes("Explicit override source")) throw new Error("Missing explicit preview source override");
+}
+
 assertIncludes(
   path.join(appDir, "dist", "docs", "interactive", "index.html"),
   "Smoke action",
