@@ -4,7 +4,7 @@ import path from "node:path";
 import mdx from "@astrojs/mdx";
 import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
-import { rehypeBasecoatTables } from "./rehype-basecoat-tables.js";
+import { rehypeDocContent } from "./rehype-doc-content.js";
 import { remarkDocComponents } from "./mdx-components.js";
 
 const basecoatStyles = new Set(["vega", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea"]);
@@ -169,7 +169,7 @@ export default function reallySimpleDocs(options = {}) {
           markdown: {
             processor: unified({
               remarkPlugins: [[remarkDocComponents, { docsDir }]],
-              rehypePlugins: [rehypeBasecoatTables],
+              rehypePlugins: [rehypeDocContent],
             }),
             shikiConfig: normalizedOptions.shiki,
           },

@@ -1,6 +1,6 @@
 {
   "name": "reallysimpledocs",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A simple documentation system for Astro, built with Basecoat and Tailwind CSS.",
   "author": {
     "name": "hunvreus",
