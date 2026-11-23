@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.2 — 2026-11-23
+
+### Fixed
+
+- Generate Preview source from its MDX children when no `code` override is provided.
+
+### Changed
+
+- Keep the active page visible in the sidebar when opening a page or navigating.
+
 ## 1.4.1 — 2026-11-23
 
 ### Changed

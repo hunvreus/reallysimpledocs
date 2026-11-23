@@ -7,6 +7,8 @@ Navigation lives in `docs/docs.json`. It controls:
 - previous and next page links,
 - `llms.txt`, `llms-full.txt`, and search ordering.
 
+The sidebar scrolls the current page into view when needed.
+
 ## Create a menu
 
 Start with one top-level group:

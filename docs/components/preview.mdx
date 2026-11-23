@@ -1,15 +1,11 @@
-export const buttonSource = `<button type="button" class="btn">Save changes</button>`;
-
 # Preview
 
-Use `Preview` to show a rendered example and its source in standard Basecoat tabs. Supply the source explicitly with `code` and put the rendered content in the default slot.
+Use `Preview` to show a rendered example and its source in standard Basecoat tabs. In MDX documentation pages, the Code tab shows the source written inside the component.
 
 ## Usage
 
 ```mdx
-export const buttonSource = `<button type="button" class="btn">Save changes</button>`;
-
-<Preview code={buttonSource} lang="html">
+<Preview lang="html">
   <button type="button" class="btn">Save changes</button>
 </Preview>
 ```
@@ -18,17 +14,17 @@ export const buttonSource = `<button type="button" class="btn">Save changes</but
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `code` | `string` | Required | Source displayed in the Code tab. |
+| `code` | `string` | Generated from children | Optional source override for the Code tab. |
 | `lang` | `string` | `"html"` | Language passed to Shiki. |
 | `title` | `string` | `"Preview"` | Label for the rendered-example tab. |
 | `class` | `string` | `""` | Extra classes on the preview canvas. |
 
-Use ordinary classes such as `flex items-center justify-center` to position the example. Scripts and other example behavior are authored by the page, using normal MDX or imported components.
+Outside MDX documentation pages, pass the source explicitly with `code`. Use ordinary classes such as `flex items-center justify-center` to position the example. Scripts and other example behavior are authored by the page, using normal MDX or imported components.
 
 ## Examples
 
 ### Button
 
-<Preview code={buttonSource} class="flex items-center justify-center">
+<Preview class="flex items-center justify-center">
   <button type="button" class="btn">Save changes</button>
 </Preview>
